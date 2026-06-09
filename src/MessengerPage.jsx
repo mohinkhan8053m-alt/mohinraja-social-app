@@ -1,58 +1,44 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AdBanner } from './AdProvider'; 
 
 const MessengerPage = () => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([]);
-  const [isPremiumLocked, setIsPremiumLocked] = useState(true);
-
-  // --- [SERVER SLOT]: सर्वर और डेटाबेस कंट्रोल ---
-  const handleServerAction = (action, data) => {
-    console.log(`[SERVER SLOT]: Action: ${action}`, data);
-  };
-
-  const handlePremiumUpgrade = () => {
-    window.location.href = "https://buy.stripe.com/YOUR_PREMIUM_UPGRADE_LINK";
-  };
+  const theme = { bg: '#000', gold: '#fbbf24', border: '1px solid #fbbf24', cardBg: 'rgba(255, 255, 255, 0.05)' };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <AdBanner />
-
-      {/* 2. टॉप बार: वीडियो कॉल, ऑडियो ट्रांसलेशन, गिफ्टिंग के साथ */}
-      <header className="p-4 bg-white border-b flex justify-between items-center sticky top-0 z-50 shadow-sm">
-        <button onClick={() => navigate(-1)} className="text-xl">⬅️</button>
-        <h2 className="font-bold text-lg text-purple-700">RangManch Chat</h2>
-        <div className="flex space-x-3 text-purple-600 text-xl">
-          <button onClick={() => navigate('/video-call')}>🎥</button>
-          <button onClick={() => handleServerAction('AudioTranslate', 'On')}>👁️‍🗨️</button>
-          <button onClick={() => handleServerAction('SendGift', 'Gift')}>🎁</button>
-          <button onClick={() => handleServerAction('Location', 'Share')}>📍</button>
+    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', fontFamily: 'serif', display: 'flex', flexDirection: 'column' }}>
+      
+      {/* 1. प्रीमियम टॉप बार */}
+      <header style={{ padding: '20px', borderBottom: theme.border, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: theme.gold, fontSize: '24px', cursor: 'pointer' }}>⬅️</button>
+        <h1 style={{ color: theme.gold, fontSize: '22px', fontWeight: 'bold' }}>RangManch Chat</h1>
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <button style={{ background: 'none', border: 'none', color: '#fff', fontSize: '22px' }} onClick={() => navigate('/video-call')}>🎥</button>
+          <button style={{ background: 'none', border: 'none', color: '#fff', fontSize: '22px' }} onClick={() => console.log('AudioTranslate')}>👁️‍🗨️</button>
+          <button style={{ background: 'none', border: 'none', color: '#fff', fontSize: '22px' }} onClick={() => console.log('Gift')}>🎁</button>
+          <button style={{ background: 'none', border: 'none', color: '#fff', fontSize: '22px' }} onClick={() => console.log('Location')}>📍</button>
         </div>
       </header>
 
-      {/* 3. चैट एरिया: मैसेज ट्रांसलेशन 'i' बटन के साथ */}
-      <div className="flex-grow p-4 overflow-y-auto space-y-4">
-        <div className="bg-purple-100 p-3 rounded-lg flex justify-between items-center">
-            <p>नमस्ते! कैसे हैं आप?</p>
-            <button onClick={() => handleServerAction('TranslateMsg')} className="text-xs bg-white px-2 py-1 rounded">i</button>
+      {/* 2. चैट एरिया (खुला-खुला) */}
+      <main style={{ flexGrow: 1, padding: '30px', overflowY: 'auto' }}>
+        <div style={{ background: 'rgba(251, 191, 36, 0.1)', padding: '20px', borderRadius: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: theme.border }}>
+          <p style={{ fontSize: '18px' }}>नमस्ते! कैसे हैं आप?</p>
+          <button onClick={() => console.log('Translate')} style={{ background: '#fff', color: '#000', border: 'none', borderRadius: '50%', width: '30px', height: '30px', fontWeight: 'bold' }}>i</button>
         </div>
-      </div>
 
-      {/* [कमाई का फीचर]: प्रीमियम लॉक */}
-      {isPremiumLocked && (
-        <div className="mx-4 p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl text-white text-center shadow-lg">
-          <p className="font-bold">🔒 Unlock AI Translations & Unlimited Chat</p>
-          <button onClick={handlePremiumUpgrade} className="mt-2 bg-white text-purple-600 font-bold px-6 py-2 rounded-full">Upgrade</button>
+        {/* प्रीमियम लॉक बैनर */}
+        <div style={{ marginTop: '30px', padding: '25px', background: 'linear-gradient(to right, #4c1d95, #b45309)', borderRadius: '25px', textAlign: 'center' }}>
+          <p style={{ fontWeight: 'bold', fontSize: '18px', marginBottom: '15px' }}>🔒 Unlock AI Translations & Unlimited Chat</p>
+          <button style={{ background: '#fff', color: '#b45309', padding: '12px 30px', borderRadius: '50px', border: 'none', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>Upgrade Now</button>
         </div>
-      )}
+      </main>
 
-      {/* 4. इनपुट एरिया: AI फिल्टर और सेंड बटन */}
-      <div className="p-4 bg-white border-t flex items-center space-x-2 pb-6">
-        <button onClick={() => handleServerAction('ApplyAIFilter')} className="text-xl">✨</button>
-        <input type="text" placeholder="Message..." className="flex-grow p-3 border rounded-full bg-gray-50 outline-none" />
-        <button onClick={() => handleServerAction('SendMessage')} className="bg-purple-600 text-white p-3 px-6 rounded-full font-bold">Send</button>
+      {/* 3. इनपुट एरिया (नीचे की तरफ) */}
+      <div style={{ padding: '20px', borderTop: theme.border, display: 'flex', gap: '15px', alignItems: 'center', background: '#000' }}>
+        <button style={{ background: 'none', border: 'none', color: theme.gold, fontSize: '28px' }} onClick={() => console.log('Filter')}>✨</button>
+        <input type="text" placeholder="Message..." style={{ flexGrow: 1, padding: '15px', borderRadius: '50px', border: theme.border, background: 'rgba(255,255,255,0.1)', color: '#fff' }} />
+        <button style={{ background: `linear-gradient(to right, ${theme.gold}, #b45309)`, color: '#000', padding: '12px 25px', borderRadius: '50px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => console.log('Send')}>Send</button>
       </div>
     </div>
   );
