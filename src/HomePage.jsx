@@ -1,88 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AdBanner } from './AdProvider'; 
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // [SERVER SLOT]: यहाँ से सर्वर से डेटा आएगा
-    setTimeout(() => setLoading(false), 1500); 
-  }, []);
-
-  const handleBoostPost = (postId) => {
-    // [SERVER SLOT]: बूस्टिंग पेमेंट गेटवे लिंक
-    alert("प्रोफाइल बूस्टिंग फीचर एक्टिव!");
+  // प्रीमियम डार्क थीम स्टाइलिंग
+  const theme = {
+    bg: '#000',
+    gold: '#fbbf24',
+    cardBg: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid #fbbf24'
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white pb-20">
-      {/* 1. मास्टर विज्ञापन बैनर */}
-      <AdBanner />
-
-      {/* 2. टॉप बार */}
-      <header className="sticky top-0 bg-white z-50 p-4 border-b flex justify-between items-center shadow-sm">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          RangManch
-        </h1>
-        <div className="flex space-x-3 items-center">
-          {/* रिवॉर्ड बटन */}
-          <button className="text-[10px] bg-yellow-100 px-2 py-1 rounded-full text-yellow-700 font-bold border border-yellow-200">
-            🎁 Rewards
-          </button>
-          {/* AI ट्रांसलेशन बटन (नया) */}
-          <button className="text-sm px-2">👁️‍🗨️</button>
-          <button className="text-xl" onClick={() => navigate('/messenger')}>✉️</button>
+    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', fontFamily: 'serif', paddingBottom: '100px' }}>
+      
+      {/* 1. टॉप बार (प्रोफेशनल) */}
+      <header style={{ padding: '20px', borderBottom: theme.border, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ color: theme.gold, fontSize: '28px', fontWeight: 'bold' }}>RANG MANCH</h1>
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+          <button style={{ background: 'transparent', border: theme.border, borderRadius: '50px', padding: '5px 15px', color: theme.gold, cursor: 'pointer' }} onClick={() => navigate('/rewards')}>🎁 Rewards</button>
+          <button style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }} onClick={() => alert("AI Translation Active")}>👁️‍🗨️</button>
+          <button style={{ background: 'none', border: 'none', color: '#fff', fontSize: '20px', cursor: 'pointer' }} onClick={() => navigate('/messenger')}>✉️</button>
         </div>
       </header>
 
-      <main className="flex-grow p-4 space-y-6">
-        {/* स्टोरीज */}
-        <div className="flex space-x-4 overflow-x-auto pb-2">
-          {[1,2,3,4,5].map((i) => (
-            <div key={i} className="flex-shrink-0 w-16 h-16 rounded-full border-2 border-purple-500 p-0.5">
-              <div className="w-full h-full bg-gray-200 rounded-full"></div>
-            </div>
-          ))}
-        </div>
+      {/* 2. स्टोरीज सेक्शन */}
+      <div style={{ display: 'flex', gap: '20px', padding: '20px', overflowX: 'auto' }}>
+        {[1,2,3,4,5].map(i => (
+          <div key={i} style={{ width: '70px', height: '70px', borderRadius: '50%', border: `2px solid ${theme.gold}`, flexShrink: 0, cursor: 'pointer' }} />
+        ))}
+      </div>
 
-        {/* पोस्ट फीड */}
-        {loading ? (
-          <div className="space-y-4 animate-pulse">
-            <div className="h-64 bg-gray-200 rounded-2xl"></div>
+      {/* 3. पोस्ट फीड (सर्वर स्लॉट के साथ) */}
+      <main style={{ padding: '20px' }}>
+        <div style={{ ...theme, background: theme.cardBg, borderRadius: '25px', padding: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+            <span style={{ fontSize: '12px', color: theme.gold, letterSpacing: '1px' }}>SPONSORED</span>
+            <button style={{ background: '#b45309', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 15px', fontSize: '12px', cursor: 'pointer' }} onClick={() => alert("Boost Payment Page")}>🚀 Boost</button>
           </div>
-        ) : (
-          <div className="border border-gray-100 rounded-2xl p-2 shadow-sm">
-            <div className="flex justify-between px-2 mb-1">
-              <div className="text-[10px] text-gray-400 font-bold uppercase">Sponsored</div>
-              <button onClick={() => handleBoostPost('1')} className="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-bold">
-                🚀 Boost
-              </button>
-            </div>
-            
-            <div className="h-80 bg-gray-100 rounded-xl flex items-center justify-center mb-2">
-              <p className="text-gray-400">[SERVER SLOT]: Post Content</p>
-            </div>
-            
-            <div className="flex justify-between px-2 mb-2">
-              <div className="flex space-x-4 text-2xl">
-                <button>❤️</button>
-                <button>💬</button>
-                <button>✈️</button>
-              </div>
-            </div>
+          
+          <div style={{ height: '300px', background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '15px', border: '1px dashed #444' }}>
+            [SERVER SLOT]: Post Content
           </div>
-        )}
+
+          <div style={{ display: 'flex', gap: '30px', marginTop: '20px', fontSize: '28px' }}>
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => alert("Liked!")}>❤️</button>
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => navigate('/comments')}>💬</button>
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => alert("Share clicked")}>✈️</button>
+          </div>
+        </div>
       </main>
 
-      {/* 3. बॉटम नेविगेशन */}
-      <nav className="fixed bottom-0 w-full bg-white border-t p-3 flex justify-around items-center z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.1)]">
-        <button onClick={() => navigate('/home')} className="text-xl">🏠</button>
-        <button onClick={() => navigate('/explore')} className="text-xl">🔍</button>
-        <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-lg -mt-8 border-4 border-white">+</button>
-        <button onClick={() => navigate('/messenger')} className="text-xl">💬</button>
-        <button onClick={() => navigate('/profile')} className="text-xl">👤</button>
+      {/* 4. बॉटम नेविगेशन (सोशल मीडिया लेआउट) */}
+      <nav style={{ position: 'fixed', bottom: '0', width: '100%', background: '#000', borderTop: theme.border, display: 'flex', justifyContent: 'space-between', padding: '15px 30px', alignItems: 'center', zIndex: '1000' }}>
+        <button onClick={() => navigate('/home')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '26px' }}>🏠</button>
+        <button onClick={() => navigate('/explore')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '26px' }}>🔍</button>
+        <button style={{ background: `linear-gradient(to right, ${theme.gold}, #b45309)`, border: 'none', borderRadius: '50%', width: '60px', height: '60px', marginTop: '-40px', fontSize: '30px', boxShadow: '0 0 15px #b45309', cursor: 'pointer' }}>+</button>
+        <button onClick={() => navigate('/messenger')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '26px' }}>💬</button>
+        <button onClick={() => navigate('/profile')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '26px' }} onClick={() => navigate('/profile')}>👤</button>
       </nav>
     </div>
   );
