@@ -3,43 +3,46 @@ import { useNavigate } from 'react-router-dom';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
+  const theme = { bg: '#000', gold: '#fbbf24', border: '1px solid #fbbf24', cardBg: 'rgba(255, 255, 255, 0.05)' };
 
-  // [SERVER SLOT]: यहाँ से सर्वर को सेटिंग्स का डेटा अपडेट किया जाएगा
   const handleToggle = (settingName, value) => {
     console.log(`[SERVER SLOT]: Updating ${settingName} to ${value}...`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <header className="p-4 bg-white border-b flex items-center shadow-sm">
-        <button onClick={() => navigate(-1)} className="text-xl mr-4">⬅️</button>
-        <h2 className="font-bold text-lg">Settings & Preferences</h2>
+    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', padding: '20px', fontFamily: 'serif' }}>
+      {/* 1. हेडर */}
+      <header style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', paddingBottom: '20px', borderBottom: theme.border }}>
+        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: theme.gold, fontSize: '24px', marginRight: '20px' }}>⬅️</button>
+        <h2 style={{ fontSize: '22px', fontWeight: 'bold' }}>Settings & Preferences</h2>
       </header>
 
-      <div className="p-4 space-y-6">
-        {/* 1. प्राइवेसी */}
-        <section className="bg-white p-4 rounded-2xl shadow-sm">
-          <h3 className="font-bold text-purple-600 mb-4">Privacy</h3>
-          <div className="flex justify-between items-center py-2">
+      {/* 2. सेटिंग्स सेक्शन (खुले-खुले) */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+        
+        {/* Privacy Section */}
+        <section style={{ background: theme.cardBg, padding: '20px', borderRadius: '20px', border: theme.border }}>
+          <h3 style={{ color: theme.gold, marginBottom: '15px' }}>Privacy</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
             <span>Private Account</span>
             <input type="checkbox" onChange={(e) => handleToggle('PrivateAccount', e.target.checked)} />
           </div>
-          <div className="flex justify-between items-center py-2">
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Hide Online Status</span>
             <input type="checkbox" onChange={(e) => handleToggle('HideStatus', e.target.checked)} />
           </div>
         </section>
 
-        {/* 2. ट्रांसलेशन और AI */}
-        <section className="bg-white p-4 rounded-2xl shadow-sm">
-          <h3 className="font-bold text-purple-600 mb-4">AI & Language</h3>
-          <div className="flex justify-between items-center py-2">
-            <span>Auto-Translate Messages</span>
+        {/* AI Section */}
+        <section style={{ background: theme.cardBg, padding: '20px', borderRadius: '20px', border: theme.border }}>
+          <h3 style={{ color: theme.gold, marginBottom: '15px' }}>AI & Language</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+            <span>Auto-Translate</span>
             <input type="checkbox" defaultChecked onChange={(e) => handleToggle('AutoTranslate', e.target.checked)} />
           </div>
-          <div className="flex justify-between items-center py-2">
-            <span>Default AI Filter</span>
-            <select onChange={(e) => handleToggle('DefaultFilter', e.target.value)} className="bg-gray-100 p-1 rounded">
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>AI Filter</span>
+            <select onChange={(e) => handleToggle('DefaultFilter', e.target.value)} style={{ background: '#222', color: '#fff', padding: '5px', borderRadius: '5px' }}>
               <option>Natural</option>
               <option>Cinematic</option>
               <option>Bright</option>
@@ -47,27 +50,28 @@ const SettingsPage = () => {
           </div>
         </section>
 
-        {/* 3. कमाई और रिवॉर्ड */}
-        <section className="bg-white p-4 rounded-2xl shadow-sm">
-          <h3 className="font-bold text-purple-600 mb-4">Monetization</h3>
-          <div className="flex justify-between items-center py-2">
-            <span>My Earnings Wallet</span>
-            <button onClick={() => navigate('/wallet')} className="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-bold">View Balance</button>
+        {/* Monetization Section */}
+        <section style={{ background: theme.cardBg, padding: '20px', borderRadius: '20px', border: theme.border }}>
+          <h3 style={{ color: theme.gold, marginBottom: '15px' }}>Monetization</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+            <span>Wallet</span>
+            <button onClick={() => navigate('/wallet')} style={{ background: theme.gold, color: '#000', border: 'none', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold' }}>View Balance</button>
           </div>
-          <div className="flex justify-between items-center py-2">
-            <span>Link Bank/UPI</span>
-            <button onClick={() => handleToggle('LinkBank', true)} className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">Connect</button>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>Bank/UPI</span>
+            <button onClick={() => handleToggle('LinkBank', true)} style={{ background: '#166534', color: '#fff', border: 'none', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold' }}>Connect</button>
           </div>
         </section>
 
-        {/* 4. नोटिफिकेशन */}
-        <section className="bg-white p-4 rounded-2xl shadow-sm">
-          <h3 className="font-bold text-purple-600 mb-4">Notifications</h3>
-          <div className="flex justify-between items-center py-2">
+        {/* Notification Section */}
+        <section style={{ background: theme.cardBg, padding: '20px', borderRadius: '20px', border: theme.border }}>
+          <h3 style={{ color: theme.gold, marginBottom: '15px' }}>Notifications</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Push Notifications</span>
             <input type="checkbox" defaultChecked onChange={(e) => handleToggle('PushNotif', e.target.checked)} />
           </div>
         </section>
+
       </div>
     </div>
   );
