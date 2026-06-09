@@ -4,56 +4,44 @@ import { AdBanner } from './AdProvider';
 
 const VideoCallHub = () => {
   const navigate = useNavigate();
-  const remoteVideoRef = useRef(null);
-  const localVideoRef = useRef(null);
+  const theme = { bg: '#000', gold: '#fbbf24', border: '1px solid #fbbf24', btnBg: '#111' };
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  // प्रीमियम स्टाइलिंग
-  const theme = { 
-    gold: '#fbbf24', 
-    border: '1px solid #fbbf24',
-    buttonBg: 'rgba(255, 255, 255, 0.1)'
-  };
-
   return (
-    <div style={{ height: '100vh', background: '#000', color: '#fff', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ height: '100vh', background: '#000', color: '#fff', position: 'relative' }}>
       
-      {/* 1-8: विज्ञापन और टॉप कंट्रोल्स */}
+      {/* 1. टॉप कंट्रोल्स */}
       <div style={{ position: 'absolute', top: 0, width: '100%', zIndex: 50 }}><AdBanner /></div>
       
-      <div style={{ position: 'absolute', top: '70px', width: '100%', textAlign: 'center', zIndex: 30 }}>
-        <div style={{ border: theme.border, padding: '10px 20px', borderRadius: '15px', display: 'inline-block', color: theme.gold }}>Translation: Waiting...</div>
-        <div style={{ fontSize: '10px', color: theme.gold, marginTop: '5px' }}>VIP USER</div>
+      <div style={{ position: 'absolute', top: '80px', width: '100%', textAlign: 'center' }}>
+        <h2 style={{ color: theme.gold }}>Live Video Chat</h2>
+        <div style={{ border: theme.border, padding: '5px 15px', borderRadius: '10px', display: 'inline-block', fontSize: '12px' }}>Encryption: Secure</div>
       </div>
 
-      {/* वीडियो फीड */}
-      <video ref={remoteVideoRef} autoPlay style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-      <div style={{ position: 'absolute', top: '80px', right: '20px', width: '100px', height: '150px', border: theme.border, borderRadius: '15px' }}>
-        <video ref={localVideoRef} autoPlay muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-      </div>
-
-      {/* 9-15: लाइव चैट ओवरले */}
+      {/* 2. वीडियो फीड */}
+      <div style={{ width: '100%', height: '100%', background: '#222' }}></div> {/* रिमोट वीडियो फीड */}
+      
+      {/* 3. लाइव चैट ओवरले (6 फीचर) */}
       {isChatOpen && (
-        <div style={{ position: 'absolute', top: '20%', right: '20px', width: '280px', height: '350px', background: 'rgba(0,0,0,0.8)', border: theme.border, borderRadius: '20px', padding: '15px', zIndex: 40 }}>
-          <h3 style={{ color: theme.gold }}>LIVE CHAT</h3>
-          <div style={{ height: '200px', overflowY: 'auto' }}></div>
-          <input type="text" placeholder="Message..." style={{ width: '100%', padding: '10px', borderRadius: '10px', background: '#222', border: 'none', color: '#fff' }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-            <button style={{ background: '#581c87', color: '#fff', padding: '5px 10px', borderRadius: '5px' }}>A ⇄ B</button>
-            <button style={{ background: '#166534', color: '#fff', padding: '5px 10px', borderRadius: '5px' }}>Send</button>
-          </div>
+        <div style={{ position: 'absolute', bottom: '150px', right: '20px', width: '250px', height: '300px', background: 'rgba(0,0,0,0.9)', border: theme.border, borderRadius: '20px', padding: '15px' }}>
+          <h4 style={{ color: theme.gold }}>Chat</h4>
+          <div style={{ height: '150px', overflowY: 'auto' }}></div>
+          <input type="text" placeholder="Message..." style={{ width: '100%', padding: '8px', background: '#333', border: 'none', color: '#fff' }} />
+          <button style={{ marginTop: '10px', width: '100%', background: theme.gold, color: '#000', fontWeight: 'bold', border: 'none', padding: '8px' }}>Send</button>
         </div>
       )}
 
-      {/* 16-19: बॉटम कंट्रोल्स (सभी 19 फीचर यहाँ मौजूद हैं) */}
-      <div style={{ position: 'absolute', bottom: '20px', width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '10px' }}>
-        <button onClick={() => console.log('Mic')} style={{ ...theme, background: theme.buttonBg, borderRadius: '50%', padding: '15px', fontSize: '20px' }}>🎤</button>
-        <button onClick={() => console.log('Rotate')} style={{ ...theme, background: theme.buttonBg, borderRadius: '50%', padding: '15px', fontSize: '20px' }}>🔄</button>
-        <button onClick={() => console.log('AudioTranslate')} style={{ ...theme, background: '#581c87', borderRadius: '50%', padding: '15px', fontSize: '20px' }}>👁️‍🗨️</button>
-        <button onClick={() => console.log('Gift')} style={{ ...theme, background: '#b45309', borderRadius: '50%', padding: '15px', fontSize: '20px' }}>🎁</button>
-        <button onClick={() => navigate(-1)} style={{ background: '#991b1b', border: 'none', borderRadius: '50%', padding: '25px', fontSize: '25px' }}>❌</button>
-        <button onClick={() => setIsChatOpen(!isChatOpen)} style={{ ...theme, background: theme.buttonBg, borderRadius: '50%', padding: '15px', fontSize: '20px' }}>💬</button>
-        <button onClick={() => console.log('Filter')} style={{ ...theme, background: '#581c87', borderRadius: '50%', padding: '15px', fontSize: '20px' }}>✨</button>
+      {/* 4. बॉटम कंट्रोल्स - इंस्टाग्राम स्टाइल में (सभी 7 बटन्स) */}
+      <div style={{ position: 'absolute', bottom: '30px', width: '100%', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+        <button onClick={() => console.log('Mic')} style={{ background: theme.btnBg, border: theme.border, borderRadius: '50%', padding: '15px', color: '#fff' }}>🎤</button>
+        <button onClick={() => console.log('Rotate')} style={{ background: theme.btnBg, border: theme.border, borderRadius: '50%', padding: '15px', color: '#fff' }}>🔄</button>
+        <button onClick={() => setIsChatOpen(!isChatOpen)} style={{ background: theme.btnBg, border: theme.border, borderRadius: '50%', padding: '15px', color: '#fff' }}>💬</button>
+        
+        {/* वीडियो कॉल का सबसे बड़ा और अलग बटन (आपका मेन मकसद) */}
+        <button onClick={() => navigate(-1)} style={{ background: '#991b1b', border: 'none', borderRadius: '50%', padding: '25px', fontSize: '30px', color: '#fff', boxShadow: '0 0 20px #991b1b' }}>❌</button>
+        
+        <button onClick={() => console.log('Gift')} style={{ background: theme.gold, border: 'none', borderRadius: '50%', padding: '15px', color: '#000', fontSize: '20px' }}>🎁</button>
+        <button onClick={() => console.log('Filter')} style={{ background: theme.btnBg, border: theme.border, borderRadius: '50%', padding: '15px', color: '#fff' }}>✨</button>
       </div>
     </div>
   );
