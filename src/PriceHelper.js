@@ -1,58 +1,61 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getPricing } from './PriceHelper';
+import React, { useState } from 'react';
+import { getPricing, getCountryList, getWhatsAppLink } from './PriceHelper';
 
-const PricingDashboard = ({ country }) => {
-  const navigate = useNavigate();
+export default function App() {
+  const [country, setCountry] = useState('India');
+  // यहाँ से करेंसी और रेट्स अपने आप अपडेट होंगे
   const pricing = getPricing(country);
   
-  // क्लासिक प्रीमियम थीम (गोल्डन और ब्लैक)
-  const theme = { 
-    bg: '#000', 
-    gold: '#fbbf24', 
-    border: '1px solid #fbbf24', 
-    cardBg: '#111' 
+  const theme = { bg: '#000', gold: '#fbbf24', cardBg: '#111', border: '1px solid #fbbf24' };
+
+  // पेमेंट का असली लॉजिक (URL जनरेशन)
+  const handlePayment = (planName) => {
+    const paymentBaseUrl = "https://your-payment-gateway-link.com/checkout"; // अपना पेमेंट लिंक यहाँ डालें
+    window.location.href = `${paymentBaseUrl}?plan=${planName}&currency=${pricing.curr}&country=${country}`;
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: theme.bg, padding: '20px', color: '#fff', fontFamily: 'serif' }}>
-      <h2 style={{ textAlign: 'center', color: theme.gold, marginBottom: '30px', fontSize: '28px' }}>Premium Plans</h2>
+    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', padding: '20px', fontFamily: 'serif' }}>
+      <h1 style={{ textAlign: 'center', color: theme.gold }}>Moin Raja Dashboard</h1>
+
+      {/* कंट्री और करेंसी सिलेक्शन (मल्टी-करेंसी फीचर) */}
+      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+        <p>Current Currency: <strong>{pricing.curr} ({pricing.symbol})</strong></p>
+        <select onChange={(e) => setCountry(e.target.value)} style={{ padding: '10px', borderRadius: '5px', background: '#333', color: '#fff' }}>
+          {getCountryList().map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+      </div>
       
-      {/* 4 प्लान्स - ग्रिड लेआउट में अलग-अलग */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+      {/* प्लान्स का ग्रिड */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', maxWidth: '600px', margin: '0 auto' }}>
         
-        {/* 1. VIP प्लान */}
+        {/* VIP प्लान */}
         <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-          <h3 style={{ color: theme.gold, margin: '0 0 10px' }}>VIP Plan</h3>
-          <p style={{ fontSize: '22px', margin: '10px 0', fontWeight: 'bold' }}>{pricing.symbol}{pricing.vip}</p>
-          <button onClick={() => alert('VIP Payment Link...')} style={{ width: '100%', background: theme.gold, color: '#000', border: 'none', padding: '12px', borderRadius: '15px', fontWeight: 'bold', cursor: 'pointer' }}>Buy Now</button>
+          <h3 style={{ color: theme.gold }}>VIP Plan</h3>
+          <p style={{ fontSize: '20px', fontWeight: 'bold' }}>{pricing.symbol}{pricing.vip}</p>
+          <button onClick={() => handlePayment('VIP')} style={{ width: '100%', background: theme.gold, color: '#000', padding: '10px', borderRadius: '15px', border: 'none', cursor: 'pointer' }}>Buy Now</button>
         </div>
 
-        {/* 2. Local Ad प्लान */}
+        {/* Local Ad */}
         <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-          <h3 style={{ color: theme.gold, margin: '0 0 10px' }}>Local Ad</h3>
-          <p style={{ fontSize: '22px', margin: '10px 0', fontWeight: 'bold' }}>{pricing.symbol}{pricing.localAd}</p>
-          <button onClick={() => alert('Promoting Link...')} style={{ width: '100%', background: '#166534', color: '#fff', border: 'none', padding: '12px', borderRadius: '15px', fontWeight: 'bold', cursor: 'pointer' }}>Promote</button>
+          <h3 style={{ color: theme.gold }}>Local Ad</h3>
+          <p style={{ fontSize: '20px', fontWeight: 'bold' }}>{pricing.symbol}{pricing.localAd}</p>
+          <button onClick={() => handlePayment('LocalAd')} style={{ width: '100%', background: '#166534', color: '#fff', padding: '10px', borderRadius: '15px', border: 'none', cursor: 'pointer' }}>Promote</button>
         </div>
 
-        {/* 3. AdFree प्लान */}
+        {/* Ad Free */}
         <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-          <h3 style={{ color: theme.gold, margin: '0 0 10px' }}>Ad Free</h3>
-          <p style={{ fontSize: '22px', margin: '10px 0', fontWeight: 'bold' }}>{pricing.symbol}{pricing.adFree}</p>
-          <button onClick={() => alert('Upgrading...')} style={{ width: '100%', background: '#1e40af', color: '#fff', border: 'none', padding: '12px', borderRadius: '15px', fontWeight: 'bold', cursor: 'pointer' }}>Upgrade</button>
+          <h3 style={{ color: theme.gold }}>Ad Free</h3>
+          <p style={{ fontSize: '20px', fontWeight: 'bold' }}>{pricing.symbol}{pricing.adFree}</p>
+          <button onClick={() => handlePayment('AdFree')} style={{ width: '100%', background: '#1e40af', color: '#fff', padding: '10px', borderRadius: '15px', border: 'none', cursor: 'pointer' }}>Upgrade</button>
         </div>
 
-        {/* 4. Global Ad प्लान */}
-        <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-          <h3 style={{ color: theme.gold, margin: '0 0 10px' }}>Global Ad</h3>
-          <p style={{ fontSize: '22px', margin: '10px 0', fontWeight: 'bold' }}>{pricing.symbol}{pricing.globalAd}</p>
-          <button onClick={() => alert('Going Global...')} style={{ width: '100%', background: '#7f1d1d', color: '#fff', border: 'none', padding: '12px', borderRadius: '15px', fontWeight: 'bold', cursor: 'pointer' }}>Go Global</button>
+        {/* सपोर्ट कार्ड */}
+        <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center', gridColumn: 'span 2' }}>
+          <h3 style={{ color: theme.gold }}>Need Help?</h3>
+          <a href={getWhatsAppLink()} style={{ background: '#25D366', color: '#fff', padding: '12px 30px', borderRadius: '20px', textDecoration: 'none', display: 'inline-block' }}>Chat on WhatsApp</a>
         </div>
-
       </div>
     </div>
   );
-};
-
-export default PricingDashboard;
-          
+}
