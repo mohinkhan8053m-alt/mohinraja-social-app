@@ -2,7 +2,6 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider } from './UserContext.jsx'; 
 
-// सभी पेजों को यहाँ 'lazy' इम्पोर्ट किया है ताकि वेबसाइट जल्दी लोड हो
 const LoginPage = lazy(() => import('./LoginPage.jsx'));
 const HomePage = lazy(() => import('./HomePage.jsx'));
 const MessengerPage = lazy(() => import('./MessengerPage.jsx'));
@@ -16,18 +15,14 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        {/* यह 'Suspense' वाला हिस्सा आपके पेजों के बीच एक स्मूथ अनुभव देगा */}
         <Suspense fallback={
           <div style={{
-            height: '100vh', 
-            background: '#000', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            color: '#fbbf24', 
-            fontSize: '20px'
+            height: '100vh', background: '#000', display: 'flex', 
+            flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
+            color: '#fbbf24', fontSize: '24px', fontWeight: 'bold'
           }}>
-            Loading Moin Raja Premium App...
+            <div style={{border: '3px solid #fbbf24', padding: '20px', borderRadius: '50%'}}>Loading...</div>
+            <p style={{marginTop: '20px'}}>Moin Raja Premium</p>
           </div>
         }>
           <Routes>
@@ -39,8 +34,6 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/admin" element={<PremiumAdminPage />} />
-            
-            {/* यह लाइन सुनिश्चित करती है कि अगर कोई गलत लिंक डाले तो वो सीधे लॉगिन पर जाए */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>
@@ -50,4 +43,3 @@ function App() {
 }
 
 export default App;
-            
