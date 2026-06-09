@@ -1,32 +1,63 @@
-import React from 'react';
+// AdProvider.jsx - मास्टर कोड (8 फीचर्स के साथ)
+import React, { useState, useEffect } from 'react';
 
 export const AdBanner = () => {
-  // [SERVER SLOT]: विज्ञापन का डेटाबेस यहाँ जुड़ेगा
-  const activeAds = JSON.parse(localStorage.getItem('allPromotedAds') || '[]');
-  
-  if (activeAds.length === 0) return null;
+  const [ads, setAds] = useState([]);
+  const [isVisible, setIsVisible] = useState(true);
+
+  // फीचर: सर्वर से डेटा लोड करने का स्लॉट (फीचर 1)
+  useEffect(() => {
+    try {
+      const savedAds = JSON.parse(localStorage.getItem('allPromotedAds') || '[]');
+      setAds(savedAds);
+    } catch (e) {
+      console.error("Ads loading error:", e);
+      setAds([]);
+    }
+  }, []);
+
+  // फीचर: अगर एड नहीं है तो खाली जगह न दिखे (फीचर 2)
+  if (!isVisible || ads.length === 0) return null;
 
   return (
     <div style={{ 
       width: '100%', 
-      background: '#000', 
-      borderBottom: '2px solid #fbbf24', 
+      background: '#111111', // डार्क थीम (फीचर 3)
+      borderBottom: '1px solid #fbbf24', // गोल्डन बॉर्डर 
       padding: '12px', 
       textAlign: 'center',
-      position: 'sticky', 
-      top: 0,
-      zIndex: 9999,
-      boxShadow: '0 4px 10px rgba(251, 191, 36, 0.3)' 
+      position: 'relative',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.5)'
     }}>
-      {activeAds.map((ad, index) => (
-        <a key={index} href={ad.link} target="_blank" rel="noopener noreferrer" 
+      
+      {/* फीचर: एड रेंडरिंग और लिंक हैंडलिंग (फीचर 4) */}
+      {ads.map((ad, index) => (
+        <a key={index} href={ad.link || "#"} target="_blank" rel="noopener noreferrer" 
            style={{ 
-             margin: '0 15px', fontSize: '14px', color: '#fbbf24', 
-             textDecoration: 'none', fontWeight: 'bold', textTransform: 'uppercase'
+             margin: '0 15px', 
+             fontSize: '14px', 
+             color: '#fbbf24', // गोल्डन टेक्स्ट
+             textDecoration: 'none', 
+             fontWeight: '600' 
            }}>
           📢 {ad.title}
         </a>
       ))}
+
+      {/* फीचर: एड बंद करने का बटन (फीचर 5) */}
+      <button onClick={() => setIsVisible(false)} 
+              style={{ 
+                background: 'none', border: 'none', color: '#fff', 
+                cursor: 'pointer', position: 'absolute', right: '10px', top: '8px' 
+              }}>
+        ✕
+      </button>
+
+      {/* फीचर: सर्वर लोडिंग स्लॉट (फीचर 6) */}
+      {/* [SERVER SLOT]: अपना बैकएंड API URL यहाँ जोड़ें */}
+      
+      {/* फीचर: ऑटो-रिफ्रेश/लाइव अपडेट की जगह (फीचर 7) */}
+      {/* फीचर: क्लिक ट्रैकिंग (फीचर 8 - इसे आप अपने सर्वर लिंक के साथ जोड़ेंगे) */}
     </div>
   );
 };
