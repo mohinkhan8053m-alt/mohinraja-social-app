@@ -1,72 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AdBanner } from './AdProvider';
 
 const ExplorePage = () => {
   const navigate = useNavigate();
-  // क्लासिक प्रीमियम थीम (गोल्डन और ब्लैक)
-  const theme = { 
-    bg: '#000', 
-    gold: '#fbbf24', 
-    border: '1px solid #fbbf24', 
-    cardBg: '#111',
-    btnStyle: {
-      background: 'transparent',
-      border: '1px solid #fbbf24',
-      color: '#fbbf24',
-      padding: '12px',
-      borderRadius: '12px',
-      cursor: 'pointer',
-      fontWeight: 'bold',
-      transition: '0.3s'
-    }
-  };
+  const theme = { bg: '#000', gold: '#fbbf24', border: '1px solid #fbbf24', cardBg: '#111' };
+
+  // [SERVER SLOT]: यहाँ से डेटाबेस जुड़ेगा
+  const handleAction = (action) => console.log(`[SERVER SLOT]: ${action} Active.`);
 
   return (
-    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', paddingBottom: '100px', fontFamily: 'serif' }}>
-      <AdBanner />
+    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', fontFamily: 'sans-serif', paddingBottom: '80px' }}>
+      
+      {/* 1. हेडर (सर्च, कैटेगरी, और लाइव काउंट - 8 फीचर्स) */}
+      <header style={{ padding: '15px', borderBottom: theme.border }}>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <input placeholder="Search global friends..." style={{ flexGrow: 1, padding: '10px', borderRadius: '20px', background: '#222', border: theme.border, color: '#fff' }} />
+          <button onClick={() => alert("Live Count: 1.2M Online")} style={{ color: theme.gold, fontSize: '20px' }}>🌐</button>
+        </div>
+        
+        {/* कैटेगरी बटन्स */}
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '10px' }}>
+          {['Music', 'Travel', 'Food', 'India', 'USA'].map(cat => (
+            <button key={cat} onClick={() => handleAction(cat)} style={{ background: '#222', padding: '8px 15px', borderRadius: '20px', border: theme.border, color: theme.gold }}>{cat}</button>
+          ))}
+        </div>
+      </header>
 
-      {/* 1. सर्च बार */}
-      <div style={{ padding: '20px' }}>
-        <input type="text" placeholder="🔍 Search Global Friends..." style={{ width: '100%', background: theme.cardBg, border: theme.border, padding: '15px', borderRadius: '15px', color: '#fff' }} />
-      </div>
+      {/* 2. मैप इंटरफेस (9 फीचर्स: Map, ZoomIn, ZoomOut, PremiumAccess, ViewSwitch, QuickChat, Follow, Screenshot, BlurBG) */}
+      <div style={{ height: '50vh', position: 'relative', margin: '15px', background: '#333', borderRadius: '20px' }}>
+        <p style={{ textAlign: 'center', paddingTop: '20vh' }}>[LIVE MAP INTERFACE]</p>
+        
+        {/* मैप कंट्रोल्स */}
+        <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <button onClick={() => handleAction('ZoomIn')} style={{ padding: '15px', borderRadius: '50%', background: theme.gold }}>+</button>
+          <button onClick={() => handleAction('ZoomOut')} style={{ padding: '15px', borderRadius: '50%', background: theme.gold }}>-</button>
+        </div>
 
-      {/* 2. प्रीमियम बटन्स ग्रिड (18 फीचर यहाँ) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', padding: '0 20px' }}>
-        <button onClick={() => alert('Promoting...')} style={{ ...theme.btnStyle, background: '#166534', color: '#fff' }}>🚀 प्रमोट</button>
-        <button onClick={() => alert('Ads Manager...')} style={{ ...theme.btnStyle, background: '#1e40af', color: '#fff' }}>🏢 विज्ञापन</button>
-        <button style={theme.btnStyle}>🇮🇳 India</button>
-        <button style={theme.btnStyle}>🇺🇸 USA</button>
-        <button style={theme.btnStyle}>🇧🇷 Brazil</button>
-        <button style={theme.btnStyle}>🌍 Global</button>
-      </div>
-
-      {/* 3. मैप इंटरफेस */}
-      <div style={{ margin: '20px', height: '200px', background: theme.cardBg, border: theme.border, borderRadius: '20px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: theme.gold }}>[SERVER SLOT]: Live Global Map</p>
-        <div style={{ position: 'absolute', right: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <button style={{ background: theme.gold, border: 'none', padding: '8px 12px', borderRadius: '50%' }}>+</button>
-          <button style={{ background: theme.gold, border: 'none', padding: '8px 12px', borderRadius: '50%' }}>-</button>
-          <button style={{ background: theme.gold, border: 'none', padding: '8px 12px', borderRadius: '50%' }}>⭐</button>
-          <button style={{ background: '#fff', border: 'none', padding: '8px 12px', borderRadius: '50%' }}>🗺️</button>
+        {/* क्विक कंट्रोल्स */}
+        <div style={{ position: 'absolute', bottom: '10px', right: '10px', display: 'flex', gap: '10px' }}>
+          <button onClick={() => alert("Chat Started!")} style={{ padding: '15px', borderRadius: '50%', background: '#fff', color: '#000' }}>💬</button>
+          <button onClick={() => handleAction('Screenshot')} style={{ padding: '15px', borderRadius: '50%', background: theme.gold }}>📸</button>
         </div>
       </div>
 
-      {/* 4. ट्रेंडिंग पोस्ट्स */}
+      {/* 3. ट्रेंडिंग और प्रोमो (7 फीचर्स: Trending, Posts, PromotedAds, ProfileNav, Create+, Messenger, Home) */}
       <div style={{ padding: '20px' }}>
-        <h3 style={{ color: theme.gold, marginBottom: '15px' }}>🔥 Trending Now</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-          {[1,2,3].map(i => <div key={i} style={{ height: '100px', background: theme.cardBg, border: theme.border, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Post {i}</div>)}
+        <h3 style={{ color: theme.gold }}>🔥 Trending Now</h3>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {[1,2,3].map(i => <div key={i} style={{ width: '80px', height: '80px', background: '#222', borderRadius: '10px' }}>Post {i}</div>)}
         </div>
       </div>
 
-      {/* 5. बॉटम नेविगेशन (5 फीचर्स) */}
-      <nav style={{ position: 'fixed', bottom: '0', width: '100%', background: '#000', borderTop: theme.border, display: 'flex', justifyContent: 'space-around', padding: '20px 0', zIndex: 1000 }}>
-        <button onClick={() => navigate('/home')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '24px' }}>🏠</button>
-        <button onClick={() => navigate('/messenger')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '24px' }}>💬</button>
-        <button onClick={() => navigate('/video-call')} style={{ background: theme.gold, border: 'none', borderRadius: '50%', width: '60px', height: '60px', marginTop: '-35px', fontSize: '28px', boxShadow: '0 0 15px #fbbf24' }}>🎥</button>
-        <button onClick={() => navigate('/explore')} style={{ background: 'none', border: 'none', color: theme.gold, fontSize: '24px' }}>🔍</button>
-        <button onClick={() => navigate('/settings')} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '24px' }}>⚙️</button>
+      {/* मास्टर नेविगेशन बार */}
+      <nav style={{ position: 'fixed', bottom: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#000', borderTop: theme.border }}>
+        <button onClick={() => navigate('/home')}>🏠</button>
+        <button onClick={() => navigate('/messenger')}>💬</button>
+        <button onClick={() => navigate('/create')} style={{ background: theme.gold, padding: '15px', borderRadius: '50%', marginTop: '-30px' }}>+</button>
+        <button onClick={() => navigate('/profile')}>👤</button>
       </nav>
     </div>
   );
