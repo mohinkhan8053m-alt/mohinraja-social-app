@@ -1,61 +1,58 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const MasterProfilePage = () => {
+const MasterMessengerPage = () => {
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState(null);
+  const [isCalling, setIsCalling] = useState(false);
 
-  const sections = {
-    'Account': ['Edit Profile', 'Settings', 'Privacy', 'Wallet', 'Bank/UPI', 'Logout'],
-    'Security & Data': ['Security', 'Data', 'ChatGuard', 'BlockUser', 'Archive', 'Saved'],
-    'Premium Features': ['Premium', 'Boost', 'Insights', 'Live Mode', 'Dark Mode', 'Activity'],
-    'Support & More': ['Invite', 'Help', 'Language', 'About', 'Feedback', 'AdminPanel']
-  };
-
-  const btnStyle = { width: '100%', padding: '15px', margin: '5px 0', border: '1px solid #ddd', borderRadius: '10px', background: '#fff', cursor: 'pointer', fontWeight: 'bold' };
+  // प्रीमियम कलर थीम
+  const primaryColor = '#fbbf24'; 
+  const btnStyle = { padding: '12px', borderRadius: '10px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer', fontWeight: 'bold' };
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Arial' }}>
-      {/* 1. हेडर */}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <div style={{ width: '90px', height: '90px', borderRadius: '50%', background: '#eee', margin: 'auto' }}></div>
-        <h2 style={{ margin: '10px' }}>Mohin Raja</h2>
-      </div>
+      
+      {/* 1. हेडर (इसमें 3 बटन: Back, Video Call, Location Share) */}
+      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <button style={btnStyle} onClick={() => navigate(-1)}>⬅️</button>
+        <h3>Moin Raja</h3>
+        <button style={{...btnStyle, color: primaryColor}} onClick={() => setIsCalling(true)}>🎥</button>
+        <button style={btnStyle} onClick={() => alert('Map Loading...')}>📍</button>
+      </header>
 
-      {/* 2. फॉलोअर्स सेक्शन */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', padding: '15px', borderTop: '1px solid #eee', borderBottom: '1px solid #eee' }}>
-        <div><strong>1.2K</strong><br/>Followers</div>
-        <div><strong>850</strong><br/>Following</div>
-      </div>
-
-      {/* 3. मेन बटन्स */}
-      <div style={{ padding: '20px 0' }}>
-        {Object.keys(sections).map((sec) => (
-          <div key={sec}>
-            <button style={{ ...btnStyle, background: '#000', color: '#fff' }} onClick={() => setActiveSection(activeSection === sec ? null : sec)}>
-              {sec} ▾
-            </button>
-            {activeSection === sec && sections[sec].map(item => (
-              <button key={item} style={{ ...btnStyle, background: '#f9f9f9', marginLeft: '10px', width: '95%' }} onClick={() => alert(`${item}Clicked`)}>
-                {item}
-              </button>
-            ))}
+      {/* 2. वीडियो कॉल इंटरफेस (5 प्रीमियम बटन) */}
+      {isCalling && (
+        <div style={{ background: '#000', padding: '20px', borderRadius: '20px', marginBottom: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px' }}>
+            <button onClick={() => alert('Voice AI')} style={btnStyle}>🎙️</button>
+            <button onClick={() => alert('Filter')} style={btnStyle}>✨</button>
+            <button onClick={() => alert('Camera')} style={btnStyle}>🔄</button>
+            <button onClick={() => alert('Screen')} style={btnStyle}>📱</button>
+            <button onClick={() => setIsCalling(false)} style={{...btnStyle, background: 'red'}}>🔴</button>
           </div>
-        ))}
+        </div>
+      )}
+
+      {/* 3. चैट एरिया (सेंड बटन) */}
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <input placeholder="Message..." style={{ flex: 1, padding: '10px' }} />
+        <button style={{...btnStyle, background: primaryColor}}>✈️</button>
       </div>
 
-      {/* 4. बॉटम नेविगेशन */}
-      <nav style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#fff', borderTop: '1px solid #eee' }}>
+      {/* [SERVER SLOT]: सर्वर वाले 35+ फीचर्स का डेटा यहाँ से जुड़ेगा */}
+      <div id="server-feature-slot" style={{ marginTop: '20px', border: '1px dashed #ccc', padding: '10px' }}>
+        {/* यहाँ आपके सभी एडमिन, सिक्योरिटी, और वॉलेट के 35 बटन रेंडर होंगे */}
+      </div>
+
+      {/* बॉटम नेविगेशन (4 बटन) */}
+      <nav style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#fff' }}>
         <button onClick={() => navigate('/home')}>🏠</button>
         <button onClick={() => navigate('/explore')}>🔍</button>
         <button onClick={() => navigate('/messenger')}>💬</button>
         <button onClick={() => navigate('/profile')}>👤</button>
       </nav>
-
-      {/* [SERVER SLOT]: सर्वर वाले फीचर्स का डेटा यहाँ आएगा */}
-      <div id="server-slot" style={{ display: 'none' }}></div>
     </div>
   );
 };
 
-export default MasterProfilePage;
+export default MasterMessengerPage;
