@@ -2,40 +2,54 @@ import React, { useState } from 'react';
 
 const LoginPage = () => {
   const [country, setCountry] = useState('India');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  // कंट्री ऑटो-डिटेक्ट फंक्शन (यह फीचर आपकी वेबसाइट को लोकेशन के हिसाब से एडजस्ट करेगा)
-  const detectLocation = () => {
-    alert(`आपकी लोकेशन डिटेक्ट की जा रही है... ${country} के हिसाब से सेटिंग्स अपडेट हो रही हैं!`);
-    // [SERVER SLOT]: यहाँ सर्वर से यूजर की Geo-location का डेटा फैच होगा
+  // सर्वर पर डेटा भेजने का फंक्शन
+  const handleLogin = () => {
+    alert(`लॉगिन प्रयास: ${email} | कंट्री: ${country}`);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px', fontFamily: 'Arial, sans-serif', background: '#fff' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#fff', padding: '20px', fontFamily: 'Arial' }}>
       
-      {/* 1. प्रीमियम टाइटल */}
+      {/* प्रीमियम टाइटल */}
       <h1 style={{ fontFamily: 'cursive', fontSize: '40px', fontWeight: 'bold', color: '#000', marginBottom: '30px' }}>Rang Manch</h1>
 
-      <div style={{ width: '100%', maxWidth: '400px' }}>
+      <div style={{ width: '100%', maxWidth: '400px', border: '1px solid #dbdbdb', padding: '20px', borderRadius: '5px' }}>
         
-        {/* 2. नया बटन: कंट्री ऑटो-डिटेक्ट और कन्वर्टर */}
-        <button onClick={detectLocation} style={{ width: '100%', padding: '12px', marginBottom: '20px', background: '#f0f0f0', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
-          📍 अपनी लोकेशन के हिसाब से सेट करें (Detected: {country})
-        </button>
+        {/* 1. सर्च बार (कंट्री डिटेक्शन के साथ) */}
+        <input type="text" placeholder="सर्च करें अपना देश..." onChange={(e) => setCountry(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #dbdbdb' }} />
 
-        {/* 3. गूगल और फ़ोन लॉगिन (चालू) */}
-        <button onClick={() => alert('Google Login Active!')} style={{ width: '100%', padding: '12px', marginBottom: '10px', background: '#fff', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer' }}>Continue with Google</button>
-        <button onClick={() => alert('Phone Login Active!')} style={{ width: '100%', padding: '12px', marginBottom: '20px', background: '#fff', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer' }}>Continue with Phone</button>
+        {/* 2 & 3. गूगल और फ़ोन लॉगिन */}
+        <button onClick={() => alert('Google Login')} style={{ width: '100%', padding: '10px', marginBottom: '10px', background: '#fff', border: '1px solid #dbdbdb', cursor: 'pointer' }}>Continue with Google</button>
+        <button onClick={() => alert('Phone Login')} style={{ width: '100%', padding: '10px', marginBottom: '20px', background: '#fff', border: '1px solid #dbdbdb', cursor: 'pointer' }}>Continue with Phone</button>
 
-        {/* 4. लॉगिन क्रेडेंशियल्स */}
-        <input type="text" placeholder="Email/Username" style={{ width: '100%', padding: '12px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '5px' }} />
-        <input type="password" placeholder="Password" style={{ width: '100%', padding: '12px', marginBottom: '20px', border: '1px solid #ccc', borderRadius: '5px' }} />
+        {/* 4 & 5. इनपुट फील्ड्स */}
+        <input type="text" placeholder="Email/Username" onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #dbdbdb' }} />
+        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '15px', border: '1px solid #dbdbdb' }} />
 
-        <button onClick={() => alert('Login Successful!')} style={{ width: '100%', padding: '12px', background: '#0095f6', border: 'none', borderRadius: '5px', color: '#fff', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>Login</button>
+        {/* 6 & 7. चेकबॉक्स और टर्म्स लिंक */}
+        <div style={{ marginBottom: '15px', fontSize: '12px' }}>
+          <input type="checkbox" id="remember" /> 
+          <label htmlFor="remember"> Remember me | </label>
+          <a href="#" onClick={() => alert('Terms & Conditions')} style={{ color: '#000', textDecoration: 'none' }}>Terms</a>
+        </div>
+
+        {/* 8. लॉगिन बटन */}
+        <button onClick={handleLogin} style={{ width: '100%', padding: '10px', background: '#0095f6', border: 'none', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Login</button>
+
+        {/* 9 & 10. फॉरगॉट पासवर्ड और साइन अप */}
+        <div style={{ textAlign: 'center', marginTop: '15px', fontSize: '13px' }}>
+          <p onClick={() => alert('Forgot Password?')} style={{ cursor: 'pointer' }}>Forgot Password?</p>
+          <p>Don't have an account? <span onClick={() => alert('Sign Up')} style={{ color: '#0095f6', cursor: 'pointer', fontWeight: 'bold' }}>Sign Up</span></p>
+        </div>
       </div>
 
-      {/* [SERVER SLOT]: यहाँ से आपका लॉगिन डेटा और सर्वर सिंक एक्टिव होगा */}
-      <div id="server-login-sync" style={{ marginTop: '20px', fontSize: '12px', color: '#888' }}>
-        {/* सर्वर एंडपॉइंट्स (API) यहाँ जोड़े जाएंगे */}
+      {/* 11. सर्वर और ऑटो-कन्वर्ट स्लॉट (यहाँ आपका डेटा सिंक होगा) */}
+      <div id="server-sync" style={{ marginTop: '20px', fontSize: '10px', color: '#ccc' }}>
+        {/* सर्वर लोकेशन: API_URL = /api/v1/auth/sync */}
+        {/* नोट: वेबसाइट अभी {country} के हिसाब से कंटेंट लोड कर रही है। */}
       </div>
     </div>
   );
