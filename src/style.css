@@ -1,52 +1,38 @@
-/* --- 1. ग्लोबल सेटअप (सभी पेजों के लिए एक जैसा) --- */
+/* --- 1. ग्लोबल सेटअप --- */
 body { background-color: #ffffff !important; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #333; }
 
-/* --- 2. LoginPage.jsx --- */
-.login-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #fff; }
-.login-box { width: 100%; max-width: 350px; padding: 30px; border: 1px solid #dbdbdb; text-align: center; border-radius: 10px; }
-.brand-name { font-family: 'Brush Script MT', cursive; font-size: 40px; margin-bottom: 30px; color: #000; }
-.btn-primary { width: 100%; padding: 12px; background-color: #0095f6; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+/* --- 2. LoginPage (Only Colors) --- */
+.login-page { background: #fff; }
+.login-box { border: 1px solid #dbdbdb; }
+.brand-name { color: #000; }
+.btn-primary { background-color: #0095f6; color: white; }
 
-/* --- 3. ExplorePage.jsx --- */
-.explore-page { padding: 20px; }
-.main-action-btn { width: 100%; padding: 15px; background: #0095f6; color: white; border: none; border-radius: 8px; cursor: pointer; }
-.sub-btn { padding: 12px; background: #f9f9f9; border: 1px solid #dbdbdb; border-radius: 6px; cursor: pointer; text-align: left; }
+/* --- 3. Explore & Home (Only Colors) --- */
+.explore-page, .home-container { background: #ffffff; }
+.sub-btn { background: #f9f9f9; border: 1px solid #dbdbdb; }
+.premium-ad-banner { background: #ffffff !important; border-bottom: 1px solid #dbdbdb; }
+.post-box { border: 1px solid #dbdbdb; }
 
-/* --- 4. AdProvider.jsx --- */
-.premium-ad-banner { background: #ffffff !important; border-bottom: 1px solid #dbdbdb; padding: 10px 20px; display: flex; justify-content: center; align-items: center; }
+/* --- 4. MessengerPage (Only Colors) --- */
+.msg-header, .toolbar { border-bottom: 1px solid #dbdbdb; }
+.tool-btn { background: #f0f0f0; }
+.chat-bubble { background: #f9f9f9; border: 1px solid #dbdbdb; }
+.input-area { background: #fff; border-top: 1px solid #dbdbdb; }
 
-/* --- 5. HomePage.jsx --- */
-.home-container { background: #ffffff; min-height: 100vh; padding-bottom: 80px; }
-.main-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #dbdbdb; align-items: center; }
-.story-circle { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #dbdbdb; }
-.post-box { border: 1px solid #dbdbdb; margin: 20px; padding: 15px; border-radius: 10px; }
-.boost-btn { background: #0095f6; color: #fff; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; }
+/* --- 5. Bottom Navigation (Only Colors) --- */
+.bottom-nav { border-top: 1px solid #dbdbdb; background: #fff; }
+.bottom-nav button { color: #333; }
 
-/* --- 6. MessengerPage.jsx --- */
-.msg-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #dbdbdb; align-items: center; }
-.video-call-btn { background: #0095f6; color: white; padding: 12px 25px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
-.toolbar { display: flex; justify-content: space-around; padding: 15px; border-bottom: 1px solid #dbdbdb; gap: 10px; }
-.tool-btn { background: #f0f0f0; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 500; cursor: pointer; }
-.chat-bubble { background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px solid #dbdbdb; display: flex; justify-content: space-between; align-items: center; }
-.input-area { position: fixed; bottom: 60px; width: 100%; display: flex; padding: 10px; background: #fff; border-top: 1px solid #dbdbdb; }
-
-/* --- 7. Bottom Navigation (Universal) --- */
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #dbdbdb; background: #fff; z-index: 1000; }
-.bottom-nav button { background: none; border: none; font-size: 16px; cursor: pointer; color: #333; }
-
-/* --- 8. Master Profile (Clean White Theme) --- */
-.profile-container { min-height: 100vh; background-color: #ffffff; color: #333; padding: 20px; padding-bottom: 120px; }
-.features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
-.feature-btn { background: #f9f9f9; color: #333; border: 1px solid #dbdbdb; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+/* --- 6. Master Profile (Only Colors) --- */
+.profile-container { background-color: #ffffff; color: #333; }
+.feature-btn { background: #f9f9f9; color: #333; border: 1px solid #dbdbdb; }
 .feature-btn:hover { background: #0095f6; color: #fff; }
-.action-bar { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px; }
-.gold-border-btn { flex: 1; padding: 10px; background: transparent; color: #0095f6; border: 1px solid #0095f6; border-radius: 8px; font-weight: bold; }
-.nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #dbdbdb; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+.gold-border-btn { color: #0095f6; border: 1px solid #0095f6; }
+.nav-bar { background: #fff; border-top: 1px solid #dbdbdb; }
 
-/* --- 9. SettingsPage.jsx (Clean White Theme) --- */
-.settings-page { min-height: 100vh; background: #ffffff; color: #333; padding: 20px; padding-bottom: 80px; }
-.settings-header { display: flex; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #dbdbdb; padding-bottom: 15px; }
-.settings-card { background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #dbdbdb; margin-bottom: 20px; }
-.setting-row { display: flex; justify-content: space-between; padding: 10px 0; align-items: center; }
-.main-btn { width: 100%; padding: 12px; background: #0095f6; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-.sub-btn-green { width: 100%; padding: 12px; background: #25D366; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+/* --- 7. SettingsPage (Only Colors) --- */
+.settings-page { background: #ffffff; color: #333; }
+.settings-header { border-bottom: 1px solid #dbdbdb; }
+.settings-card { background: #f9f9f9; border: 1px solid #dbdbdb; }
+.main-btn { background: #0095f6; color: #fff; }
+.sub-btn-green { background: #25D366; color: #fff; }
