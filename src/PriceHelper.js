@@ -1,61 +1,53 @@
-import React, { useState } from 'react';
-import { getPricing, getCountryList, getWhatsAppLink } from './PriceHelper';
+// --- 1. कंट्री और करेंसी डेटा ---
+export const getCountryList = () => ['India', 'USA', 'UK'];
 
-export default function App() {
-  const [country, setCountry] = useState('India');
-  // यहाँ से करेंसी और रेट्स अपने आप अपडेट होंगे
-  const pricing = getPricing(country);
-  
-  const theme = { bg: '#000', gold: '#fbbf24', cardBg: '#111', border: '1px solid #fbbf24' };
-
-  // पेमेंट का असली लॉजिक (URL जनरेशन)
-  const handlePayment = (planName) => {
-    const paymentBaseUrl = "https://your-payment-gateway-link.com/checkout"; // अपना पेमेंट लिंक यहाँ डालें
-    window.location.href = `${paymentBaseUrl}?plan=${planName}&currency=${pricing.curr}&country=${country}`;
+export const getPricing = (country) => {
+  const data = {
+    'India': { curr: 'INR', symbol: '₹', vip: 999, localAd: 499, adFree: 299 },
+    'USA': { curr: 'USD', symbol: '$', vip: 15, localAd: 8, adFree: 5 },
+    'UK': { curr: 'GBP', symbol: '£', vip: 12, localAd: 6, adFree: 4 }
   };
+  return data[country] || data['India'];
+};
 
-  return (
-    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', padding: '20px', fontFamily: 'serif' }}>
-      <h1 style={{ textAlign: 'center', color: theme.gold }}>Moin Raja Dashboard</h1>
+// --- 2. 8 फीचर्स का लॉजिक (सर्वर लिंक यहाँ खाली छोड़ दिए हैं) ---
+export const handleFeature = (featureName) => {
+  switch (featureName) {
+    case 'VIP':
+      window.location.href = "/* VIP_PAYMENT_URL_HERE */";
+      break;
+    case 'LocalAd':
+      window.location.href = "/* LOCAL_AD_URL_HERE */";
+      break;
+    case 'AdFree':
+      window.location.href = "/* AD_FREE_URL_HERE */";
+      break;
+    case 'SubmitPromotion':
+      alert("प्रमोशन सबमिशन फॉर्म खुल रहा है...");
+      break;
+    case 'Upgrade':
+      window.location.href = "/* UPGRADE_URL_HERE */";
+      break;
+    case 'Home':
+      console.log("Home पर जा रहे हैं");
+      break;
+    case 'Explore':
+      console.log("Explore सेक्शन खुल रहा है");
+      break;
+    case 'Create':
+      console.log("Create बटन दबाया गया");
+      break;
+    default:
+      console.log("Feature not found");
+  }
+};
 
-      {/* कंट्री और करेंसी सिलेक्शन (मल्टी-करेंसी फीचर) */}
-      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <p>Current Currency: <strong>{pricing.curr} ({pricing.symbol})</strong></p>
-        <select onChange={(e) => setCountry(e.target.value)} style={{ padding: '10px', borderRadius: '5px', background: '#333', color: '#fff' }}>
-          {getCountryList().map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-      </div>
-      
-      {/* प्लान्स का ग्रिड */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', maxWidth: '600px', margin: '0 auto' }}>
-        
-        {/* VIP प्लान */}
-        <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-          <h3 style={{ color: theme.gold }}>VIP Plan</h3>
-          <p style={{ fontSize: '20px', fontWeight: 'bold' }}>{pricing.symbol}{pricing.vip}</p>
-          <button onClick={() => handlePayment('VIP')} style={{ width: '100%', background: theme.gold, color: '#000', padding: '10px', borderRadius: '15px', border: 'none', cursor: 'pointer' }}>Buy Now</button>
-        </div>
+// --- 3. व्हाट्सएप सपोर्ट ---
+export const getWhatsAppLink = () => {
+  return "https://wa.me/8053756591?text=Hi Moin Raja, I need help.";
+};
 
-        {/* Local Ad */}
-        <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-          <h3 style={{ color: theme.gold }}>Local Ad</h3>
-          <p style={{ fontSize: '20px', fontWeight: 'bold' }}>{pricing.symbol}{pricing.localAd}</p>
-          <button onClick={() => handlePayment('LocalAd')} style={{ width: '100%', background: '#166534', color: '#fff', padding: '10px', borderRadius: '15px', border: 'none', cursor: 'pointer' }}>Promote</button>
-        </div>
-
-        {/* Ad Free */}
-        <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-          <h3 style={{ color: theme.gold }}>Ad Free</h3>
-          <p style={{ fontSize: '20px', fontWeight: 'bold' }}>{pricing.symbol}{pricing.adFree}</p>
-          <button onClick={() => handlePayment('AdFree')} style={{ width: '100%', background: '#1e40af', color: '#fff', padding: '10px', borderRadius: '15px', border: 'none', cursor: 'pointer' }}>Upgrade</button>
-        </div>
-
-        {/* सपोर्ट कार्ड */}
-        <div style={{ background: theme.cardBg, border: theme.border, padding: '20px', borderRadius: '20px', textAlign: 'center', gridColumn: 'span 2' }}>
-          <h3 style={{ color: theme.gold }}>Need Help?</h3>
-          <a href={getWhatsAppLink()} style={{ background: '#25D366', color: '#fff', padding: '12px 30px', borderRadius: '20px', textDecoration: 'none', display: 'inline-block' }}>Chat on WhatsApp</a>
-        </div>
-      </div>
-    </div>
-  );
-}
+// --- 4. सोशल लिंक ---
+export const getInstagramLink = () => {
+  return "https://www.instagram.com/moin_raja_10";
+};
