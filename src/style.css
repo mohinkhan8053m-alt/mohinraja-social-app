@@ -1,8 +1,8 @@
-/* --- 1. बेसिक ग्लोबल सेटअप --- */
+/* --- 1. ग्लोबल सेटअप (सभी पेजों के लिए एक जैसा) --- */
 body { background-color: #ffffff !important; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #333; }
 
 /* --- 2. LoginPage.jsx --- */
-.login-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+.login-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #fff; }
 .login-box { width: 100%; max-width: 350px; padding: 30px; border: 1px solid #dbdbdb; text-align: center; border-radius: 10px; }
 .brand-name { font-family: 'Brush Script MT', cursive; font-size: 40px; margin-bottom: 30px; color: #000; }
 .btn-primary { width: 100%; padding: 12px; background-color: #0095f6; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
@@ -28,118 +28,25 @@ body { background-color: #ffffff !important; margin: 0; padding: 0; font-family:
 .toolbar { display: flex; justify-content: space-around; padding: 15px; border-bottom: 1px solid #dbdbdb; gap: 10px; }
 .tool-btn { background: #f0f0f0; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 500; cursor: pointer; }
 .chat-bubble { background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px solid #dbdbdb; display: flex; justify-content: space-between; align-items: center; }
-.upgrade-box { margin-top: 20px; padding: 15px; background: #0095f6; color: #fff; border-radius: 12px; text-align: center; }
-.upgrade-btn { background: #fff; color: #0095f6; padding: 8px 20px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; }
-.input-area { position: fixed; bottom: 60px; width: 100%; display: flex; padding: 10px; background: #fff; border-top: 1px solid #dbdbdb; gap: 5px; align-items: center; }
-.action-btn { background: #f0f0f0; border: none; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; }
-.send-btn { background: #0095f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.input-area { position: fixed; bottom: 60px; width: 100%; display: flex; padding: 10px; background: #fff; border-top: 1px solid #dbdbdb; }
 
-/* --- 7. Admin & Common Bottom Navigation --- */
-.bottom-nav { 
-    position: fixed; 
-    bottom: 0; 
-    width: 100%; 
-    display: flex; 
-    justify-content: space-around; 
-    padding: 15px; 
-    border-top: 1px solid #dbdbdb; 
-    background: #fff; 
-    z-index: 1000; 
-}
-.bottom-nav button { 
-    background: none; 
-    border: none; 
-    font-size: 16px; 
-    cursor: pointer; 
-    font-weight: 500; 
-    color: #333; 
-}
-.create-btn { 
-    background: #0095f6 !important; 
-    color: #fff !important; 
-    padding: 5px 20px !important; 
-    border-radius: 20px !important; 
-    font-weight: bold !important; 
-}
+/* --- 7. Bottom Navigation (Universal) --- */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #dbdbdb; background: #fff; z-index: 1000; }
+.bottom-nav button { background: none; border: none; font-size: 16px; cursor: pointer; color: #333; }
 
-/* --- 8. Master Profile & Features Updated Style --- */
-.profile-container {
-    min-height: 100vh;
-    background-color: #000;
-    color: #fff;
-    padding: 20px;
-    padding-bottom: 120px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-.features-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 25px;
-}
-.feature-btn {
-    background: #111;
-    color: #fff;
-    border: 1px solid #fbbf24;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    text-align: center;
-    transition: background 0.3s;
-}
-.feature-btn:hover {
-    background: #fbbf24;
-    color: #000;
-}
-.action-bar {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-.gold-border-btn {
-    flex: 1;
-    padding: 10px;
-    background: transparent;
-    color: #fbbf24;
-    border: 1px solid #fbbf24;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-.nav-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #000;
-    border-top: 1px solid #fbbf24;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    z-index: 1000;
-}
-.whatsapp-support-btn { 
-    display: block; 
-    width: 80%; 
-    margin: 20px auto; 
-    background: #25D366; 
-    color: white; 
-    padding: 12px; 
-    border-radius: 20px; 
-    text-align: center; 
-    font-weight: bold; 
-    text-decoration: none; 
-}
+/* --- 8. Master Profile (Clean White Theme) --- */
+.profile-container { min-height: 100vh; background-color: #ffffff; color: #333; padding: 20px; padding-bottom: 120px; }
+.features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
+.feature-btn { background: #f9f9f9; color: #333; border: 1px solid #dbdbdb; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+.feature-btn:hover { background: #0095f6; color: #fff; }
+.action-bar { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px; }
+.gold-border-btn { flex: 1; padding: 10px; background: transparent; color: #0095f6; border: 1px solid #0095f6; border-radius: 8px; font-weight: bold; }
+.nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #dbdbdb; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
 
-/* --- 9. SettingsPage.jsx Updated Style --- */
-.settings-page { min-height: 100vh; background: #ffffff; color: #333; padding: 20px; padding-bottom: 80px; font-family: sans-serif; }
+/* --- 9. SettingsPage.jsx (Clean White Theme) --- */
+.settings-page { min-height: 100vh; background: #ffffff; color: #333; padding: 20px; padding-bottom: 80px; }
 .settings-header { display: flex; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #dbdbdb; padding-bottom: 15px; }
-.back-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
 .settings-card { background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #dbdbdb; margin-bottom: 20px; }
 .setting-row { display: flex; justify-content: space-between; padding: 10px 0; align-items: center; }
-.search-input { width: 100%; padding: 12px; background: #fff; border: 1px solid #dbdbdb; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
-.main-btn { width: 100%; padding: 12px; background: #0095f6; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+.main-btn { width: 100%; padding: 12px; background: #0095f6; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 .sub-btn-green { width: 100%; padding: 12px; background: #25D366; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
