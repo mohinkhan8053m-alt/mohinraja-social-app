@@ -1,70 +1,66 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const MasterProfilePage = () => {
+const InstagramProfile = () => {
   const navigate = useNavigate();
-  const [showFeatures, setShowFeatures] = useState(false);
-  
-  const [profile] = useState({ name: 'Mohin Raja', followers: '1.2K', following: '850', posts: '45' });
+  const [showMenu, setShowMenu] = useState(false);
 
-  const allFeatures = [
-    'Edit Profile', 'Settings', 'Privacy', 'Wallet', 'Bank/UPI', 'Logout',
-    'Security', 'Data', 'ChatGuard', 'BlockUser', 'Archive', 'Saved',
-    'Premium', 'Boost', 'Insights', 'Live Mode', 'Dark Mode', 'Activity',
-    'Invite', 'Help', 'Language', 'About', 'Feedback', 'AdminPanel'
-  ];
+  // 40+ फीचर्स का डेटा
+  const features = ['Edit Profile', 'Settings', 'Privacy', 'Wallet', 'Bank/UPI', 'Logout', 'Security', 'Data', 'ChatGuard', 'BlockUser', 'Archive', 'Saved', 'Premium', 'Boost', 'Insights', 'Live Mode', 'Dark Mode', 'Activity', 'Invite', 'Help', 'Language', 'About', 'Feedback', 'AdminPanel'];
 
   return (
-    <div style={{ background: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Arial' }}>
+    <div style={{ maxWidth: '400px', margin: 'auto', background: '#fff', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>
       
-      {/* 1. टॉप हेडर (दाईं तरफ मैप, बाईं तरफ सेटिंग्स) */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <button style={{ background: 'none', border: 'none', fontSize: '24px' }} onClick={() => setShowFeatures(!showFeatures)}>⚙️</button>
-        <button style={{ background: 'none', border: 'none', fontSize: '24px' }} onClick={() => alert('Opening Map...')}>📍</button>
+      {/* 1. टॉप हेडर */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px', alignItems: 'center', borderBottom: '1px solid #dbdbdb' }}>
+        <button style={{ background: 'none', border: 'none', fontSize: '20px' }} onClick={() => setShowMenu(!showMenu)}>⚙️</button>
+        <h2 style={{ fontSize: '18px', margin: 0 }}>Mohin Raja</h2>
+        <button style={{ background: 'none', border: 'none', fontSize: '20px' }} onClick={() => alert('Map Activated!')}>📍</button>
       </div>
 
-      {/* 2. प्रोफाइल फोटो और नाम */}
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: '#eee', margin: 'auto' }}></div>
-        <h2>{profile.name}</h2>
+      {/* 2. प्रोफाइल फोटो और स्टेट्स */}
+      <div style={{ display: 'flex', padding: '20px', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ width: '85px', height: '85px', borderRadius: '50%', background: '#dbdbdb' }}></div>
+        <div style={{ display: 'flex', gap: '25px' }}>
+          <div style={{ textAlign: 'center' }}><strong>45</strong><br/><small>Posts</small></div>
+          <div style={{ textAlign: 'center' }}><strong>1.2K</strong><br/><small>Followers</small></div>
+          <div style={{ textAlign: 'center' }}><strong>850</strong><br/><small>Following</small></div>
+        </div>
       </div>
 
-      {/* 3. फॉलोअर्स, फॉलोइंग, पोस्ट */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', margin: '20px 0' }}>
-        <div style={{ textAlign: 'center' }}><strong>{profile.posts}</strong><br/>Posts</div>
-        <div style={{ textAlign: 'center' }}><strong>{profile.followers}</strong><br/>Followers</div>
-        <div style={{ textAlign: 'center' }}><strong>{profile.following}</strong><br/>Following</div>
+      {/* 3. नाम और बायो */}
+      <div style={{ padding: '0 20px', marginBottom: '20px' }}>
+        <div style={{ fontWeight: 'bold' }}>Mohin Raja</div>
+        <div style={{ fontSize: '14px' }}>अपनी कला, अपनी पहचान - रंगमंच</div>
       </div>
 
-      {/* 4. एडिट और प्रमोट बटन (सामने) */}
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
-        <button style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff' }} onClick={() => navigate('/edit-profile')}>Edit Profile</button>
-        <button style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#fbbf24' }} onClick={() => alert('Start Promotion!')}>+ Promote</button>
+      {/* 4. एडिट और प्रमोट बटन्स */}
+      <div style={{ padding: '0 20px', display: 'flex', gap: '10px' }}>
+        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: '1px solid #dbdbdb', background: '#efefef', fontWeight: 'bold' }} onClick={() => navigate('/edit-profile')}>Edit Profile</button>
+        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: '1px solid #dbdbdb', background: '#fbbf24', fontWeight: 'bold' }} onClick={() => alert('Promoting...')}>+ Promote</button>
       </div>
 
-      {/* 5. 40+ फीचर्स का मेनू (सेटिंग्स बटन से खुलेगा) */}
-      {showFeatures && (
-        <div style={{ background: '#f9f9f9', padding: '15px', borderRadius: '10px', marginBottom: '60px' }}>
-          {allFeatures.map(feat => (
-            <button key={feat} style={{ display: 'block', width: '100%', padding: '10px', margin: '5px 0', border: 'none', borderRadius: '5px' }} onClick={() => alert(feat + ' clicked!')}>
-              {feat}
-            </button>
+      {/* 5. 40+ फीचर्स का ड्रॉपडाउन */}
+      {showMenu && (
+        <div style={{ padding: '20px', background: '#f9f9f9', marginTop: '10px' }}>
+          {features.map(f => (
+            <button key={f} style={{ display: 'block', width: '100%', padding: '10px', margin: '5px 0', border: 'none', borderRadius: '5px' }} onClick={() => alert(f)}>{f}</button>
           ))}
         </div>
       )}
 
       {/* 6. बॉटम नेविगेशन */}
-      <nav style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#fff', borderTop: '1px solid #eee' }}>
+      <nav style={{ position: 'fixed', bottom: 0, width: '100%', maxWidth: '400px', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#fff', borderTop: '1px solid #dbdbdb' }}>
         <button onClick={() => navigate('/home')}>🏠</button>
         <button onClick={() => navigate('/explore')}>🔍</button>
         <button onClick={() => navigate('/messenger')}>💬</button>
         <button onClick={() => navigate('/profile')}>👤</button>
       </nav>
-
-      {/* [SERVER SLOT]: सर्वर सिंक */}
-      <div id="server-sync" style={{ display: 'none' }}></div>
+      
+      {/* [SERVER SLOT]: यहाँ सर्वर का डेटा सिंक होगा */}
+      <div id="server-data" style={{ display: 'none' }}></div>
     </div>
   );
 };
 
-export default MasterProfilePage;
+export default InstagramProfile;
