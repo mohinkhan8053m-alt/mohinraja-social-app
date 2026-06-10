@@ -6,34 +6,55 @@ const ExplorePage = () => {
   const [showCategories, setShowCategories] = useState(false);
   const navigate = useNavigate();
 
+  // बटन स्टाइलिंग (सबके लिए समान प्रीमियम लुक)
+  const btnStyle = {
+    padding: '12px 20px',
+    margin: '8px',
+    borderRadius: '10px',
+    border: '1px solid #ddd',
+    backgroundColor: '#fff',
+    cursor: 'pointer',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    transition: '0.3s'
+  };
+
   return (
-    <div className="explore-page">
-      {/* 1. मैसेंजर सेक्शन (Nested Buttons) */}
-      <div className="menu-group">
-        <button className="main-action-btn" onClick={() => setShowMessenger(!showMessenger)}>💬 Messenger Options</button>
+    <div style={{ padding: '20px', backgroundColor: '#f9f9f9', minHeight: '100vh', fontFamily: 'Arial' }}>
+      
+      {/* 1. मैसेंजर सेक्शन */}
+      <div style={{ marginBottom: '20px' }}>
+        <button style={{ ...btnStyle, backgroundColor: '#000', color: '#fff' }} onClick={() => setShowMessenger(!showMessenger)}>
+          💬 Messenger Options
+        </button>
         {showMessenger && (
-          <div className="options-container">
-            <button className="sub-btn">🎥 Video Call</button>
-            <button className="sub-btn">📞 Audio Call</button>
-            <button className="sub-btn">💬 Open Chat</button>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
+            {/* वीडियो कॉल बटन - बड़ा और अलग */}
+            <button style={{ ...btnStyle, backgroundColor: '#fbbf24', padding: '20px 40px', fontSize: '20px' }} onClick={() => navigate('/video-call')}>
+              🎥 Video Call (Direct)
+            </button>
+            <button style={{ ...btnStyle }} onClick={() => alert('Audio Calling...')}>📞 Audio Call</button>
+            <button style={{ ...btnStyle }} onClick={() => navigate('/messenger')}>💬 Open Chat</button>
           </div>
         )}
       </div>
 
       {/* 2. कैटेगरी सेक्शन */}
-      <div className="menu-group">
-        <button className="main-action-btn" onClick={() => setShowCategories(!showCategories)}>📂 Select Categories</button>
+      <div style={{ marginBottom: '20px' }}>
+        <button style={{ ...btnStyle, backgroundColor: '#333', color: '#fff' }} onClick={() => setShowCategories(!showCategories)}>
+          📂 Select Categories
+        </button>
         {showCategories && (
-          <div className="options-container">
+          <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
             {['Music', 'Travel', 'Food', 'India', 'USA'].map(cat => (
-              <button key={cat} className="sub-btn">{cat}</button>
+              <button key={cat} style={{ ...btnStyle }} onClick={() => alert(`Opening ${cat}`)}>{cat}</button>
             ))}
           </div>
         )}
       </div>
 
-      {/* सर्वर डेटा स्लॉट */}
-      <div id="server-slot" style={{ display: 'none' }}>{/* API Data here */}</div>
+      {/* सर्वर डेटा स्लॉट - इसे खाली छोड़ दिया है */}
+      <div id="server-slot" style={{ display: 'none' }}></div>
     </div>
   );
 };
