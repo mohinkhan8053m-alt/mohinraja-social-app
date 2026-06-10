@@ -1,4 +1,3 @@
-import './style.css'; // आपकी नई CSS फाइल यहाँ जुड़ गई है
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider } from './UserContext.jsx'; 
