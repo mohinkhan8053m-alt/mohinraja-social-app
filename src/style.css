@@ -1,1 +1,57 @@
+/* पूरी वेबसाइट का बैकग्राउंड साफ़ रखें */
+body { background-color: #ffffff !important; }
 
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #ffffff !important;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 350px;
+    padding: 30px;
+    background: #ffffff !important;
+    border: 1px solid #dbdbdb;
+    text-align: center;
+}
+
+.brand-name {
+    font-family: 'Brush Script MT', cursive; /* स्टाइल नाम के लिए */
+    font-size: 40px;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.btn-secondary {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #dbdbdb;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.options, .link-text { font-size: 12px; margin: 10px 0; }
