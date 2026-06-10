@@ -1,58 +1,56 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MessengerPage = () => {
   const navigate = useNavigate();
-  const theme = { bg: '#000', gold: '#fbbf24', border: '1px solid #fbbf24', cardBg: '#111' };
 
   return (
-    <div style={{ minHeight: '100vh', background: theme.bg, color: '#fff', fontFamily: 'serif', paddingBottom: '100px' }}>
+    <div className="messenger-page" style={{ background: '#fff', minHeight: '100vh', paddingBottom: '100px' }}>
       
-      {/* 1. हेडर (इसमें 5 फीचर्स हैं: Back, Title, VideoCall, Translate, Gift) */}
-      <header style={{ padding: '20px', borderBottom: theme.border, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: theme.gold, fontSize: '20px' }}>⬅️</button>
-        <h1 style={{ color: theme.gold, fontSize: '18px', margin: 0 }}>RangManch Chat</h1>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => navigate('/video-call')} style={{ background: theme.gold, padding: '8px 15px', borderRadius: '20px', border: 'none', fontWeight: 'bold' }}>🎥 Call</button>
-          <button onClick={() => alert("Server: Audio Translate Active")} style={{ background: '#222', border: theme.border, color: '#fff', padding: '8px' }}>👁️‍🗨️</button>
-          <button onClick={() => alert("Server: Sending Gift...")} style={{ background: '#222', border: theme.border, color: '#fff', padding: '8px' }}>🎁</button>
-        </div>
+      {/* 1. हेडर */}
+      <header className="msg-header">
+        <button onClick={() => navigate(-1)} className="text-btn">Back</button>
+        <h1 style={{ fontSize: '18px' }}>RangManch Chat</h1>
+        <button className="video-call-btn" onClick={() => navigate('/video-call')}>Start Video Call</button>
       </header>
 
-      {/* 2. प्रीमियम टूलबार (3 फीचर्स: Location, AdBanner, PremiumLock) */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', padding: '15px', borderBottom: theme.border }}>
-        <button onClick={() => alert("Server: Sharing Location...")} style={{ background: 'none', border: 'none', color: '#fff' }}>📍 Location</button>
-        <div style={{ fontSize: '10px', color: '#888' }}>[AD BANNER SLOT]</div>
+      {/* 2. प्रीमियम टूलबार */}
+      <div className="toolbar">
+        <button className="tool-btn">Share Location</button>
+        <button className="tool-btn">Translate Chat</button>
+        <button className="tool-btn">Send Gift</button>
       </div>
 
-      {/* 3. चैट एरिया (4 फीचर्स: MessageBubble, Translate 'i', PremiumBanner, Upgrade) */}
+      {/* 3. चैट एरिया */}
       <main style={{ padding: '20px' }}>
-        <div style={{ background: theme.cardBg, padding: '15px', borderRadius: '15px', border: theme.border, display: 'flex', justifyContent: 'space-between' }}>
+        <div className="chat-bubble">
           <p>नमस्ते! कैसे हैं आप?</p>
-          <button onClick={() => alert("Server: Translating...")} style={{ background: '#333', border: 'none', borderRadius: '5px', padding: '2px 8px' }}>i</button>
+          <button className="mini-btn">Translate</button>
         </div>
-        
-        <div style={{ marginTop: '20px', padding: '15px', background: 'linear-gradient(to right, #4c1d95, #b45309)', borderRadius: '15px', textAlign: 'center' }}>
-          <p>🔒 Unlock AI Features</p>
-          <button onClick={() => alert("Server: Opening Payment...")} style={{ background: '#fff', color: '#000', padding: '8px 20px', borderRadius: '20px', border: 'none', marginTop: '10px' }}>Upgrade Now</button>
+        <div className="upgrade-box">
+          <p>Unlock AI Features</p>
+          <button className="upgrade-btn" onClick={() => alert("Payment...")}>Upgrade Now</button>
         </div>
       </main>
 
-      {/* 4. इनपुट एरिया (6 फीचर्स: AI-Filter, Gallery, Emoji, InputBox, Send, Navigation-Home/Explore/Profile) */}
-      <div style={{ position: 'fixed', bottom: '0', width: '100%', padding: '15px', background: '#000', borderTop: theme.border, display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <button onClick={() => alert("Server: AI Filter On")} style={{ background: 'none', border: 'none', color: theme.gold }}>✨</button>
-        <button onClick={() => alert("Opening Gallery...")}>📸</button>
-        <button onClick={() => alert("Opening Emoji...")}>😊</button>
-        <input type="text" placeholder="Message..." style={{ flexGrow: 1, padding: '10px', borderRadius: '20px', background: theme.cardBg, border: theme.border, color: '#fff' }} />
-        <button onClick={() => alert("Message Sent!")} style={{ background: theme.gold, border: 'none', padding: '10px 20px', borderRadius: '20px', fontWeight: 'bold' }}>Send</button>
+      {/* 4. इनपुट एरिया */}
+      <div className="input-area">
+        <button className="action-btn">AI Filter</button>
+        <button className="action-btn">Gallery</button>
+        <button className="action-btn">Emoji</button>
+        <input type="text" placeholder="Type a message..." className="msg-input" />
+        <button className="send-btn">Send</button>
       </div>
 
-      {/* बॉटम नेविगेशन (3 नेविगेशन फीचर्स: Home, Explore, Profile) */}
-      <nav style={{ position: 'fixed', bottom: '70px', width: '100%', display: 'flex', justifyContent: 'space-around', background: '#000', padding: '10px' }}>
-        <button onClick={() => navigate('/home')}>🏠</button>
-        <button onClick={() => navigate('/explore')}>🔍</button>
-        <button onClick={() => navigate('/profile')}>👤</button>
+      {/* बॉटम नेविगेशन */}
+      <nav className="bottom-nav">
+        <button onClick={() => navigate('/home')}>Home</button>
+        <button onClick={() => navigate('/explore')}>Explore</button>
+        <button onClick={() => navigate('/profile')}>Profile</button>
       </nav>
+
+      {/* [SERVER SLOT]: अपना बैकएंड डेटा यहाँ जोड़ें */}
+      <div id="server-slot" style={{ display: 'none' }}></div>
     </div>
   );
 };
