@@ -1,67 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MasterProfilePage = () => {
   const navigate = useNavigate();
-  const theme = { bg: '#000', gold: '#fbbf24', text: '#fff', border: '1px solid #fbbf24' };
+  const [activeSection, setActiveSection] = useState(null);
 
-  // 28 फीचर्स की लिस्ट
-  const features = [
-    'Edit Profile', 'Settings', 'Privacy', 'Wallet', 'Bank/UPI', 'Logout', 
-    'Invite', 'Help', 'Security', 'Data', 'Notifications', 'Language', 
-    'Theme', 'Premium', 'About', 'Feedback', 'Boost', 'ChatGuard', 
-    'Translate', 'VideoCall', 'BlockUser', 'AdminPanel', 'Share', 'Archive',
-    'Saved', 'Close Friends', 'Activity', 'Insights'
-  ];
-
-  const handleFeatureClick = (feature) => {
-    // यहाँ सर्वर लिंक की जगह खाली छोड़ी है (बाद में यहाँ अपना API लिंक डालें)
-    /* [SERVER_API_LINK_START] */
-    console.log(`Executing feature: ${feature}`);
-    alert(`${feature} is ready! (Server link pending)`);
-    /* [SERVER_API_LINK_END] */
+  const sections = {
+    'Account': ['Edit Profile', 'Settings', 'Privacy', 'Wallet', 'Bank/UPI', 'Logout'],
+    'Security & Data': ['Security', 'Data', 'ChatGuard', 'BlockUser', 'Archive', 'Saved'],
+    'Premium Features': ['Premium', 'Boost', 'Insights', 'Live Mode', 'Dark Mode', 'Activity'],
+    'Support & More': ['Invite', 'Help', 'Language', 'About', 'Feedback', 'AdminPanel']
   };
 
+  const btnStyle = { width: '100%', padding: '15px', margin: '5px 0', border: '1px solid #ddd', borderRadius: '10px', background: '#fff', cursor: 'pointer', fontWeight: 'bold' };
+
   return (
-    <div className="profile-container">
-      {/* 1. प्रोफाइल हेडर */}
-      <header style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <div style={{ width: '90px', height: '90px', borderRadius: '50%', border: theme.border, margin: '0 auto 10px', background: '#222' }}></div>
-        <h2 style={{ color: theme.gold, margin: '5px' }}>Mohin Raja</h2>
-      </header>
-
-      {/* 2. फॉलोअर्स/फॉलोइंग */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', margin: '20px 0', borderTop: theme.border, borderBottom: theme.border, padding: '10px' }}>
-        <div style={{ textAlign: 'center' }}><strong>1.2K</strong><br/>Followers</div>
-        <div style={{ textAlign: 'center' }}><strong>850</strong><br/>Following</div>
+    <div style={{ background: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Arial' }}>
+      {/* 1. हेडर */}
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <div style={{ width: '90px', height: '90px', borderRadius: '50%', background: '#eee', margin: 'auto' }}></div>
+        <h2 style={{ margin: '10px' }}>Mohin Raja</h2>
       </div>
 
-      {/* 3. इंस्टाग्राम स्टाइल बटन्स (मैसेंजर + फॉलो) */}
-      <div className="action-bar">
-        <button className="gold-border-btn" onClick={() => alert('Following!')}>Follow</button>
-        <button className="gold-border-btn" onClick={() => navigate('/messenger')}>Message</button>
+      {/* 2. फॉलोअर्स सेक्शन */}
+      <div style={{ display: 'flex', justifyContent: 'space-around', padding: '15px', borderTop: '1px solid #eee', borderBottom: '1px solid #eee' }}>
+        <div><strong>1.2K</strong><br/>Followers</div>
+        <div><strong>850</strong><br/>Following</div>
       </div>
 
-      {/* 4. 28 फीचर्स का व्यवस्थित ग्रिड */}
-      <div className="features-grid">
-        {features.map((item, index) => (
-          <button key={index} className="feature-btn" onClick={() => handleFeatureClick(item)}>
-            {item}
-          </button>
+      {/* 3. मेन बटन्स */}
+      <div style={{ padding: '20px 0' }}>
+        {Object.keys(sections).map((sec) => (
+          <div key={sec}>
+            <button style={{ ...btnStyle, background: '#000', color: '#fff' }} onClick={() => setActiveSection(activeSection === sec ? null : sec)}>
+              {sec} ▾
+            </button>
+            {activeSection === sec && sections[sec].map(item => (
+              <button key={item} style={{ ...btnStyle, background: '#f9f9f9', marginLeft: '10px', width: '95%' }} onClick={() => alert(`${item}Clicked`)}>
+                {item}
+              </button>
+            ))}
+          </div>
         ))}
       </div>
 
-      {/* 5. बॉटम नेविगेशन (स्टोरी प्लस के साथ) */}
-      <nav className="nav-bar">
-        <div style={{textAlign: 'center'}} onClick={() => alert('Add Story')}>
-            <button style={{background:'none', border:theme.border, color:theme.gold, padding:'5px 15px', borderRadius:'5px'}}>+</button>
-            <div style={{fontSize:'9px', marginTop:'5px'}}>Story</div>
-        </div>
-        <button onClick={() => navigate('/home')} style={{background:'none', border:'none', color:'#fff'}}>🔍</button>
-        <button onClick={() => navigate('/messenger')} style={{background:'none', border:'none', color:'#fff'}}>💬</button>
-        <button onClick={() => navigate('/settings')} style={{background:'none', border:'none', color:'#fff'}}>⚙️</button>
-        <button onClick={() => navigate('/profile')} style={{background:'none', border:'none', color:theme.gold}}>👤</button>
+      {/* 4. बॉटम नेविगेशन */}
+      <nav style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#fff', borderTop: '1px solid #eee' }}>
+        <button onClick={() => navigate('/home')}>🏠</button>
+        <button onClick={() => navigate('/explore')}>🔍</button>
+        <button onClick={() => navigate('/messenger')}>💬</button>
+        <button onClick={() => navigate('/profile')}>👤</button>
       </nav>
+
+      {/* [SERVER SLOT]: सर्वर वाले फीचर्स का डेटा यहाँ आएगा */}
+      <div id="server-slot" style={{ display: 'none' }}></div>
     </div>
   );
 };
