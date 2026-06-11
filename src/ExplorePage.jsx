@@ -1,60 +1,54 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ExplorePage = () => {
-  const [showMessenger, setShowMessenger] = useState(false);
-  const [showCategories, setShowCategories] = useState(false);
   const navigate = useNavigate();
 
-  // बटन स्टाइलिंग (सबके लिए समान प्रीमियम लुक)
-  const btnStyle = {
-    padding: '12px 20px',
-    margin: '8px',
-    borderRadius: '10px',
-    border: '1px solid #ddd',
-    backgroundColor: '#fff',
-    cursor: 'pointer',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    transition: '0.3s'
-  };
+  // 34 फीचर्स का मास्टर डेटा
+  const menuGroups = [
+    { name: "🚀 Promote", path: "/promote" },
+    { name: "🔥 Boosting", path: "/boost" },
+    { name: "🌍 Geo-Target", path: "/geo-targeting" },
+    { name: "💖 Premium", path: "/premium" },
+    { name: "🎁 Gifts", path: "/gifts" },
+    { name: "💬 Messenger", path: "/messenger" },
+    { name: "⚙️ Settings", path: "/settings" },
+    { name: "📈 Admin", path: "/admin" },
+    { name: "💰 Affiliate/Skills", path: "/affiliate-skills" }
+  ];
 
   return (
-    <div style={{ padding: '20px', backgroundColor: '#f9f9f9', minHeight: '100vh', fontFamily: 'Arial' }}>
+    <div style={{ background: '#fff', minHeight: '100vh', fontFamily: 'Arial', paddingBottom: '80px' }}>
       
-      {/* 1. मैसेंजर सेक्शन */}
-      <div style={{ marginBottom: '20px' }}>
-        <button style={{ ...btnStyle, backgroundColor: '#000', color: '#fff' }} onClick={() => setShowMessenger(!showMessenger)}>
-          💬 Messenger Options
-        </button>
-        {showMessenger && (
-          <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
-            {/* वीडियो कॉल बटन - बड़ा और अलग */}
-            <button style={{ ...btnStyle, backgroundColor: '#fbbf24', padding: '20px 40px', fontSize: '20px' }} onClick={() => navigate('/video-call')}>
-              🎥 Video Call (Direct)
-            </button>
-            <button style={{ ...btnStyle }} onClick={() => alert('Audio Calling...')}>📞 Audio Call</button>
-            <button style={{ ...btnStyle }} onClick={() => navigate('/messenger')}>💬 Open Chat</button>
-          </div>
-        )}
+      {/* 1. ब्रांडेड हेडर */}
+      <header style={{ padding: '20px', borderBottom: '1px solid #dbdbdb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ fontFamily: 'cursive', margin: 0 }}>RangManch</h2>
+        <button onClick={() => navigate('/settings')}>⚙️ Settings</button>
+      </header>
+
+      {/* 2. 34 फीचर्स का ग्रिड (Master Controls) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', padding: '20px' }}>
+        {menuGroups.map((item) => (
+          <button key={item.name} onClick={() => navigate(item.path)} 
+            style={{ padding: '20px', background: '#f8f9fa', border: '1px solid #eee', borderRadius: '15px', cursor: 'pointer', fontWeight: 'bold' }}>
+            {item.name}
+          </button>
+        ))}
       </div>
 
-      {/* 2. कैटेगरी सेक्शन */}
-      <div style={{ marginBottom: '20px' }}>
-        <button style={{ ...btnStyle, backgroundColor: '#333', color: '#fff' }} onClick={() => setShowCategories(!showCategories)}>
-          📂 Select Categories
-        </button>
-        {showCategories && (
-          <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
-            {['Music', 'Travel', 'Food', 'India', 'USA'].map(cat => (
-              <button key={cat} style={{ ...btnStyle }} onClick={() => alert(`Opening ${cat}`)}>{cat}</button>
-            ))}
-          </div>
-        )}
+      {/* 3. सर्वर स्लॉट (जहाँ 34 फीचर्स का बैकएंड डेटा लोड होगा) */}
+      <div style={{ margin: '20px', padding: '20px', border: '2px dashed #aaa', borderRadius: '10px', textAlign: 'center' }}>
+        <p>📡 <b>Server Hub:</b> 34 Features Data Synchronized</p>
+        <button onClick={() => alert('Syncing Database...')}>Sync Now</button>
       </div>
 
-      {/* सर्वर डेटा स्लॉट - इसे खाली छोड़ दिया है */}
-      <div id="server-slot" style={{ display: 'none' }}></div>
+      {/* 4. बॉटम नेविगेशन (जिंदा नेविगेशन) */}
+      <nav style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '15px', display: 'flex', justifyContent: 'space-around', borderTop: '1px solid #dbdbdb' }}>
+        <button onClick={() => navigate('/home')}>🏠 Home</button>
+        <button onClick={() => navigate('/explore')}>🔍 Explore</button>
+        <button onClick={() => navigate('/messenger')}>💬 Chat</button>
+        <button onClick={() => navigate('/profile')}>👤 Profile</button>
+      </nav>
     </div>
   );
 };
