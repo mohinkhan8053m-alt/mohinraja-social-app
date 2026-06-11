@@ -3,72 +3,42 @@ import { useNavigate } from 'react-router-dom';
 
 const MessengerPage = () => {
   const navigate = useNavigate();
-
-  // प्रोफेशनल बटन स्टाइल
-  const btnStyle = {
-    padding: '10px 15px',
-    margin: '5px',
-    borderRadius: '8px',
-    border: '1px solid #ddd',
-    backgroundColor: '#fff',
-    cursor: 'pointer',
-    fontWeight: 'bold'
-  };
+  const users = ["Mohan Raja", "RangManch Team", "Business Partner", "Creative Designer"];
 
   return (
-    <div style={{ background: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Arial' }}>
+    <div style={{ background: '#fff', minHeight: '100vh', fontFamily: 'Arial' }}>
       
-      {/* 1. हेडर */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
-        <button style={btnStyle} onClick={() => navigate(-1)}>Back</button>
-        <h1 style={{ fontSize: '18px' }}>RangManch Chat</h1>
-        {/* वीडियो कॉल बटन - बड़ा और आकर्षक */}
-        <button 
-          style={{ ...btnStyle, backgroundColor: '#fbbf24', padding: '15px 30px', fontSize: '18px' }} 
-          onClick={() => navigate('/video-call')}>
-          🎥 Start Video Call
-        </button>
+      {/* 1. प्रोफेशनल टॉप हेडर - बाईं तरफ RangManch ब्रांडिंग */}
+      <header style={{ display: 'flex', justifyContent: 'space-between', padding: '15px', borderBottom: '1px solid #dbdbdb', alignItems: 'center' }}>
+        <h2 style={{ fontFamily: 'cursive', margin: 0, fontSize: '20px' }}>RangManch</h2>
+        <div style={{ display: 'flex', gap: '15px' }}>
+          <button onClick={() => navigate(-1)} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>⬅️</button>
+          <button onClick={() => navigate('/settings')} style={{ border: 'none', background: 'none', fontSize: '20px', cursor: 'pointer' }}>⚙️</button>
+        </div>
       </header>
 
-      {/* 2. प्रीमियम टूलबार */}
-      <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap' }}>
-        <button style={btnStyle} onClick={() => alert('Location Shared!')}>Share Location</button>
-        <button style={btnStyle} onClick={() => alert('Translating...')}>Translate Chat</button>
-        <button style={btnStyle} onClick={() => alert('Gift Sent!')}>Send Gift</button>
+      {/* 2. फॉलोअर्स/फॉलोइंग लिस्ट (सभी को मैसेज करने के लिए) */}
+      <div style={{ padding: '10px' }}>
+        {users.map((name, index) => (
+          <div key={index} style={{ padding: '15px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontWeight: 'bold' }}>{name}</span>
+            <button onClick={() => navigate(`/chat/${name}`)} style={{ padding: '6px 12px', borderRadius: '5px', background: '#fbbf24', border: 'none', cursor: 'pointer' }}>Chat</button>
+          </div>
+        ))}
       </div>
 
-      {/* 3. चैट एरिया */}
-      <main style={{ padding: '20px 0' }}>
-        <div style={{ padding: '15px', border: '1px solid #eee', borderRadius: '10px', marginBottom: '10px' }}>
-          <p>नमस्ते! कैसे हैं आप?</p>
-          <button style={{ ...btnStyle, fontSize: '12px' }} onClick={() => alert('Translation: Hello! How are you?')}>Translate</button>
-        </div>
-        <div style={{ padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '10px' }}>
-          <p>Unlock AI Features</p>
-          <button style={{ ...btnStyle, backgroundColor: '#000', color: '#fff' }} onClick={() => alert("Payment Gateway Loading...")}>Upgrade Now</button>
-        </div>
-      </main>
-
-      {/* 4. इनपुट एरिया */}
-      <div style={{ display: 'flex', gap: '5px', alignItems: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
-        <button style={btnStyle} onClick={() => alert('AI Filter On')}>AI Filter</button>
-        <button style={btnStyle} onClick={() => alert('Opening Gallery...')}>Gallery</button>
-        <button style={btnStyle} onClick={() => alert('Emoji Picker')}>Emoji</button>
-        <input type="text" placeholder="Type a message..." style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
-        <button style={{ ...btnStyle, backgroundColor: '#000', color: '#fff' }} onClick={() => alert('Message Sent!')}>Send</button>
+      {/* 3. बड़ी कंपनियों के लिए ऐड स्लॉट (कमाई का जरिया) */}
+      <div style={{ margin: '20px', padding: '15px', background: '#fff3cd', border: '2px dashed #ffc107', borderRadius: '10px', textAlign: 'center' }}>
+        <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: 'bold' }}>📢 Promote Your Brand Here</p>
+        <button onClick={() => navigate('/promote')} style={{ width: '100%', padding: '10px', background: '#000', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Boost Your Business</button>
       </div>
 
-      {/* बॉटम नेविगेशन */}
-      <nav style={{ marginTop: '40px', display: 'flex', justifyContent: 'space-around', borderTop: '1px solid #eee', paddingTop: '15px' }}>
-        <button style={btnStyle} onClick={() => navigate('/home')}>Home</button>
-        <button style={btnStyle} onClick={() => navigate('/explore')}>Explore</button>
-        <button style={btnStyle} onClick={() => navigate('/profile')}>Profile</button>
+      {/* 4. बॉटम नेविगेशन - हर पेज से जुड़ा हुआ */}
+      <nav style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '15px', display: 'flex', justifyContent: 'space-around', borderTop: '1px solid #dbdbdb' }}>
+        <button onClick={() => navigate('/home')} style={{ border: 'none', background: 'none' }}>🏠</button>
+        <button onClick={() => navigate('/explore')} style={{ border: 'none', background: 'none' }}>🔍</button>
+        <button onClick={() => navigate('/profile')} style={{ border: 'none', background: 'none' }}>👤</button>
       </nav>
-
-      {/* [SERVER SLOT]: यहाँ आपका बैकएंड डेटा सुरक्षित है */}
-      <div id="server-slot" style={{ display: 'none', margin: '20px 0', padding: '20px', border: '2px dashed #ccc' }}>
-        {/* अपना API का डेटा यहाँ रेंडर करें */}
-      </div>
     </div>
   );
 };
