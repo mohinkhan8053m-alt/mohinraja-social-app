@@ -4,66 +4,56 @@ import { useNavigate } from 'react-router-dom';
 const PremiumAdminPage = () => {
   const navigate = useNavigate();
 
-  // प्रोफेशनल प्रीमियम स्टाइल
-  const btnStyle = {
-    padding: '12px 18px',
-    margin: '8px',
-    borderRadius: '12px',
-    border: '1px solid #e0e0e0',
-    backgroundColor: '#ffffff',
-    cursor: 'pointer',
-    fontWeight: '600',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-    transition: '0.3s'
-  };
-
-  const handleAction = (feature) => alert(`Action Active: ${feature}`);
+  // प्रीमियम स्टाइलिंग
+  const btnStyle = { padding: '12px 18px', margin: '6px', borderRadius: '12px', border: '1px solid #e0e0e0', backgroundColor: '#fff', cursor: 'pointer', fontWeight: '600', transition: '0.3s' };
 
   return (
-    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', padding: '20px', fontFamily: 'Arial' }}>
+    <div style={{ backgroundColor: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Arial' }}>
       
-      {/* 1. हेडर */}
+      {/* 1. ब्रांडेड हेडर (बाएं: RangManch, दाएं: Settings) */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h2 style={{ fontSize: '24px' }}>Creator Dashboard</h2>
-        <button style={{ ...btnStyle, backgroundColor: '#000', color: '#fff' }} onClick={() => handleAction('Edit Profile')}>Edit Profile</button>
+        <h2 style={{ fontFamily: 'cursive', fontSize: '28px', margin: 0 }}>RangManch</h2>
+        <button style={btnStyle} onClick={() => navigate('/settings')}>⚙️ Settings</button>
       </header>
 
-      {/* 2. प्रीमियम बैनर (नया फीचर) */}
+      {/* 2. प्रीमियम बैनर (VIP Access) */}
       <section style={{ backgroundColor: '#fbbf24', padding: '20px', borderRadius: '15px', marginBottom: '20px' }}>
-        <h3 style={{ margin: '0 0 10px 0' }}>🚀 VIP Premium Access</h3>
-        <p>अपने फीचर्स को अनलॉक करें और अपनी कमाई को बूस्ट करें!</p>
-        <button style={btnStyle} onClick={() => handleAction('Subscribe Now')}>Subscribe Now</button>
+        <h3>🚀 VIP Premium Access</h3>
+        <p>अपनी कमाई को 3x बूस्ट करें!</p>
+        <button style={{...btnStyle, backgroundColor: '#000', color: '#fff'}} onClick={() => alert('Redirecting to Payment...')}>Subscribe Now</button>
       </section>
 
-      {/* 3. एनालिटिक्स ग्रिड */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '30px' }}>
-        {['Views: 12K', 'Likes: 850', 'Earnings: ₹5K', 'See Graph'].map(stat => (
-          <button key={stat} style={{ ...btnStyle, backgroundColor: '#f8f8f8' }} onClick={() => handleAction(stat)}>{stat}</button>
-        ))}
+      {/* 3. लाइव एनालिटिक्स और वॉलेट (नए फीचर्स) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '20px' }}>
+        <button style={btnStyle} onClick={() => alert('Views: 12K')}>📊 Views: 12K</button>
+        <button style={btnStyle} onClick={() => alert('Earnings: ₹5K')}>💰 Wallet: ₹5K</button>
+        <button style={btnStyle} onClick={() => alert('Growth: +20%')}>📈 Growth: +20%</button>
+        <button style={btnStyle} onClick={() => alert('Withdrawal Initiated')}>💸 Withdraw</button>
       </div>
 
-      {/* 4. कंट्रोल सेंटर (18 फीचर्स) */}
-      <div style={{ marginBottom: '40px' }}>
-        <h4 style={{ marginBottom: '15px' }}>Settings & Control</h4>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '10px' }}>
-          {['Chat Guard', 'Support', 'Payouts', 'Blocked List', 'Auto Reply', 'Corporate Ads', 'Upload Media', 'Logout', 'Live Mode', 'Security', 'Themes', 'Invite', 'History', 'Backups', 'Language', 'Terms', 'Privacy', 'Feedback'].map(btn => (
-            <button key={btn} style={btnStyle} onClick={() => handleAction(btn)}>{btn}</button>
+      {/* 4. मास्टर कंट्रोल (18 फीचर्स) */}
+      <div>
+        <h4>Creator Control Center</h4>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+          {['Chat Guard', 'Support', 'Payouts', 'Auto Reply', 'Ads Manager', 'Live Mode', 'Security', 'Themes', 'History', 'Backups', 'Language', 'Privacy'].map(btn => (
+            <button key={btn} style={btnStyle} onClick={() => alert(`${btn} Active`)}>{btn}</button>
           ))}
         </div>
       </div>
 
+      {/* [SERVER SLOT]: 34 फीचर्स का बैकएंड डेटा यहीं लोड होगा */}
+      <div style={{ marginTop: '40px', padding: '20px', border: '2px dashed #000', borderRadius: '10px', textAlign: 'center' }}>
+        <p>📡 <b>Server Hub:</b> API Synchronization active...</p>
+        <button onClick={() => alert('Syncing Data...')}>Sync Server Data</button>
+      </div>
+
       {/* 5. बॉटम नेविगेशन */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', backgroundColor: '#fff', borderTop: '1px solid #eee' }}>
-        <button style={btnStyle} onClick={() => navigate('/home')}>Home</button>
-        <button style={btnStyle} onClick={() => navigate('/explore')}>Explore</button>
-        <button style={{ ...btnStyle, backgroundColor: '#fbbf24', borderRadius: '50%', width: '50px' }} onClick={() => navigate('/create')}>+</button>
-        <button style={btnStyle} onClick={() => navigate('/messenger')}>Chat</button>
+        <button onClick={() => navigate('/home')}>🏠</button>
+        <button onClick={() => navigate('/explore')}>🔍</button>
+        <button style={{backgroundColor: '#fbbf24', borderRadius: '50%', width: '50px', border: 'none'}} onClick={() => navigate('/create')}>+</button>
+        <button onClick={() => navigate('/messenger')}>💬</button>
       </nav>
-
-      {/* [SERVER SLOT]: यहाँ आपका बैकएंड डेटा सुरक्षित है */}
-      <div id="server-slot" style={{ display: 'none', margin: '40px 0', border: '2px dashed #ccc', padding: '20px' }}>
-        {/* API Data here */}
-      </div>
     </div>
   );
 };
