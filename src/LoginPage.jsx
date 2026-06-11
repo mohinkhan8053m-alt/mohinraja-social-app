@@ -3,62 +3,77 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  
+  // 11 फीचर्स का स्टेट मैनेजमेंट
   const [country, setCountry] = useState('India');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
+  const [showCountry, setShowCountry] = useState(false);
 
-  // लॉगिन बटन का असली लॉजिक - जो आपको अगले पेज पर ले जाएगा
+  // लॉगिन फंक्शन - जो सीधे Home पेज पर ले जाएगा
   const handleLogin = () => {
     if (email && password) {
-      // यहाँ आपका लॉगिन सर्वर से वेरीफाई होगा
-      navigate('/profile'); // यह आपको आपके प्रोफाइल पेज पर ले जाएगा
+      navigate('/home'); // मास्टर नेविगेशन
     } else {
-      alert('कृपया ईमेल और पासवर्ड भरें!');
+      alert('कृपया अपनी जानकारी भरें!');
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#fff', padding: '20px', fontFamily: 'Arial' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: '#fff', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      fontFamily: 'Arial, sans-serif',
+      padding: '20px'
+    }}>
       
-      {/* 1. प्रीमियम नाम */}
-      <h1 style={{ fontFamily: 'cursive', fontSize: '40px', fontWeight: 'bold', color: '#000', marginBottom: '20px' }}>Rang Manch</h1>
+      {/* प्रीमियम ब्रांड नाम - स्टाइल वही जो आपने चाहा था */}
+      <h1 style={{ 
+        fontFamily: 'cursive', 
+        fontSize: '55px', 
+        fontWeight: 'bold', 
+        color: '#000', 
+        marginBottom: '40px',
+        textAlign: 'center' 
+      }}>RangManch</h1>
 
-      <div style={{ width: '100%', maxWidth: '400px', border: '1px solid #dbdbdb', padding: '20px', borderRadius: '5px' }}>
+      <div style={{ width: '100%', maxWidth: '380px', padding: '25px', border: '1px solid #e5e5e5', borderRadius: '15px' }}>
         
-        {/* 2. सर्च और कंट्री सेलेक्टर (11वां फीचर) */}
-        <button onClick={() => setShowSearch(!showSearch)} style={{ width: '100%', padding: '10px', marginBottom: '10px', background: '#f9f9f9', border: '1px solid #dbdbdb', textAlign: 'left' }}>
-          📍 सर्च करें अपना देश... ({country})
+        {/* 1. कंट्री सर्च बटन */}
+        <button onClick={() => setShowCountry(!showCountry)} style={{ width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '8px', border: '1px solid #ddd', background: '#f9f9f9', textAlign: 'left', cursor: 'pointer' }}>
+          📍 {country}
         </button>
-        {showSearch && <input type="text" onChange={(e) => setCountry(e.target.value)} placeholder="देश टाइप करें..." style={{ width: '100%', padding: '10px', marginBottom: '10px' }} />}
+        {showCountry && <input type="text" placeholder="सर्च करें..." onChange={(e) => setCountry(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '15px', border: '1px solid #000', borderRadius: '5px' }} />}
 
-        {/* 3 & 4. गूगल और फोन लॉगिन */}
-        <button style={{ width: '100%', padding: '10px', marginBottom: '10px', background: '#fff', border: '1px solid #dbdbdb' }}>Continue with Google</button>
-        <button style={{ width: '100%', padding: '10px', marginBottom: '20px', background: '#fff', border: '1px solid #dbdbdb' }}>Continue with Phone</button>
+        {/* 2 & 3. गूगल और फोन लॉगिन */}
+        <button style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' }}>Continue with Google</button>
+        <button style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' }}>Continue with Phone</button>
 
-        {/* 5 & 6. ईमेल और पासवर्ड */}
-        <input type="text" placeholder="Email/Username" onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #dbdbdb' }} />
-        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #dbdbdb' }} />
+        {/* 4 & 5. ईमेल और पासवर्ड इनपुट */}
+        <input type="text" placeholder="Email/Username" onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ddd' }} />
 
-        {/* 7 & 8. चेकबॉक्स और टर्म्स */}
-        <div style={{ marginBottom: '15px', fontSize: '12px' }}>
-          <input type="checkbox" /> Remember me | <a href="#">Terms</a>
+        {/* 6 & 7. चेकबॉक्स और टर्म्स लिंक */}
+        <div style={{ marginBottom: '20px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <input type="checkbox" /> <span>Remember me</span> | <a href="#" style={{ color: '#0095f6' }}>Terms</a>
         </div>
 
-        {/* 9. लॉगिन बटन - जो अब काम करेगा */}
-        <button onClick={handleLogin} style={{ width: '100%', padding: '10px', background: '#0095f6', border: 'none', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Login</button>
+        {/* 8. मुख्य लॉगिन बटन */}
+        <button onClick={handleLogin} style={{ width: '100%', padding: '12px', background: '#000', color: '#fff', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>Login</button>
 
-        {/* 10 & 11. फॉरगॉट पासवर्ड और साइन अप */}
-        <div style={{ textAlign: 'center', marginTop: '15px', fontSize: '13px' }}>
-          <p>Forgot Password?</p>
-          <p>Don't have an account? <b>Sign Up</b></p>
+        {/* 9 & 10. फॉरगॉट और साइन अप */}
+        <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '13px' }}>
+          <p style={{ cursor: 'pointer' }}>Forgot Password?</p>
+          <p>Don't have an account? <b style={{ cursor: 'pointer', color: '#0095f6' }}>Sign Up</b></p>
         </div>
       </div>
-
-      {/* सर्वर सिंक स्लॉट */}
-      <div id="server-sync" style={{ marginTop: '20px', fontSize: '10px', color: '#ccc' }}>
-        {/* सर्वर लोकेशन सिंक: {country} के लिए सर्वर एक्टिव है */}
-      </div>
+      
+      {/* 11. सर्वर सिंक स्लॉट (नीचे सबसे छोटा, अदृश्य) */}
+      <div id="server-slot" style={{ display: 'none' }}></div>
     </div>
   );
 };
