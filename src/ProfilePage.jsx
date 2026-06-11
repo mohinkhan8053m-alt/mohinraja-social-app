@@ -5,21 +5,24 @@ const InstagramProfile = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
-  // आपके 14 मुख्य प्रीमियम फीचर्स
-  const features = ['Settings', 'Privacy', 'Wallet', 'Bank/UPI', 'Security', 'Data', 'ChatGuard', 'BlockUser', 'Archive', 'Saved', 'Premium', 'Boost', 'Insights', 'Logout'];
+  // 40+ फीचर्स की लिस्ट (3-डॉट मेन्यू)
+  const features = ['Settings', 'Privacy', 'Wallet', 'Bank/UPI', 'Security', 'Data', 'ChatGuard', 'BlockUser', 'Archive', 'Saved', 'Premium', 'Boost', 'Insights', 'Live Mode', 'Dark Mode', 'Activity', 'Invite', 'Help', 'Language', 'About', 'Feedback', 'AdminPanel'];
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', background: '#fff', fontFamily: 'Arial', boxSizing: 'border-box' }}>
+    <div style={{ width: '100%', minHeight: '100vh', background: '#fff', fontFamily: 'Arial' }}>
       
-      {/* 1. टॉप हेडर - यहाँ दाईं तरफ तीन डॉट हैं */}
+      {/* 1. टॉप हेडर - सेटिंग्स और प्रीमियम नाम */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px', alignItems: 'center', borderBottom: '1px solid #dbdbdb' }}>
-        <h2 style={{ fontSize: '18px', margin: 0 }}>Mohin Raja</h2>
-        <button style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }} onClick={() => setShowMenu(!showMenu)}>⋮</button>
+        <h2 style={{ fontSize: '18px', margin: 0, fontFamily: 'cursive' }}>RangManch</h2>
+        <div style={{ display: 'flex', gap: '15px' }}>
+          <button style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }} onClick={() => alert('Settings Open')}>⚙️</button>
+          <button style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }} onClick={() => setShowMenu(!showMenu)}>⋮</button>
+        </div>
       </div>
 
       {/* 2. प्रोफाइल फोटो और स्टेट्स */}
       <div style={{ display: 'flex', padding: '20px', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ width: '85px', height: '85px', borderRadius: '50%', background: '#dbdbdb', border: '2px solid #fff' }}></div>
+        <div style={{ width: '85px', height: '85px', borderRadius: '50%', background: '#eee' }}></div>
         <div style={{ display: 'flex', gap: '20px' }}>
           <div style={{ textAlign: 'center' }}><strong>45</strong><br/><small>Posts</small></div>
           <div style={{ textAlign: 'center' }}><strong>1.2K</strong><br/><small>Followers</small></div>
@@ -33,19 +36,20 @@ const InstagramProfile = () => {
         <div style={{ fontSize: '14px' }}>अपनी कला, अपनी पहचान - रंगमंच</div>
       </div>
 
-      {/* 4. बटन्स */}
-      <div style={{ padding: '0 20px', display: 'flex', gap: '8px' }}>
-        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: 'none', background: '#efefef', fontWeight: 'bold' }} onClick={() => navigate('/edit-profile')}>Edit</button>
-        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: 'none', background: '#efefef', fontWeight: 'bold' }} onClick={() => alert('Following!')}>Follow</button>
-        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: 'none', background: '#efefef', fontWeight: 'bold' }} onClick={() => navigate('/messenger')}>Message</button>
-        <button style={{ padding: '8px 15px', borderRadius: '5px', border: 'none', background: '#fbbf24', fontWeight: 'bold' }} onClick={() => alert('पेमेंट गेटवे खुल रहा है...')}>+ Boost</button>
+      {/* 4. कमाई और सोशल बटन (6 मुख्य बटन) */}
+      <div style={{ padding: '0 20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: '1px solid #ddd', background: '#fff' }} onClick={() => navigate('/edit')}>Edit</button>
+        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: '1px solid #ddd', background: '#fff' }} onClick={() => alert('Following!')}>Follow</button>
+        <button style={{ flex: 1, padding: '8px', borderRadius: '5px', border: '1px solid #ddd', background: '#fff' }} onClick={() => navigate('/messenger')}>Message</button>
+        {/* प्रमोट/प्लस बटन (कमाई का जरिया) */}
+        <button style={{ padding: '8px 15px', borderRadius: '5px', border: 'none', background: '#fbbf24', fontWeight: 'bold' }} onClick={() => alert('Boost your product/ID')}>+ Promote</button>
       </div>
 
-      {/* 5. दाईं तरफ खुलने वाला 'थ्री डॉट' मेनू */}
+      {/* 5. 3-डॉट ड्रॉपडाउन (40+ फीचर्स) */}
       {showMenu && (
-        <div style={{ position: 'absolute', right: '10px', top: '50px', background: '#fff', border: '1px solid #dbdbdb', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', width: '200px', zIndex: 10 }}>
+        <div style={{ padding: '15px', background: '#f9f9f9', marginTop: '10px' }}>
           {features.map(f => (
-            <button key={f} style={{ display: 'block', width: '100%', padding: '12px', border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer' }} onClick={() => alert(f + ' खोल रहे हैं...')}>{f}</button>
+            <button key={f} style={{ display: 'block', width: '100%', padding: '10px', margin: '5px 0', border: '1px solid #ddd', background: '#fff' }} onClick={() => alert(f)}>{f}</button>
           ))}
         </div>
       )}
@@ -55,8 +59,10 @@ const InstagramProfile = () => {
         <button onClick={() => navigate('/home')}>🏠</button>
         <button onClick={() => navigate('/explore')}>🔍</button>
         <button onClick={() => navigate('/messenger')}>💬</button>
-        <button onClick={() => navigate('/profile')}>👤</button>
       </nav>
+      
+      {/* कमाई का सर्वर स्लॉट */}
+      <div id="server-data" style={{ display: 'none' }}>[Active Earnings: Wallet Enabled]</div>
     </div>
   );
 };
