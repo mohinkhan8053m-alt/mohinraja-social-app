@@ -1,25 +1,41 @@
-import React from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
-const GlobalSettings = ({ onClose }) => {
-  const settingsList = [
-    'App Theme', 'Language', 'Notifications', 'Chat Privacy', 
-    'Auto-Pay Mode', 'Data Usage', 'Ad Preferences', 'Security Lock',
-    'Account Activity', 'Help & Support', 'Report a Bug', 
-    'Terms & Privacy', 'Cache Clear', 'Logout'
-  ];
+export const UserContext = createContext();
+
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState({
+    userId: 'mohin_raja_10',
+    name: 'Moin Raja',
+    isPremium: false,
+    premiumExpiry: null, 
+    walletBalance: 0,
+    totalEarnings: 0,    
+    language: 'hi',
+    isChatGuardOn: true,
+    socialLinks: {
+      youtube: 'https://youtube.com/@mohinraja-r2m',
+      facebook: 'https://www.facebook.com/share/1ArteE1FzG/',
+      instagram: 'https://www.instagram.com/moin_raja_10'
+    },
+    isVerified: false
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // [SERVER SLOT]: यहाँ सर्वर से डेटा सिंक होता है
+    try {
+      console.log("[SERVER SLOT]: Syncing User Data...");
+      setLoading(false);
+    } catch (error) {
+      console.error("Server Sync Error:", error);
+      setLoading(false);
+    }
+  }, []);
 
   return (
-    <div style={{ position: 'fixed', top: 0, right: 0, width: '300px', height: '100%', background: '#fff', boxShadow: '-5px 0 15px rgba(0,0,0,0.2)', padding: '20px', zIndex: 1000 }}>
-      <h3>⚙️ Master Settings</h3>
-      {settingsList.map(item => (
-        <button key={item} style={{ display: 'block', width: '100%', padding: '10px', margin: '5px 0', border: 'none', background: '#f0f0f0', cursor: 'pointer' }} 
-                onClick={() => alert(`Setting ${item} updated!`)}>
-          {item}
-        </button>
-      ))}
-      <button style={{ marginTop: '20px', color: 'red' }} onClick={onClose}>Close Settings</button>
-    </div>
+    <UserContext.Provider value={{ user, setUser, loading }}>
+      {children}
+    </UserContext.Provider>
   );
 };
-
-export default GlobalSettings;
