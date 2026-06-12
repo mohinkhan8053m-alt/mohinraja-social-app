@@ -1,8 +1,10 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider } from './UserContext.jsx'; 
+import { AdProvider } from './AdProvider.jsx'; // ऐड सिस्टम का तालमेल
+import Layout from './Layout.jsx'; // हर पेज को Layout के अंदर लपेटना जरूरी है
 
-// सभी पेजों को यहाँ सही से इम्पोर्ट करें
+// सभी पेज (Lazy Loading)
 const LoginPage = lazy(() => import('./LoginPage.jsx'));
 const HomePage = lazy(() => import('./HomePage.jsx'));
 const MessengerPage = lazy(() => import('./MessengerPage.jsx'));
@@ -11,27 +13,33 @@ const ExplorePage = lazy(() => import('./ExplorePage.jsx'));
 const ProfilePage = lazy(() => import('./ProfilePage.jsx'));
 const SettingsPage = lazy(() => import('./SettingsPage.jsx'));
 const PremiumAdminPage = lazy(() => import('./PremiumAdminPage.jsx'));
+const PromotionForm = lazy(() => import('./PromotionForm.jsx')); // प्रमोशन फॉर्म भी जोड़ दिया
 
 function App() {
   return (
     <UserProvider>
-      <Router>
-        {/* Suspense का इस्तेमाल पेजों को लोड करते समय खाली स्क्रीन आने से रोकता है */}
-        <Suspense fallback={<div style={{textAlign:'center', marginTop:'20%', fontSize:'20px'}}>Moin Raja App Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/messenger" element={<MessengerPage />} />
-            <Route path="/video-call" element={<VideoCallHub />} />
-            <Route path="/explore" element={<ExplorePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/admin" element={<PremiumAdminPage />} />
-            {/* अगर कोई गलत लिंक डाले, तो सीधा होम पर भेज देगा */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </Suspense>
-      </Router>
+      <AdProvider>
+        <Router>
+          <Suspense fallback={<div style={{textAlign:'center', marginTop:'20%', fontSize:'20px'}}>RangManch Loading...</div>}>
+            <Routes>
+              {/* लॉगिन पेज बिना लेआउट के */}
+              <Route path="/" element={<LoginPage />} />
+              
+              {/* बाकी सभी पेज Layout के अंदर, ताकि BottomNav और हेडर सब जगह दिखे */}
+              <Route path="/home" element={<Layout><HomePage /></Layout>} />
+              <Route path="/messenger" element={<Layout><MessengerPage /></Layout>} />
+              <Route path="/video-call" element={<Layout><VideoCallHub /></Layout>} />
+              <Route path="/explore" element={<Layout><ExplorePage /></Layout>} />
+              <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
+              <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
+              <Route path="/admin" element={<Layout><PremiumAdminPage /></Layout>} />
+              <Route path="/promote" element={<Layout><PromotionForm /></Layout>} />
+              
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </AdProvider>
     </UserProvider>
   );
 }
