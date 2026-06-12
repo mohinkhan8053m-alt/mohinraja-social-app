@@ -10,7 +10,8 @@ export const UserProvider = ({ children }) => {
     premiumExpiry: null, 
     walletBalance: 0,
     totalEarnings: 0,    
-    language: 'hi',
+    language: 'hi', // आपकी भाषा का प्रेफरेंस
+    countryCode: 'IN', // यह ग्लोबल प्राइसिंग के लिए जरूरी है
     isChatGuardOn: true,
     socialLinks: {
       youtube: 'https://youtube.com/@mohinraja-r2m',
@@ -23,18 +24,29 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // [SERVER SLOT]: यहाँ सर्वर से डेटा सिंक होता है
-    try {
-      console.log("[SERVER SLOT]: Syncing User Data...");
-      setLoading(false);
-    } catch (error) {
-      console.error("Server Sync Error:", error);
-      setLoading(false);
-    }
+    // [SERVER SLOT]: यहाँ से सर्वर सिंक का काम होगा
+    // जब आप सर्वर का API लगाओगे, तो बस यहाँ URL डाल देना
+    const syncUserData = async () => {
+      try {
+        console.log("[SERVER SLOT]: Syncing Global User Data...");
+        // यहाँ आप अपना API कॉल डालेंगे
+        setLoading(false);
+      } catch (error) {
+        console.error("Server Sync Error:", error);
+        setLoading(false);
+      }
+    };
+
+    syncUserData();
   }, []);
 
+  // यह फंक्शन पूरी वेबसाइट पर कहीं भी यूजर का डेटा अपडेट कर देगा
+  const updateUser = (newData) => {
+    setUser({ ...user, ...newData });
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser, loading }}>
+    <UserContext.Provider value={{ user, setUser, updateUser, loading }}>
       {children}
     </UserContext.Provider>
   );
