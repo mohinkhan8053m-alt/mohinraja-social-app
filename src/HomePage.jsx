@@ -4,55 +4,52 @@ import { useNavigate } from 'react-router-dom';
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const btnStyle = { padding: '8px 12px', borderRadius: '8px', border: 'none', background: '#f0f0f0', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' };
-  const navBtn = { background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' };
+  // बटनों के लिए स्टाइल्स
+  const btnStyle = { padding: '8px 12px', borderRadius: '12px', border: 'none', background: '#f4f4f4', cursor: 'pointer', fontWeight: 'bold', fontSize: '11px', transition: '0.3s' };
+  const actionBtn = { ...btnStyle, background: '#000', color: '#fff' };
 
   return (
-    <div style={{ background: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Arial' }}>
+    <div style={{ background: '#fff', paddingBottom: '20px', fontFamily: 'Poppins, sans-serif' }}>
       
-      {/* 1. हेडर (रंग मंच प्रीमियम नाम + सेटिंग्स आइकन) */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1 style={{ fontFamily: 'cursive', fontSize: '24px', margin: 0 }}>RangManch</h1>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button style={navBtn} onClick={() => alert('Settings')}>⚙️</button>
-          <button style={navBtn} onClick={() => navigate('/messenger')}>💬</button>
-        </div>
-      </header>
-
-      {/* 2. प्रीमियम रिवार्ड्स और ट्रांसलेट बार */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <button style={btnStyle} onClick={() => alert('Rewards')}>🎁 Rewards</button>
-        <button style={btnStyle} onClick={() => alert('Translating...')}>🌐 Translate</button>
+      {/* 1. प्रीमियम रिवार्ड्स, ट्रांसलेट, और नए फीचर्स */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto', paddingBottom: '5px' }}>
+        <button style={btnStyle} onClick={() => navigate('/rewards')}>🎁 Rewards</button>
+        <button style={btnStyle} onClick={() => console.log('Translating...')}>🌐 Translate</button>
+        <button style={btnStyle} onClick={() => console.log('Live Status Active')}>⚡ Live Status</button>
+        <button style={btnStyle} onClick={() => console.log('Global Connect')}>🌍 Global</button>
       </div>
 
-      {/* 3. स्टोरीज़ */}
-      <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }}>
-        {[1, 2, 3, 4, 5].map(i => (
-          <div key={i} style={{ minWidth: '60px', height: '60px', borderRadius: '50%', background: '#ddd' }}></div>
+      {/* 2. स्टोरीज़ (गोल आकार) */}
+      <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '15px' }}>
+        {[1, 2, 3, 4, 5, 6].map(i => (
+          <div key={i} style={{ minWidth: '65px', height: '65px', borderRadius: '50%', background: '#eee', border: '2px solid #fbbf24', cursor: 'pointer' }}></div>
         ))}
       </div>
 
-      {/* 4. पोस्ट फीड (बूस्ट फीचर के साथ) */}
-      <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '15px', marginTop: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+      {/* 3. पोस्ट फीड (बूस्ट फीचर के साथ) */}
+      <div style={{ border: '1px solid #f0f0f0', padding: '15px', borderRadius: '20px', marginTop: '15px', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', alignItems: 'center' }}>
           <strong>Sponsored</strong>
-          <button style={{ ...btnStyle, background: '#fbbf24' }} onClick={() => alert('Boost ID...')}>🚀 Boost</button>
+          <button style={{ ...btnStyle, background: '#fbbf24' }} onClick={() => console.log('Boost initiated')}>🚀 Boost</button>
         </div>
-        <div style={{ height: '200px', background: '#f9f9f9', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>[Content Post]</div>
-        <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
+        
+        {/* पोस्ट कंटेंट */}
+        <div style={{ height: '220px', background: '#f9f9f9', borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+          [User Video/Image Content]
+        </div>
+
+        {/* लाइक, कमेंट, शेयर, सेव */}
+        <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
           {['Like', 'Comment', 'Share', 'Save'].map(action => (
-            <button key={action} style={btnStyle} onClick={() => alert(`${action} Clicked!`)}>{action}</button>
+            <button key={action} style={btnStyle} onClick={() => console.log(`${action} Action Recorded`)}>{action}</button>
           ))}
         </div>
       </div>
 
-      {/* 5. बॉटम नेविगेशन */}
-      <nav style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', padding: '15px', background: '#fff', borderTop: '1px solid #ddd', display: 'flex', justifyContent: 'space-around' }}>
-        <button style={navBtn} onClick={() => navigate('/home')}>🏠</button>
-        <button style={navBtn} onClick={() => navigate('/explore')}>🔍</button>
-        <button style={navBtn} onClick={() => navigate('/profile')}>👤</button>
-        <button style={{...navBtn, background: '#000', color: '#fff', borderRadius: '50%', width: '30px', height: '30px'}} onClick={() => alert('Add Post')}>+</button>
-      </nav>
+      {/* 4. सर्वर स्लॉट (अदृश्य/अंडर द हुड) */}
+      <div style={{ marginTop: '20px', padding: '10px', border: '1px dashed #ddd', borderRadius: '10px', textAlign: 'center', fontSize: '9px', color: '#888' }}>
+        📡 RangManch Core: Real-time Sync Active
+      </div>
     </div>
   );
 };
