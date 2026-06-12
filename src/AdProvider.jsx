@@ -1,73 +1,64 @@
 import React, { useState, useEffect } from 'react';
 
+// यहाँ सेटिंग कॉन्फिगरेशन है - इसे भविष्य में बार-बार नहीं बदलना पड़ेगा
+const CONFIG = {
+  API_URL: 'YOUR_API_ENDPOINT_FOR_ADS', 
+  REFRESH_INTERVAL: 15000, // 15 सेकंड (ज्यादा रिफ्रेश = ज्यादा कमाई)
+};
+
 export const AdBanner = () => {
-  const [ads, setAds] = useState([]); 
+  const [ads, setAds] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  // 1. डेटा लोड करने का फीचर (API के साथ)
-  useEffect(() => {
-    const fetchAds = () => {
-      // यहाँ अपनी सर्वर API का लिंक डालें
-      fetch('YOUR_API_ENDPOINT_FOR_ADS')
-        .then(res => res.json())
-        .then(data => setAds(data))
-        .catch(err => console.log("सर्वर से विज्ञापन लोड नहीं हो पाए..."));
-    };
+  const fetchAds = async () => {
+    try {
+      const response = await fetch(CONFIG.API_URL);
+      const data = await response.json();
+      setAds(data);
+      setError(false);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchAds();
-    // 30 सेकंड में विज्ञापन रिफ्रेश करने का फीचर
-    const interval = setInterval(fetchAds, 30000); 
+    const interval = setInterval(fetchAds, CONFIG.REFRESH_INTERVAL);
     return () => clearInterval(interval);
   }, []);
 
-  // 2. क्लिक ट्रैकिंग फीचर (कमाई का जरिया)
   const trackClick = (adId) => {
-    console.log(`User clicked ad: ${adId}. Server updated!`);
-    // यहाँ से तुम सर्वर को बता सकते हो कि ऐड पर क्लिक हुआ है
+    console.log(`Click recorded for: ${adId}`);
+    // यहाँ आप अपने सर्वर का ट्रैकिंग API कॉल डाल सकते हैं
   };
 
   if (!isVisible) return null;
 
   return (
-    <div style={{
-      backgroundColor: '#ffffff',
-      padding: '15px 25px',
-      border: '1px solid #e5e5e5',
-      borderRadius: '12px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-      margin: '10px',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      {/* 3. प्रोमोटेड विज्ञापन लिस्ट */}
-      <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-        {ads.length > 0 ? (
-          ads.map((ad, index) => (
-            <a key={index} href={ad.link || "#"} onClick={() => trackClick(ad.id)} style={{ textDecoration: 'none', color: '#333' }}>
-              <span style={{ backgroundColor: '#000', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '10px', marginRight: '5px' }}>Promoted</span>
-              {ad.title}
+    <div style={{ backgroundColor: '#ffffff', padding: '15px', border: '1px solid #eee', borderRadius: '12px', margin: '10px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+      
+      {/* 1. प्रोमोटेड विज्ञापन लिस्ट (पुराना फीचर) */}
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+        {loading ? (<span>लोड हो रहा है...</span>) : error ? (<span>कोई विज्ञापन नहीं</span>) : (
+          ads.map((ad) => (
+            <a key={ad.id} href={ad.link} onClick={() => trackClick(ad.id)} style={{ textDecoration: 'none', color: '#333' }}>
+              <span style={{ background: '#000', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px' }}>Promoted</span> {ad.title}
             </a>
           ))
-        ) : (
-          <span style={{ color: '#888' }}>कोई विज्ञापन उपलब्ध नहीं है</span>
         )}
+        
+        {/* क्लोज बटन */}
+        <button onClick={() => setIsVisible(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px' }}>×</button>
       </div>
 
-      {/* सर्वर डेटा स्लॉट - जहाँ से 34 फीचर्स का डेटा आएगा */}
-      <div id="server-data-slot"></div>
-
-      {/* क्लोज बटन */}
-      <button 
-        onClick={() => setIsVisible(false)} 
-        style={{
-          background: 'none', border: '1px solid #ccc', borderRadius: '50%',
-          width: '30px', height: '30px', cursor: 'pointer', fontSize: '18px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '20px'
-        }}>
-        ×
-      </button>
+      {/* 2. सर्वर डेटा स्लॉट (Future-Proof: यहाँ से 34 फीचर्स का डेटा आएगा) */}
+      <div id="server-data-slot" style={{ marginTop: '10px', borderTop: '1px solid #f0f0f0', paddingTop: '10px' }}>
+        {/* यहाँ भविष्य में सर्वर से सीधे डेटा लोड होगा */}
+      </div>
     </div>
   );
 };
