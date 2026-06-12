@@ -5,7 +5,7 @@ const InstagramProfile = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
-  // 40+ फीचर्स का पूरा मास्टर डेटा
+  // आपकी पूरी 54 फीचर्स की लिस्ट सुरक्षित है
   const features = {
     editMenu: ['Change Photo', 'Change Name', 'Edit Bio', 'Social Links', 'Change Username', 'Category', 'Private Info', 'Pro Dashboard'],
     msgMenu: ['Video Call', 'Voice Call', 'AI Translate', 'Location', 'Send Gift', 'ChatGuard', 'Gallery', 'Block User'],
@@ -14,14 +14,14 @@ const InstagramProfile = () => {
   };
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', background: '#fff', fontFamily: 'Arial' }}>
+    <div style={{ width: '100%', minHeight: '100vh', background: '#fff', fontFamily: 'Arial', paddingBottom: '80px' }}>
       
       {/* 1. हेडर */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', padding: '15px', borderBottom: '1px solid #dbdbdb' }}>
-        <h2 style={{ fontSize: '22px', fontFamily: 'cursive' }}>RangManch</h2>
+      <header style={{ display: 'flex', justifyContent: 'space-between', padding: '15px', borderBottom: '1px solid #dbdbdb', alignItems: 'center' }}>
+        <h2 style={{ fontSize: '22px', fontFamily: 'cursive', margin: 0 }}>RangManch</h2>
         <div>
-          <button onClick={() => navigate('/settings')}>⚙️</button>
-          <button onClick={() => setShowMenu(!showMenu)}>⋮</button>
+          <button onClick={() => navigate('/settings')} style={{ border: 'none', background: 'none' }}>⚙️</button>
+          <button onClick={() => setShowMenu(!showMenu)} style={{ border: 'none', background: 'none' }}>⋮</button>
         </div>
       </header>
 
@@ -35,37 +35,36 @@ const InstagramProfile = () => {
         </div>
       </div>
 
-      {/* 3. मेन बटन (अब ये सभी क्लिकेबल हैं) */}
+      {/* 3. मेन बटन (अब ये सीधे नेविगेशन पर ले जाएंगे) */}
       <div style={{ padding: '0 20px', display: 'flex', gap: '8px' }}>
-        {/* Edit बटन (8 फीचर वाला) */}
         <button onClick={() => navigate('/edit-profile')} style={{ flex: 1, padding: '8px' }}>Edit</button>
-        {/* Message बटन (8 फीचर वाला) */}
         <button onClick={() => navigate('/messenger')} style={{ flex: 1, padding: '8px' }}>Message</button>
-        {/* + Promote बटन */}
         <button onClick={() => navigate('/promote')} style={{ padding: '8px 15px', background: '#fbbf24', border: 'none' }}>+ Promote</button>
-        {/* Story बटन (6 फीचर वाला) */}
         <button onClick={() => navigate('/story-upload')} style={{ padding: '8px 15px' }}>+</button>
       </div>
 
-      {/* 4. 3-डॉट मेनू (18 फीचर) */}
+      {/* 4. 3-डॉट मेनू (18 फीचर - आप यहाँ बाद में सर्वर के लिंक जोड़ सकते हैं) */}
       {showMenu && (
-        <div style={{ padding: '20px', background: '#f9f9f9' }}>
+        <div style={{ padding: '20px', background: '#f9f9f9', borderBottom: '1px solid #eee' }}>
           {features.mainMenu.map(f => (
-            <button key={f} onClick={() => alert(f)} style={{ display: 'block', width: '100%', padding: '10px' }}>{f}</button>
+            <button key={f} onClick={() => navigate(`/${f.toLowerCase().replace(' ', '-')}`)} style={{ display: 'block', width: '100%', padding: '10px', textAlign: 'left', border: 'none', background: 'none', cursor: 'pointer' }}>{f}</button>
           ))}
         </div>
       )}
 
-      {/* 5. सर्वर स्लॉट (कमाई डेटा) */}
-      <div style={{ padding: '20px', border: '2px dashed #ccc', margin: '20px' }}>
-        <p>📈 [Active Earnings: Wallet Enabled]</p>
+      {/* 5. सर्वर स्लॉट (कमाई डेटा - आप बाद में यहाँ API कनेक्ट करेंगे) */}
+      <div style={{ padding: '20px', border: '2px dashed #ccc', margin: '20px', borderRadius: '10px' }}>
+        <p>📡 <b>Server Hub:</b> Wallet System & Analytics Sync</p>
+        {/* सर्वर की जगह छोड़ी गई है */}
       </div>
 
-      {/* 6. बॉटम नेविगेशन */}
-      <nav style={{ position: 'fixed', bottom: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#fff' }}>
-        <button onClick={() => navigate('/home')}>🏠</button>
-        <button onClick={() => navigate('/explore')}>🔍</button>
-        <button onClick={() => navigate('/messenger')}>💬</button>
+      {/* 6. बॉटम नेविगेशन (अब इसमें 5 बटन हैं) */}
+      <nav style={{ position: 'fixed', bottom: 0, width: '100%', display: 'flex', justifyContent: 'space-around', padding: '15px', background: '#fff', borderTop: '1px solid #dbdbdb' }}>
+        <button onClick={() => navigate('/home')} style={{ border: 'none', background: 'none' }}>🏠</button>
+        <button onClick={() => navigate('/explore')} style={{ border: 'none', background: 'none' }}>🔍</button>
+        <button onClick={() => navigate('/messenger')} style={{ border: 'none', background: 'none' }}>💬</button>
+        <button onClick={() => navigate('/video-call')} style={{ border: 'none', background: 'none' }}>📹</button>
+        <button onClick={() => navigate('/profile')} style={{ border: 'none', background: 'none' }}>👤</button>
       </nav>
     </div>
   );
