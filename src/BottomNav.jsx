@@ -6,8 +6,8 @@ const BottomNav = () => {
   const [showMenu, setShowMenu] = useState(false);
   
   const navBtn = { 
-    background: 'none', border: 'none', fontSize: '24px', 
-    cursor: 'pointer', padding: '10px' 
+    background: 'none', border: 'none', fontSize: '22px', 
+    cursor: 'pointer', padding: '8px' 
   };
 
   return (
@@ -21,11 +21,9 @@ const BottomNav = () => {
       <button style={navBtn} onClick={() => navigate('/explore')}>🔍</button>
       <button style={navBtn} onClick={() => navigate('/messenger')}>💬</button>
       <button style={navBtn} onClick={() => navigate('/video-call')}>📹</button>
+      <button style={navBtn} onClick={() => navigate('/profile')}>👤</button>
       
-      {/* गियर वाला सेटिंग बटन - अब नीचे मुख्य पट्टी में है */}
-      <button style={navBtn} onClick={() => navigate('/settings')}>⚙️</button>
-      
-      {/* 3-डॉट मेनू - भीड़ कम करने के लिए */}
+      {/* 3-डॉट मेनू - इसमें अब गियर, एडमिन और सिक्योरिटी है */}
       <button style={navBtn} onClick={() => setShowMenu(!showMenu)}>⋮</button>
 
       {/* 3-डॉट वाला पॉप-अप मेनू */}
@@ -35,7 +33,7 @@ const BottomNav = () => {
           border: '1px solid #ddd', borderRadius: '12px', padding: '10px', 
           boxShadow: '0 -2px 10px rgba(0,0,0,0.15)', width: '160px'
         }}>
-          <div onClick={() => { navigate('/profile'); setShowMenu(false); }} style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #eee' }}>👤 Profile</div>
+          <div onClick={() => { navigate('/settings'); setShowMenu(false); }} style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #eee' }}>⚙️ Settings</div>
           <div onClick={() => { navigate('/admin'); setShowMenu(false); }} style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #eee' }}>📈 Admin</div>
           <div onClick={() => { navigate('/security'); setShowMenu(false); }} style={{ padding: '10px', cursor: 'pointer' }}>🛡️ Security</div>
         </div>
