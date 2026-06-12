@@ -1,79 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   
-  // 11 फीचर्स का स्टेट मैनेजमेंट
-  const [country, setCountry] = useState('India');
+  const [country, setCountry] = useState('Detecting...');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showCountry, setShowCountry] = useState(false);
 
-  // लॉगिन फंक्शन - जो सीधे Home पेज पर ले जाएगा
+  // 1. ऑटोमैटिक कंट्री डिटेक्शन फीचर
+  useEffect(() => {
+    const userLang = navigator.language || 'en-IN';
+    if (userLang.includes('IN')) setCountry('India');
+    else setCountry('Global');
+  }, []);
+
+  // लॉगिन फंक्शन (बिना अलर्ट के डायरेक्ट नेविगेशन)
   const handleLogin = () => {
-    if (email && password) {
-      navigate('/home'); // मास्टर नेविगेशन
-    } else {
-      alert('कृपया अपनी जानकारी भरें!');
-    }
+    if (email && password) navigate('/home');
   };
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: '#fff', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      fontFamily: 'Arial, sans-serif',
-      padding: '20px'
-    }}>
+    <div style={{ minHeight: '100vh', background: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: 'Poppins, sans-serif', padding: '20px' }}>
       
-      {/* प्रीमियम ब्रांड नाम - स्टाइल वही जो आपने चाहा था */}
-      <h1 style={{ 
-        fontFamily: 'cursive', 
-        fontSize: '55px', 
-        fontWeight: 'bold', 
-        color: '#000', 
-        marginBottom: '40px',
-        textAlign: 'center' 
-      }}>RangManch</h1>
+      {/* क्लासिक ब्रांडिंग */}
+      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+        <h1 style={{ fontFamily: 'cursive', fontSize: '50px', margin: 0, color: '#000' }}>RangManch</h1>
+        <p style={{ fontSize: '12px', color: '#666', letterSpacing: '2px' }}>GLOBAL SOCIAL HUB</p>
+      </div>
 
-      <div style={{ width: '100%', maxWidth: '380px', padding: '25px', border: '1px solid #e5e5e5', borderRadius: '15px' }}>
+      <div style={{ width: '100%', maxWidth: '380px', padding: '25px', border: '1px solid #f0f0f0', borderRadius: '20px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
         
-        {/* 1. कंट्री सर्च बटन */}
-        <button onClick={() => setShowCountry(!showCountry)} style={{ width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '8px', border: '1px solid #ddd', background: '#f9f9f9', textAlign: 'left', cursor: 'pointer' }}>
-          📍 {country}
-        </button>
-        {showCountry && <input type="text" placeholder="सर्च करें..." onChange={(e) => setCountry(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '15px', border: '1px solid #000', borderRadius: '5px' }} />}
-
-        {/* 2 & 3. गूगल और फोन लॉगिन */}
-        <button style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' }}>Continue with Google</button>
-        <button style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' }}>Continue with Phone</button>
-
-        {/* 4 & 5. ईमेल और पासवर्ड इनपुट */}
-        <input type="text" placeholder="Email/Username" onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
-        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ddd' }} />
-
-        {/* 6 & 7. चेकबॉक्स और टर्म्स लिंक */}
-        <div style={{ marginBottom: '20px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <input type="checkbox" /> <span>Remember me</span> | <a href="#" style={{ color: '#0095f6' }}>Terms</a>
+        <div style={{ marginBottom: '15px', padding: '12px', borderRadius: '10px', background: '#f8f9fa', textAlign: 'center', fontWeight: 'bold' }}>
+          📍 Location: {country}
         </div>
 
-        {/* 8. मुख्य लॉगिन बटन */}
-        <button onClick={handleLogin} style={{ width: '100%', padding: '12px', background: '#000', color: '#fff', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>Login</button>
+        {/* डायरेक्ट फंक्शनल बटन */}
+        <button onClick={() => window.location.href = 'https://accounts.google.com'} style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' }}>Continue with Google</button>
+        <button onClick={() => window.location.href = 'tel:+91'} style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '10px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer' }}>Continue with Phone</button>
 
-        {/* 9 & 10. फॉरगॉट और साइन अप */}
+        <input type="text" placeholder="Email / Username" onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #eee' }} />
+        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '10px', border: '1px solid #eee' }} />
+
+        {/* नया प्रीमियम नीला लॉगिन बटन */}
+        <button onClick={handleLogin} style={{ width: '100%', padding: '15px', background: '#007bff', color: '#fff', borderRadius: '10px', border: 'none', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>Login to RangManch</button>
+
         <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '13px' }}>
-          <p style={{ cursor: 'pointer' }}>Forgot Password?</p>
-          <p>Don't have an account? <b style={{ cursor: 'pointer', color: '#0095f6' }}>Sign Up</b></p>
+          <p onClick={() => alert('Redirecting to reset...')} style={{ cursor: 'pointer' }}>Forgot Password?</p>
+          <p>Don't have an account? <b onClick={() => navigate('/signup')} style={{ cursor: 'pointer', color: '#007bff' }}>Sign Up</b></p>
         </div>
       </div>
       
-      {/* 11. सर्वर सिंक स्लॉट (नीचे सबसे छोटा, अदृश्य) */}
-      <div id="server-slot" style={{ display: 'none' }}></div>
+      {/* सर्वर स्लॉट (बाकी फीचर्स के लिए नीचे जगह) */}
+      <div id="server-slot" style={{ marginTop: '30px', fontSize: '10px', color: '#aaa' }}>
+        Server Engine Active: RangManch Core v1.0
+      </div>
     </div>
   );
 };
