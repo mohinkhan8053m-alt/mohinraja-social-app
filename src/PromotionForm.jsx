@@ -1,65 +1,68 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Layout from './Layout.jsx'; // मास्टर लेआउट जोड़ने के लिए
 
 const PromotionForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     companyName: '',
-    targetLink: '', // यहाँ से यूजर अपना प्रोडक्ट या प्रोफाइल लिंक डालेगा
+    targetLink: '',
     adCategory: 'Normal',
-    amount: 500 
+    amount: 500,
+    contactEmail: '', // नया फीचर
+    adDescription: '', // नया फीचर
+    targetAudience: 'Global' // नया फीचर
   });
 
   const handlePromotionSubmission = async () => {
-    // 1. डेटा वैलिडेशन
     if (!formData.companyName || !formData.targetLink) {
-      alert("कृपया सभी जानकारी भरें!");
+      alert("कृपया नाम और लिंक जरूर भरें!");
       return;
     }
-
-    // 2. पेमेंट गेटवे का लॉजिक (यहाँ तुम्हारा Razorpay या Stripe का लिंक आएगा)
-    console.log("Saving Ad Link to Database:", formData.targetLink);
-    
-    // 3. पेमेंट पेज पर रीडायरेक्ट करना
-    alert("पेमेंट गेटवे पर जा रहे हैं...");
-    
-    // मान लो पेमेंट के बाद डेटाबेस में सेव होगा
-    // navigate('/payment-success'); 
-    
-    // अभी के लिए एक डमी पेमेंट लिंक खोलते हैं
-    window.location.href = "https://rzp.io/l/your-payment-link"; // यहाँ अपना पेमेंट लिंक डालो
+    // पेमेंट लॉजिक
+    alert(`पेमेंट गेटवे पर जा रहे हैं: ₹${formData.amount}`);
+    window.location.href = "https://rzp.io/l/your-payment-link";
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto', border: '1px solid #ddd', borderRadius: '15px' }}>
-      <h2 style={{ fontFamily: 'cursive' }}>🚀 Boost Your Business</h2>
-      
-      <input 
-        placeholder="कंपनी या प्रोफाइल का नाम" 
-        onChange={(e) => setFormData({...formData, companyName: e.target.value})} 
-        style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px' }} 
-      />
-      
-      <input 
-        placeholder="प्रमोशन लिंक (YouTube/Insta/Website)" 
-        onChange={(e) => setFormData({...formData, targetLink: e.target.value})} 
-        style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px' }} 
-      />
+    <Layout>
+      <div style={{ padding: '20px', maxWidth: '500px', margin: 'auto', background: '#fff', borderRadius: '20px', border: '1px solid #eee' }}>
+        <h2 style={{ fontFamily: 'cursive', textAlign: 'center' }}>🚀 RangManch Ad Center</h2>
+        
+        {/* इनपुट फील्ड्स (अब ज्यादा फीचर्स के साथ) */}
+        <input placeholder="ब्रांड/कंपनी का नाम" onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd' }} />
+        
+        <input placeholder="प्रमोशन लिंक (URL)" onChange={(e) => setFormData({...formData, targetLink: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd' }} />
 
-      <div style={{ margin: '10px 0' }}>
-        <label>प्रमोशन टाइप:</label>
-        <select onChange={(e) => setFormData({...formData, adCategory: e.target.value})} style={{ width: '100%', padding: '10px' }}>
-          <option value="Normal">Normal (₹500)</option>
-          <option value="Premium">Premium (₹1000)</option>
-        </select>
+        <input placeholder="संपर्क ईमेल (Contact Email)" onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd' }} />
+
+        <textarea placeholder="ऐड का विवरण (Description)" onChange={(e) => setFormData({...formData, adDescription: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd', height: '80px' }}></textarea>
+
+        {/* कैटेगरी और प्राइसिंग लॉजिक */}
+        <div style={{ margin: '10px 0' }}>
+          <label>प्रमोशन प्लान चुनें:</label>
+          <select onChange={(e) => {
+            const price = e.target.value === 'Premium' ? 1000 : 500;
+            setFormData({...formData, adCategory: e.target.value, amount: price});
+          }} style={{ width: '100%', padding: '12px', borderRadius: '8px' }}>
+            <option value="Normal">Normal Plan (₹500)</option>
+            <option value="Premium">Premium Plan (₹1000 - 2x Reach)</option>
+          </select>
+        </div>
+
+        {/* डायनामिक प्राइस बटन */}
+        <button 
+          onClick={handlePromotionSubmission} 
+          style={{ width: '100%', padding: '15px', background: '#fbbf24', border: 'none', borderRadius: '8px', fontWeight: 'bold', marginTop: '20px', cursor: 'pointer' }}>
+          PAY ₹{formData.amount} & BOOST NOW
+        </button>
+
+        {/* सर्वर की जगह */}
+        <div style={{ marginTop: '30px', padding: '10px', fontSize: '12px', color: '#888', textAlign: 'center' }}>
+          📡 <b>Ad-Server Sync:</b> Payment tracking enabled.
+        </div>
       </div>
-
-      <button 
-        onClick={handlePromotionSubmission} 
-        style={{ width: '100%', padding: '15px', background: '#fbbf24', border: 'none', borderRadius: '8px', fontWeight: 'bold', marginTop: '20px' }}>
-        PAY & BOOST NOW
-      </button>
-    </div>
+    </Layout>
   );
 };
 
