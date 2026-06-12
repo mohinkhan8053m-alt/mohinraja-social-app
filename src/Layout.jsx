@@ -6,8 +6,12 @@ const Layout = ({ children }) => {
   const [showTopMenu, setShowTopMenu] = useState(false);
   const [showAdPopup, setShowAdPopup] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 3 सेकंड बाद पॉप-अप ऐड (सिर्फ एक बार दिखेगा)
+  // यह लाइन चेक करेगी कि क्या हम 'home' पेज पर हैं
+  // अगर हम home पेज पर नहीं हैं, तो लेआउट वाला नाम नहीं दिखेगा
+  const isHomePage = location.pathname === '/home' || location.pathname === '/';
+
   useEffect(() => {
     const hasSeenAd = localStorage.getItem('hasSeenAd');
     if (!hasSeenAd) {
@@ -25,14 +29,18 @@ const Layout = ({ children }) => {
 
   return (
     <div style={{ paddingBottom: '80px', minHeight: '100vh', background: '#fcfcfc' }}>
-      {/* हेडर */}
       <header style={{ 
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
         padding: '10px 20px', background: '#fff', borderBottom: '1px solid #eee',
         position: 'sticky', top: 0, zIndex: 1000
       }}>
-        {/* यहाँ नाम सिर्फ एक बार है */}
-        <h1 style={{ fontFamily: 'cursive', fontSize: '24px', margin: 0, color: '#333' }}>RangManch</h1>
+        
+        {/* मैजिक लाइन: अगर Home है तो ही 'RangManch' दिखेगा, बाकी सब जगह खाली */}
+        {isHomePage ? (
+          <h1 style={{ fontFamily: 'cursive', fontSize: '24px', margin: 0, color: '#333' }}>RangManch</h1>
+        ) : (
+          <div style={{ width: '100px' }}></div> 
+        )}
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24', background: '#fff9e6', padding: '5px 10px', borderRadius: '15px', border: '1px solid #fbbf24' }}>
@@ -49,7 +57,6 @@ const Layout = ({ children }) => {
         )}
       </header>
 
-      {/* पॉप-अप ऐड */}
       {showAdPopup && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2000 }}>
           <div style={{ background: '#fff', padding: '20px', borderRadius: '15px', width: '80%', textAlign: 'center' }}>
@@ -61,10 +68,7 @@ const Layout = ({ children }) => {
         </div>
       )}
 
-      {/* मुख्य कंटेंट */}
       <main style={{ padding: '20px' }}>{children}</main>
-
-      {/* बॉटम नेविगेशन */}
       <BottomNav />
     </div>
   );
