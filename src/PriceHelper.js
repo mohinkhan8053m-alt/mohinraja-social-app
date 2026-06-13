@@ -1,29 +1,34 @@
-// --- 1. ग्लोबल करेंसी और स्मार्ट डायनामिक प्राइसिंग ---
-export const getCountryPricing = (countryCode) => {
-  // भारत का बेस प्राइस
-  const basePriceIndia = 999; 
-  
-  // कैटेगरीज के हिसाब से फिक्स मल्टीप्लायर
-  // Tier 1 (अमीर देश - 3 से 4 गुना), Tier 2 (सामान्य), Tier 3 (इंडिया के आसपास)
+// --- 1. ग्लोबल करेंसी और प्रीमियम प्राइसिंग इंजन ---
+export const getGlobalPricing = (originCountry, targetReach) => {
+  // आपका फिक्स प्रीमियम टारगेट
+  const PRICE_INDIA_GLOBAL = 1000000; // ₹10 Lakh
+  const PRICE_FOREIGN_GLOBAL = 2000000; // ₹20 Lakh
+
+  // बेस करेंसी डेटा
   const currencyData = {
-    'IN': { curr: 'INR', symbol: '₹', multiplier: 1 },    // भारत (Base)
-    'US': { curr: 'USD', symbol: '$', multiplier: 0.04 }, // 1000 INR = 40 USD
-    'UK': { curr: 'GBP', symbol: '£', multiplier: 0.035 },
-    'AE': { curr: 'AED', symbol: 'DH', multiplier: 0.14 }, // दुबई
-    'KW': { curr: 'KWD', symbol: 'KD', multiplier: 0.012 }, // कुवैत (महंगी करेंसी)
-    'PK': { curr: 'PKR', symbol: '₨', multiplier: 3.2 },    // कम करेंसी वाली कंट्री
-    'BD': { curr: 'BDT', symbol: '৳', multiplier: 1.4 }     // बांग्लादेश
+    'IN': { curr: 'INR', symbol: '₹', rate: 1 },
+    'US': { curr: 'USD', symbol: '$', rate: 0.012 }, // 1 INR = 0.012 USD approx
+    'UK': { curr: 'GBP', symbol: '£', rate: 0.009 },
+    'AE': { curr: 'AED', symbol: 'DH', rate: 0.044 },
+    'KW': { curr: 'KWD', symbol: 'KD', rate: 0.0036 }
   };
 
-  const data = currencyData[countryCode] || currencyData['IN'];
+  // लॉजिक: अगर इंडिया का क्लाइंट है तो 10 लाख, फॉरेन है तो 20 लाख
+  const basePrice = (originCountry === 'IN') ? PRICE_INDIA_GLOBAL : PRICE_FOREIGN_GLOBAL;
   
-  // यहाँ लॉजिक है: अगर अमीर देश है तो multiplier से गुना करें, 
-  // अगर छोटी करेंसी है तो उसी हिसाब से एडजस्ट करें।
-  const calculatedPrice = Math.round(basePriceIndia * data.multiplier);
+  const data = currencyData[originCountry] || currencyData['IN'];
+  
+  // कन्वर्टेड प्राइस
+  const finalPrice = Math.round(basePrice * data.rate);
 
   return {
-    ...data,
-    vipPrice: calculatedPrice,
-    displayPrice: `${data.symbol}${calculatedPrice}` 
+    curr: data.curr,
+    symbol: data.symbol,
+    displayPrice: `${data.symbol}${finalPrice.toLocaleString()}`,
+    basePrice: basePrice
   };
 };
+
+// इस्तेमाल कैसे करें (उदाहरण):
+// const price = getGlobalPricing('US', 'Global'); 
+// यह आपको US के क्लाइंट के लिए $24,000 (लगभग) का प्रीमियम प्राइस देगा।
