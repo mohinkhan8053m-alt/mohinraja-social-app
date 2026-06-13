@@ -1,34 +1,32 @@
-// --- 1. ग्लोबल करेंसी और प्रीमियम प्राइसिंग इंजन ---
-export const getGlobalPricing = (originCountry, targetReach) => {
-  // आपका फिक्स प्रीमियम टारगेट
-  const PRICE_INDIA_GLOBAL = 1000000; // ₹10 Lakh
-  const PRICE_FOREIGN_GLOBAL = 2000000; // ₹20 Lakh
+// --- PriceHelper.js (सिर्फ कैलकुलेशन के लिए) ---
 
-  // बेस करेंसी डेटा
-  const currencyData = {
-    'IN': { curr: 'INR', symbol: '₹', rate: 1 },
-    'US': { curr: 'USD', symbol: '$', rate: 0.012 }, // 1 INR = 0.012 USD approx
-    'UK': { curr: 'GBP', symbol: '£', rate: 0.009 },
-    'AE': { curr: 'AED', symbol: 'DH', rate: 0.044 },
-    'KW': { curr: 'KWD', symbol: 'KD', rate: 0.0036 }
+export const getGlobalPricing = (originCountry) => {
+  // आपका फिक्स प्रीमियम टारगेट - कोई कॉम्प्रोमाइज नहीं
+  const PRICE_INDIA = 1000000;   // ₹10,00,000 फिक्स
+  const PRICE_FOREIGN = 2000000; // ₹20,00,000 की वैल्यू (फॉरेन करेंसी में)
+
+  // अगर इंडिया का क्लाइंट है
+  if (originCountry === 'IN') {
+    return { 
+      symbol: '₹', 
+      displayPrice: '₹10,00,000', 
+      value: PRICE_INDIA 
+    };
+  }
+
+  // अगर फॉरेन का क्लाइंट है - उनकी करेंसी में ₹20 लाख की सटीक वैल्यू
+  const foreignRates = {
+    'US': { symbol: '$', val: '24,000' }, // 20 Lakhs in USD
+    'UK': { symbol: '£', val: '19,000' }, // 20 Lakhs in GBP
+    'AE': { symbol: 'DH', val: '88,000' }, // 20 Lakhs in AED
+    'KW': { symbol: 'KD', val: '7,300' }  // 20 Lakhs in KWD
   };
 
-  // लॉजिक: अगर इंडिया का क्लाइंट है तो 10 लाख, फॉरेन है तो 20 लाख
-  const basePrice = (originCountry === 'IN') ? PRICE_INDIA_GLOBAL : PRICE_FOREIGN_GLOBAL;
-  
-  const data = currencyData[originCountry] || currencyData['IN'];
-  
-  // कन्वर्टेड प्राइस
-  const finalPrice = Math.round(basePrice * data.rate);
+  const data = foreignRates[originCountry] || { symbol: '$', val: '24,000' };
 
   return {
-    curr: data.curr,
     symbol: data.symbol,
-    displayPrice: `${data.symbol}${finalPrice.toLocaleString()}`,
-    basePrice: basePrice
+    displayPrice: `${data.symbol}${data.val}`,
+    value: PRICE_FOREIGN
   };
 };
-
-// इस्तेमाल कैसे करें (उदाहरण):
-// const price = getGlobalPricing('US', 'Global'); 
-// यह आपको US के क्लाइंट के लिए $24,000 (लगभग) का प्रीमियम प्राइस देगा।
