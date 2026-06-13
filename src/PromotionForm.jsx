@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import Layout from './Layout.jsx'; 
+// PriceHelper से कैलकुलेशन पावर इंपोर्ट कर रहे हैं
+import { getGlobalPricing } from './PriceHelper'; 
 
 const PromotionForm = () => {
-  // मोइन भाई का फिक्स प्रीमियम लॉजिक
-  const getDynamicPrice = (origin) => {
-    return origin === 'IN' ? 1000000 : 2000000; // 10 लाख या 20 लाख
-  };
-
   const [formData, setFormData] = useState({
     companyName: '',
     targetLink: '',
     contactEmail: '',
-    origin: 'IN', // Default India
-    amount: 1000000
+    origin: 'IN',
+    // इनिशियल स्टेट ही हेल्पर से आ रही है
+    priceInfo: getGlobalPricing('IN') 
   });
 
   const handlePartnerRequest = () => {
@@ -20,8 +18,8 @@ const PromotionForm = () => {
       alert("मोइन भाई, कंपनी का नाम और ईमेल जरूरी है!");
       return;
     }
-    // अब यहाँ से आप क्लाइंट को सीधे पार्टनरशिप पिच पर ले जाएंगे
-    alert(`प्रपोजल सबमिट! मोइन राजा की टीम ₹${formData.amount.toLocaleString()} की डील के लिए संपर्क करेगी।`);
+    // अब यहाँ जो प्राइस दिखेगा, वही डील फाइनल होगी
+    alert(`प्रपोजल सबमिट! मोइन राजा की टीम ${formData.priceInfo.displayPrice} की डील के लिए संपर्क करेगी।`);
   };
 
   return (
@@ -36,15 +34,21 @@ const PromotionForm = () => {
 
         <div style={{ margin: '20px 0' }}>
           <label>Region of Origin:</label>
-          <select onChange={(e) => setFormData({...formData, origin: e.target.value, amount: getDynamicPrice(e.target.value)})} style={inputStyle}>
-            <option value="IN">India (Base: ₹10 Lakhs)</option>
-            <option value="US">Foreign (Base: ₹20 Lakhs)</option>
+          <select 
+            onChange={(e) => setFormData({...formData, origin: e.target.value, priceInfo: getGlobalPricing(e.target.value)})} 
+            style={inputStyle}
+          >
+            <option value="IN">India</option>
+            <option value="US">USA (USD)</option>
+            <option value="UK">UK (GBP)</option>
+            <option value="AE">UAE (AED)</option>
+            <option value="KW">Kuwait (KWD)</option>
           </select>
         </div>
 
         <div style={{ textAlign: 'center', margin: '30px 0', border: '1px solid #333', padding: '20px', borderRadius: '15px' }}>
           <p>Package Price (30 Days):</p>
-          <h1 style={{ color: '#FFD700' }}>{formData.origin === 'IN' ? '₹10,00,000' : '₹20,00,000'}</h1>
+          <h1 style={{ color: '#FFD700' }}>{formData.priceInfo.displayPrice}</h1>
         </div>
 
         <button onClick={handlePartnerRequest} style={btnStyle}>
