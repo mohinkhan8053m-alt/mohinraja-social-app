@@ -3,14 +3,17 @@ import Layout from './Layout.jsx';
 import { getCurrencyData } from './CurrencyConfig';
 
 const WalletPage = () => {
-  const [currency, setCurrency] = useState('INR');
-  const [balance, setBalance] = useState(2000);
+  const [currency, setCurrency] = useState('IN'); // 'IN', 'US', 'KW'
+  const [balance, setBalance] = useState(2000); // टोटल कॉइन्स
+  const [giftEarnings, setGiftEarnings] = useState(500); // मान लीजिए 500 कॉइन गिफ्ट से आए
+  
   const data = getCurrencyData(currency);
 
-  // लड़की की कमाई का हिसाब (5 कॉइन/मिनट का फिक्स रेट)
-  const calculatePayout = (coins) => {
-    const total = coins * 0.5; // 1 कॉइन = 0.5 यूनिट
-    return (total * (1 - data.commission)).toFixed(2); // आपका कमीशन कटकर
+  // आपका कुल कमीशन (कॉल + गिफ्ट दोनों का)
+  const calculateTotalEarnings = () => {
+    const callCommission = (balance * data.payoutRate) * data.commission;
+    const giftCommission = giftEarnings * data.giftCommission;
+    return (callCommission + giftCommission).toFixed(2);
   };
 
   return (
@@ -18,24 +21,31 @@ const WalletPage = () => {
       <div style={{ padding: '20px', fontFamily: 'Poppins' }}>
         <h2>💰 Wallet & Earnings</h2>
         
-        {/* करेंसी सेलेक्टर */}
-        <select onChange={(e) => setCurrency(e.target.value)} style={{ padding: '10px', width: '100%' }}>
-          <option value="INR">INR (India)</option>
-          <option value="USD">USD (Global)</option>
-          <option value="EUR">EUR (Europe)</option>
+        {/* देश के हिसाब से करेंसी सेलेक्टर */}
+        <select onChange={(e) => setCurrency(e.target.value)} style={{ padding: '10px', width: '100%', borderRadius: '10px' }}>
+          <option value="IN">🇮🇳 India (INR)</option>
+          <option value="US">🇺🇸 Global (USD)</option>
+          <option value="KW">🇰🇼 Kuwait (KWD)</option>
         </select>
 
-        {/* अर्निंग डैशबोर्ड */}
-        <div style={{ background: '#222', color: '#fff', padding: '20px', borderRadius: '15px', marginTop: '20px' }}>
-          <p>Net Earnings (After {data.commission * 100}% Platform Fee)</p>
-          <h1>{data.symbol} {calculatePayout(balance)}</h1>
-          <button 
-            onClick={() => alert("Withdrawal sent to your linked Bank/UPI/PayPal automatically!")}
-            style={{ background: '#fff', color: '#000', padding: '10px', border: 'none', borderRadius: '5px', width: '100%' }}
-          >
-            Auto-Withdraw Now
-          </button>
+        {/* अर्निंग डैशबोर्ड (आपका कमीशन) */}
+        <div style={{ background: '#000', color: '#fff', padding: '20px', borderRadius: '20px', marginTop: '20px' }}>
+          <p style={{ opacity: 0.8 }}>Your Net Profit (30% Commission)</p>
+          <h1 style={{ margin: '10px 0' }}>{data.symbol} {calculateTotalEarnings()}</h1>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginTop: '10px' }}>
+            <span>From Calls: {data.symbol} {(balance * data.payoutRate * data.commission).toFixed(2)}</span>
+            <span>From Gifts: {data.symbol} {(giftEarnings * data.giftCommission).toFixed(2)}</span>
+          </div>
         </div>
+
+        {/* विड्रॉल बटन */}
+        <button 
+          onClick={() => alert("Payout successfully initiated to your registered Bank/PayPal!")}
+          style={{ marginTop: '20px', background: '#FFD700', color: '#000', padding: '15px', border: 'none', borderRadius: '15px', width: '100%', fontWeight: 'bold' }}
+        >
+          Auto-Withdraw Now
+        </button>
       </div>
     </Layout>
   );
