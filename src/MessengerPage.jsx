@@ -1,56 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from './Layout.jsx'; 
+import Layout from './Layout.jsx';
 
-const MessengerPage = () => {
+const ExplorePage = () => {
+  const [isPremium, setIsPremium] = useState(false);
   const navigate = useNavigate();
-  // 10 फीचर्स वाला आपका ओरिजिनल डेटा स्ट्रक्चर
-  const users = ["Mohan Raja", "RangManch Team", "Business Partner", "Creative Designer"];
 
   return (
     <Layout>
-      <div style={{ padding: '0 10px' }}>
+      <div style={{ padding: '20px' }}>
+        {/* एक्सप्लोर पेज की हेडिंग जो इसे ढूंढने में मदद करेगी */}
+        <h1 style={{ textAlign: 'center', color: '#fbbf24' }}>🔍 Explore RangManch</h1>
         
-        {/* मैसेंजर लिस्ट (पुराने 10 फीचर्स के साथ 4 नए फीचर्स का इंटीग्रेशन) */}
-        <div style={{ background: '#fff', borderRadius: '15px', border: '1px solid #eee' }}>
-          {users.map((name, index) => (
-            <div key={index} style={{ 
-              padding: '15px', borderBottom: '1px solid #f0f0f0', 
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center' 
-            }}>
-              <div>
-                <span style={{ fontWeight: 'bold', display: 'block' }}>{name}</span>
-                {/* फीचर 1: Online Status Indicator */}
-                <span style={{ fontSize: '10px', color: '#28a745' }}>● Online</span>
-              </div>
-              
-              <div style={{ display: 'flex', gap: '8px' }}>
-                {/* फीचर 2: AI Translate Button */}
-                <button onClick={() => alert('AI Translating...')} style={{ padding: '8px', borderRadius: '8px', border: 'none', background: '#e0e0e0' }}>🌐</button>
-                
-                {/* फीचर 3: Dual Call Options (Video & Audio) */}
-                <button onClick={() => navigate('/video-call')} style={{ padding: '8px 12px', borderRadius: '8px', background: '#fbbf24', border: 'none', fontWeight: 'bold' }}>Video</button>
-                <button onClick={() => alert('Audio Call Started...')} style={{ padding: '8px 12px', borderRadius: '8px', background: '#ddd', border: 'none' }}>Audio</button>
-              </div>
-            </div>
-          ))}
+        {/* 16 बटन्स का ग्रिड लेआउट (सब सामने दिखेगा) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+          <button onClick={() => window.open('https://adsense.google.com')}>AdSense Apply</button>
+          <button onClick={() => setIsPremium(!isPremium)}>Premium Toggle</button>
+          <button onClick={() => alert('Download Report')}>Get Analytics</button>
+          <button onClick={() => alert('Local Promotion')}>Local Ad</button>
+          <button onClick={() => alert('Multi-Country')}>Multi-Region</button>
+          <button onClick={() => alert('Global')}>Global Ad</button>
+          <button onClick={() => alert('Gift Shop')}>Send Gift</button>
+          <button onClick={() => alert('Girl-Talk Filter')}>⚡ Girl Filter</button>
+          <button onClick={() => alert('Syncing...')}>Sync Data</button>
+          <button onClick={() => alert('Server Active')}>Server Hub</button>
+          <button onClick={() => alert('Ad-Wall')}>Force Ad</button>
+          <button onClick={() => alert('Live Stats')}>Live Stats</button>
+          <button onClick={() => alert('Name Input')}>Add Name</button>
+          <button onClick={() => alert('Link Input')}>Add Link</button>
+          <button onClick={() => alert('Select Region')}>Region Select</button>
+          <button onClick={() => alert('Payment Gate')}>Pay Now</button>
         </div>
-
-        {/* विज्ञापन स्लॉट */}
-        <div style={{ margin: '30px 0', padding: '15px', background: '#fff3cd', border: '2px dashed #ffc107', borderRadius: '15px', textAlign: 'center' }}>
-          <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: 'bold' }}>📢 Promote Your Brand Here</p>
-          <button onClick={() => navigate('/promote')} style={{ width: '100%', padding: '12px', background: '#000', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Boost Your Business</button>
-        </div>
-
-        {/* सर्वर स्लॉट (फीचर 4: प्रीमियम एबिलिटी/सिंक) */}
-        <div style={{ marginTop: '20px', padding: '15px', border: '2px dashed #ccc', borderRadius: '15px', textAlign: 'center', background: '#f9f9f9' }}>
-          <p style={{ fontSize: '13px', color: '#555' }}>📡 <b>Server Hub:</b> Message Encryption & Sync Active</p>
-          <button onClick={() => alert('Syncing Chat History...')} style={{ marginTop: '10px', padding: '8px 20px', background: '#333', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Sync Messages</button>
-        </div>
-
       </div>
     </Layout>
   );
 };
 
-export default MessengerPage;
+export default ExplorePage;
