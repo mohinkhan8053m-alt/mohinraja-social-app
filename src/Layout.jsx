@@ -8,16 +8,12 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // यह लाइन चेक करेगी कि क्या हम 'home' पेज पर हैं
-  // अगर हम home पेज पर नहीं हैं, तो लेआउट वाला नाम नहीं दिखेगा
   const isHomePage = location.pathname === '/home' || location.pathname === '/';
 
   useEffect(() => {
     const hasSeenAd = localStorage.getItem('hasSeenAd');
     if (!hasSeenAd) {
-      const timer = setTimeout(() => {
-        setShowAdPopup(true);
-      }, 3000);
+      const timer = setTimeout(() => { setShowAdPopup(true); }, 3000);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -35,17 +31,22 @@ const Layout = ({ children }) => {
         position: 'sticky', top: 0, zIndex: 1000
       }}>
         
-        {/* मैजिक लाइन: अगर Home है तो ही 'RangManch' दिखेगा, बाकी सब जगह खाली */}
         {isHomePage ? (
           <h1 style={{ fontFamily: 'cursive', fontSize: '24px', margin: 0, color: '#333' }}>RangManch</h1>
         ) : (
-          <div style={{ width: '100px' }}></div> 
+          <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer' }}>⬅️ Back</button>
         )}
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* पार्टनरशिप के लिए एक छोटा बटन */}
+          <button onClick={() => navigate('/partnerships')} style={{ background: '#FFD700', border: 'none', padding: '5px 10px', borderRadius: '15px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+            🤝 Partner
+          </button>
+          
           <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24', background: '#fff9e6', padding: '5px 10px', borderRadius: '15px', border: '1px solid #fbbf24' }}>
-            💰 500 Coins
+            💰 500
           </div>
+          
           <button onClick={() => setShowTopMenu(!showTopMenu)} style={{ background: 'none', border: 'none', fontSize: '28px', cursor: 'pointer' }}>⋮</button>
         </div>
         
@@ -53,10 +54,12 @@ const Layout = ({ children }) => {
           <div style={{ position: 'absolute', top: '60px', right: '15px', background: '#fff', border: '1px solid #ddd', borderRadius: '12px', padding: '10px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', width: '160px', zIndex: 1001 }}>
             <div onClick={() => { navigate('/settings'); setShowTopMenu(false); }} style={{ padding: '8px', cursor: 'pointer' }}>⚙️ Settings</div>
             <div onClick={() => { navigate('/admin'); setShowTopMenu(false); }} style={{ padding: '8px', cursor: 'pointer' }}>📈 Admin</div>
+            <div onClick={() => { navigate('/promote'); setShowTopMenu(false); }} style={{ padding: '8px', cursor: 'pointer' }}>🚀 Promote</div>
           </div>
         )}
       </header>
 
+      {/* एड पॉपअप वही रहेगा */}
       {showAdPopup && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2000 }}>
           <div style={{ background: '#fff', padding: '20px', borderRadius: '15px', width: '80%', textAlign: 'center' }}>
