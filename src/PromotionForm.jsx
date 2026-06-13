@@ -1,69 +1,61 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from './Layout.jsx'; // मास्टर लेआउट जोड़ने के लिए
+import Layout from './Layout.jsx'; 
 
 const PromotionForm = () => {
-  const navigate = useNavigate();
+  // मोइन भाई का फिक्स प्रीमियम लॉजिक
+  const getDynamicPrice = (origin) => {
+    return origin === 'IN' ? 1000000 : 2000000; // 10 लाख या 20 लाख
+  };
+
   const [formData, setFormData] = useState({
     companyName: '',
     targetLink: '',
-    adCategory: 'Normal',
-    amount: 500,
-    contactEmail: '', // नया फीचर
-    adDescription: '', // नया फीचर
-    targetAudience: 'Global' // नया फीचर
+    contactEmail: '',
+    origin: 'IN', // Default India
+    amount: 1000000
   });
 
-  const handlePromotionSubmission = async () => {
-    if (!formData.companyName || !formData.targetLink) {
-      alert("कृपया नाम और लिंक जरूर भरें!");
+  const handlePartnerRequest = () => {
+    if (!formData.companyName || !formData.contactEmail) {
+      alert("मोइन भाई, कंपनी का नाम और ईमेल जरूरी है!");
       return;
     }
-    // पेमेंट लॉजिक
-    alert(`पेमेंट गेटवे पर जा रहे हैं: ₹${formData.amount}`);
-    window.location.href = "https://rzp.io/l/your-payment-link";
+    // अब यहाँ से आप क्लाइंट को सीधे पार्टनरशिप पिच पर ले जाएंगे
+    alert(`प्रपोजल सबमिट! मोइन राजा की टीम ₹${formData.amount.toLocaleString()} की डील के लिए संपर्क करेगी।`);
   };
 
   return (
     <Layout>
-      <div style={{ padding: '20px', maxWidth: '500px', margin: 'auto', background: '#fff', borderRadius: '20px', border: '1px solid #eee' }}>
-        <h2 style={{ fontFamily: 'cursive', textAlign: 'center' }}>🚀 RangManch Ad Center</h2>
-        
-        {/* इनपुट फील्ड्स (अब ज्यादा फीचर्स के साथ) */}
-        <input placeholder="ब्रांड/कंपनी का नाम" onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd' }} />
-        
-        <input placeholder="प्रमोशन लिंक (URL)" onChange={(e) => setFormData({...formData, targetLink: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd' }} />
+      <div style={{ background: '#000', color: '#fff', padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius: '30px', border: '2px solid #FFD700' }}>
+        <h2 style={{ textAlign: 'center', color: '#FFD700', fontSize: '28px' }}>🚀 Global Enterprise Partner</h2>
+        <p style={{ textAlign: 'center', opacity: '0.8' }}>90+ AI Features | Worldwide Exposure</p>
 
-        <input placeholder="संपर्क ईमेल (Contact Email)" onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd' }} />
+        <input placeholder="Brand/Company Name" onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={inputStyle} />
+        <input placeholder="Business Website/Link" onChange={(e) => setFormData({...formData, targetLink: e.target.value})} style={inputStyle} />
+        <input placeholder="Official Email" onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} style={inputStyle} />
 
-        <textarea placeholder="ऐड का विवरण (Description)" onChange={(e) => setFormData({...formData, adDescription: e.target.value})} style={{ width: '100%', padding: '12px', margin: '10px 0', borderRadius: '8px', border: '1px solid #ddd', height: '80px' }}></textarea>
-
-        {/* कैटेगरी और प्राइसिंग लॉजिक */}
-        <div style={{ margin: '10px 0' }}>
-          <label>प्रमोशन प्लान चुनें:</label>
-          <select onChange={(e) => {
-            const price = e.target.value === 'Premium' ? 1000 : 500;
-            setFormData({...formData, adCategory: e.target.value, amount: price});
-          }} style={{ width: '100%', padding: '12px', borderRadius: '8px' }}>
-            <option value="Normal">Normal Plan (₹500)</option>
-            <option value="Premium">Premium Plan (₹1000 - 2x Reach)</option>
+        <div style={{ margin: '20px 0' }}>
+          <label>Region of Origin:</label>
+          <select onChange={(e) => setFormData({...formData, origin: e.target.value, amount: getDynamicPrice(e.target.value)})} style={inputStyle}>
+            <option value="IN">India (Base: ₹10 Lakhs)</option>
+            <option value="US">Foreign (Base: ₹20 Lakhs)</option>
           </select>
         </div>
 
-        {/* डायनामिक प्राइस बटन */}
-        <button 
-          onClick={handlePromotionSubmission} 
-          style={{ width: '100%', padding: '15px', background: '#fbbf24', border: 'none', borderRadius: '8px', fontWeight: 'bold', marginTop: '20px', cursor: 'pointer' }}>
-          PAY ₹{formData.amount} & BOOST NOW
-        </button>
-
-        {/* सर्वर की जगह */}
-        <div style={{ marginTop: '30px', padding: '10px', fontSize: '12px', color: '#888', textAlign: 'center' }}>
-          📡 <b>Ad-Server Sync:</b> Payment tracking enabled.
+        <div style={{ textAlign: 'center', margin: '30px 0', border: '1px solid #333', padding: '20px', borderRadius: '15px' }}>
+          <p>Package Price (30 Days):</p>
+          <h1 style={{ color: '#FFD700' }}>{formData.origin === 'IN' ? '₹10,00,000' : '₹20,00,000'}</h1>
         </div>
+
+        <button onClick={handlePartnerRequest} style={btnStyle}>
+          SUBMIT PARTNERSHIP PROPOSAL
+        </button>
       </div>
     </Layout>
   );
 };
+
+const inputStyle = { width: '100%', padding: '15px', margin: '10px 0', borderRadius: '10px', background: '#1a1a1a', border: '1px solid #444', color: '#fff', boxSizing: 'border-box' };
+const btnStyle = { width: '100%', padding: '20px', background: '#FFD700', border: 'none', borderRadius: '10px', fontWeight: '900', fontSize: '18px', cursor: 'pointer', color: '#000' };
 
 export default PromotionForm;
