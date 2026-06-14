@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Layout from './Layout.jsx'; 
-// PriceHelper से कैलकुलेशन पावर इंपोर्ट कर रहे हैं
 import { getGlobalPricing } from './PriceHelper'; 
 
 const PromotionForm = () => {
@@ -9,7 +8,7 @@ const PromotionForm = () => {
     targetLink: '',
     contactEmail: '',
     origin: 'IN',
-    // इनिशियल स्टेट ही हेल्पर से आ रही है
+    campaignType: 'Brand Awareness', // नया फीचर 1
     priceInfo: getGlobalPricing('IN') 
   });
 
@@ -18,7 +17,6 @@ const PromotionForm = () => {
       alert("मोइन भाई, कंपनी का नाम और ईमेल जरूरी है!");
       return;
     }
-    // अब यहाँ जो प्राइस दिखेगा, वही डील फाइनल होगी
     alert(`प्रपोजल सबमिट! मोइन राजा की टीम ${formData.priceInfo.displayPrice} की डील के लिए संपर्क करेगी।`);
   };
 
@@ -26,11 +24,24 @@ const PromotionForm = () => {
     <Layout>
       <div style={{ background: '#000', color: '#fff', padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius: '30px', border: '2px solid #FFD700' }}>
         <h2 style={{ textAlign: 'center', color: '#FFD700', fontSize: '28px' }}>🚀 Global Enterprise Partner</h2>
-        <p style={{ textAlign: 'center', opacity: '0.8' }}>90+ AI Features | Worldwide Exposure</p>
+        
+        {/* नया फीचर 2: मैजिक बटन (डील फाइनल करने के लिए) */}
+        <div style={{ textAlign: 'center', marginBottom: '20px', background: '#1a1a1a', padding: '10px', borderRadius: '15px' }}>
+            <p style={{ fontSize: '10px', color: '#aaa' }}>Admin Deal Control:</p>
+            <button onClick={() => alert('Ads Live!')} style={{ background: '#00ff00', border: 'none', padding: '8px 15px', cursor: 'pointer', borderRadius: '5px', marginRight: '10px' }}>✅ Start Ads</button>
+            <button onClick={() => alert('Ads Paused!')} style={{ background: '#ff0000', border: 'none', padding: '8px 15px', cursor: 'pointer', borderRadius: '5px', color: '#fff' }}>❌ Stop</button>
+        </div>
 
         <input placeholder="Brand/Company Name" onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={inputStyle} />
         <input placeholder="Business Website/Link" onChange={(e) => setFormData({...formData, targetLink: e.target.value})} style={inputStyle} />
         <input placeholder="Official Email" onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} style={inputStyle} />
+
+        {/* नया फीचर 3: कैंपेन का मकसद */}
+        <select onChange={(e) => setFormData({...formData, campaignType: e.target.value})} style={inputStyle}>
+          <option value="Brand Awareness">Brand Awareness</option>
+          <option value="Product Launch">Product Launch</option>
+          <option value="App Install">App Install</option>
+        </select>
 
         <div style={{ margin: '20px 0' }}>
           <label>Region of Origin:</label>
@@ -38,11 +49,10 @@ const PromotionForm = () => {
             onChange={(e) => setFormData({...formData, origin: e.target.value, priceInfo: getGlobalPricing(e.target.value)})} 
             style={inputStyle}
           >
-            <option value="IN">India</option>
+            <option value="IN">India (INR)</option>
             <option value="US">USA (USD)</option>
             <option value="UK">UK (GBP)</option>
             <option value="AE">UAE (AED)</option>
-            <option value="KW">Kuwait (KWD)</option>
           </select>
         </div>
 
@@ -51,9 +61,7 @@ const PromotionForm = () => {
           <h1 style={{ color: '#FFD700' }}>{formData.priceInfo.displayPrice}</h1>
         </div>
 
-        <button onClick={handlePartnerRequest} style={btnStyle}>
-          SUBMIT PARTNERSHIP PROPOSAL
-        </button>
+        <button onClick={handlePartnerRequest} style={btnStyle}>SUBMIT PARTNERSHIP PROPOSAL</button>
       </div>
     </Layout>
   );
