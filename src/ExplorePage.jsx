@@ -28,12 +28,11 @@ const ExplorePage = () => {
     { name: "🌐 Global Reach", path: "/global" }
   ];
 
-  // यह फंक्शन बटन को प्रीमियम लुक देगा
   const getButtonStyle = (name) => {
     const isPremium = name === "🤝 Partnerships" || name === "🚀 Promote";
     return {
       padding: '15px',
-      background: isPremium ? '#FFD700' : '#f8f9fa', // गोल्डन रंग
+      background: isPremium ? '#FFD700' : '#f8f9fa',
       border: isPremium ? 'none' : '1px solid #eee',
       borderRadius: '12px',
       cursor: 'pointer',
@@ -47,7 +46,16 @@ const ExplorePage = () => {
   return (
     <Layout>
       <div style={{ padding: '0 10px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Explore Modules</h2>
+        {/* RangManch Branding - आपकी पहचान */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h1 style={{ fontFamily: 'cursive', fontSize: '24px', margin: 0, color: '#000' }}>RangManch</h1>
+          <p style={{ fontSize: '12px', color: '#666' }}>EXPLORE</p>
+        </div>
+        
+        {/* कंपनी के लिए प्रोमोशनल संदेश */}
+        <div style={{ background: '#fff9c4', padding: '10px', borderRadius: '10px', textAlign: 'center', marginBottom: '20px', border: '1px dashed #fbc02d' }}>
+          <p style={{ fontSize: '13px', margin: 0, fontWeight: 'bold' }}>📢 Companies: Click 'Promote' or 'Partnership'!</p>
+        </div>
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {masterFeatures.map((item) => (
@@ -60,6 +68,7 @@ const ExplorePage = () => {
           ))}
         </div>
 
+        {/* सर्वर स्लॉट - यहाँ आप अपना सर्वर जोड़ेंगे */}
         <div style={{ marginTop: '40px', padding: '20px', border: '2px dashed #aaa', borderRadius: '15px', textAlign: 'center', marginBottom: '20px' }}>
           <p style={{ fontSize: '14px', marginBottom: '10px' }}>📡 <b>Server Hub:</b> 34 Features Synchronized</p>
           <button 
