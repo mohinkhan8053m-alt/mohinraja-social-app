@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// आप 'react-phone-input-2' लाइब्रेरी का इस्तेमाल करें: npm install react-phone-input-2
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
@@ -10,41 +9,60 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // सर्वर हैंडलर: यहाँ आपका सर्वर/बैकएंड जुड़ेगा
+  const handleAuthAction = (actionName) => {
+    console.log(`📡 Server Engine: Initiating ${actionName}...`);
+    // भविष्य में यहाँ Firebase या API कॉल आएगी
+    if (actionName === 'Login') navigate('/home');
+  };
+
   return (
-    <div style={{ minHeight: '100vh', background: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       
-      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <h1 style={{ fontFamily: 'cursive', fontSize: '50px', margin: 0 }}>RangManch</h1>
-        <p style={{ fontSize: '12px', color: '#666', letterSpacing: '2px' }}>GLOBAL SOCIAL HUB</p>
+      {/* 1 & 2: ग्लोबल और लोकल बटन (ऊपरी पट्टी) */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+        <button style={topBtnStyle}>🌍 GLOBAL</button>
+        <button style={topBtnStyle}>LOCAL</button>
       </div>
 
-      <div style={{ width: '100%', maxWidth: '380px', padding: '25px', border: '1px solid #f0f0f0', borderRadius: '20px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
+      <div style={{ width: '100%', maxWidth: '380px', border: '1px solid #ddd', padding: '20px', borderRadius: '20px' }}>
         
-        {/* कंट्री सर्च बार के साथ फोन इनपुट */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ fontSize: '12px', color: '#888' }}>Select Country & Enter Phone</label>
-          <PhoneInput
-            country={'in'}
-            value={phone}
-            onChange={phone => setPhone(phone)}
-            inputStyle={{ width: '100%', padding: '20px 0 20px 45px', borderRadius: '10px' }}
-          />
-        </div>
+        {/* 3: फोन इनपुट (सर्च बार के साथ) */}
+        <PhoneInput
+          country={'in'}
+          enableSearch={true}
+          value={phone}
+          onChange={setPhone}
+          inputStyle={{ width: '100%', padding: '20px 0 20px 45px' }}
+        />
 
-        <button style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', background: '#f8f9fa', border: '1px solid #ddd' }}>Continue with Google</button>
+        {/* 4, 5, 6: सोशल लॉगिन बटन */}
+        <button style={btnStyle} onClick={() => handleAuthAction('Google')}>Continue with Google</button>
+        <button style={btnStyle} onClick={() => handleAuthAction('Facebook')}>Continue with Facebook</button>
+        <button style={btnStyle} onClick={() => handleAuthAction('Apple')}>Continue with Apple</button>
 
-        <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #eee' }} />
-        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '10px', border: '1px solid #eee' }} />
+        {/* ईमेल और पासवर्ड */}
+        <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
+        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
 
-        <button style={{ width: '100%', padding: '15px', background: '#007bff', color: '#fff', borderRadius: '10px', border: 'none', fontWeight: 'bold' }}>Login to RangManch</button>
+        {/* 7: लॉगिन बटन (यह काम करेगा) */}
+        <button onClick={() => handleAuthAction('Login')} style={{ ...btnStyle, background: '#007bff', color: '#fff' }}>Login to RangManch</button>
 
-        <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '13px' }}>
-          <p style={{ cursor: 'pointer' }}>Forgot Password?</p>
-          <p>Don't have an account? <b onClick={() => navigate('/signup')} style={{ color: '#007bff', cursor: 'pointer' }}>Sign Up</b></p>
-        </div>
+        {/* 8 & 9: Forgot Password और Sign Up */}
+        <p style={{ textAlign: 'center', fontSize: '12px' }} onClick={() => handleAuthAction('Forgot Password')}>Forgot Password?</p>
+        <p style={{ textAlign: 'center', fontSize: '12px' }}>Don't have an account? <b onClick={() => navigate('/signup')} style={{ color: 'blue' }}>Sign Up</b></p>
+      </div>
+
+      {/* सर्वर की खाली जगह (Server Engine Space) */}
+      <div style={{ marginTop: '30px', padding: '15px', border: '2px dashed #007bff', borderRadius: '15px', width: '380px', textAlign: 'center' }}>
+        <p style={{ fontSize: '10px', color: '#555' }}>📡 <b>Server Engine:</b> Waiting for Backend Integration... <br/> (यहाँ आपका Firebase/Node.js सर्वर जुड़ेगा)</p>
       </div>
     </div>
   );
 };
+
+const inputStyle = { width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ccc' };
+const btnStyle = { width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', background: '#f8f9fa', border: '1px solid #ddd', cursor: 'pointer' };
+const topBtnStyle = { padding: '5px 15px', borderRadius: '5px', background: '#000', color: '#fff', border: 'none' };
 
 export default LoginPage;
