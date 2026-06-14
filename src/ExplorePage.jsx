@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout.jsx'; 
+import { getPriceData } from './PriceHelper.js'; // आपका हेल्पर यहाँ जुड़ गया
 
 const ExplorePage = () => {
   const navigate = useNavigate();
+  // तीनों कैटेगरी के लिए स्टेट
+  const [userRole, setUserRole] = useState('starter'); 
 
   const masterFeatures = [
     { name: "🚀 Promote", path: "/promote" },
@@ -46,29 +49,42 @@ const ExplorePage = () => {
   return (
     <Layout>
       <div style={{ padding: '0 10px' }}>
-        {/* RangManch Branding - आपकी पहचान */}
+        {/* RangManch Branding */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
           <h1 style={{ fontFamily: 'cursive', fontSize: '24px', margin: 0, color: '#000' }}>RangManch</h1>
           <p style={{ fontSize: '12px', color: '#666' }}>EXPLORE</p>
         </div>
         
-        {/* कंपनी के लिए प्रोमोशनल संदेश */}
-        <div style={{ background: '#fff9c4', padding: '10px', borderRadius: '10px', textAlign: 'center', marginBottom: '20px', border: '1px dashed #fbc02d' }}>
-          <p style={{ fontSize: '13px', margin: 0, fontWeight: 'bold' }}>📢 Companies: Click 'Promote' or 'Partnership'!</p>
+        {/* कैटेगरी सिलेक्शन (तीनों कैटेगरी यहीं से सिलेक्ट होंगी) */}
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '20px' }}>
+          <button onClick={() => setUserRole('starter')} style={{ flex: 1, padding: '10px', background: userRole === 'starter' ? '#FFD700' : '#eee', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>Starter</button>
+          <button onClick={() => setUserRole('startup')} style={{ flex: 1, padding: '10px', background: userRole === 'startup' ? '#FFD700' : '#eee', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>Startup</button>
+          <button onClick={() => setUserRole('enterprise')} style={{ flex: 1, padding: '10px', background: userRole === 'enterprise' ? '#000' : '#eee', color: userRole === 'enterprise' ? '#fff' : '#000', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>Enterprise</button>
         </div>
         
+        {/* कंपनी प्रोमोशनल संदेश */}
+        <div style={{ background: '#fff9c4', padding: '10px', borderRadius: '10px', textAlign: 'center', marginBottom: '20px', border: '1px dashed #fbc02d' }}>
+          <p style={{ fontSize: '13px', margin: 0, fontWeight: 'bold' }}>📢 {userRole.toUpperCase()} Mode Active! Click to proceed.</p>
+        </div>
+        
+        {/* मास्ट फीचर्स लिस्ट (वही 20 बटन) */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {masterFeatures.map((item) => (
             <button 
               key={item.name} 
-              onClick={() => navigate(item.path)} 
+              onClick={() => navigate(item.path, { state: { role: userRole } })} 
               style={getButtonStyle(item.name)}>
               {item.name}
             </button>
           ))}
         </div>
 
-        {/* सर्वर स्लॉट - यहाँ आप अपना सर्वर जोड़ेंगे */}
+        {/* Stripe पेमेंट गेटवे का लिंक एरिया */}
+        <div style={{ marginTop: '20px', padding: '10px', textAlign: 'center', border: '1px solid #eee', borderRadius: '10px', fontSize: '12px' }}>
+          Stripe Integration Slot: Ready for payment processing.
+        </div>
+
+        {/* सर्वर स्लॉट */}
         <div style={{ marginTop: '40px', padding: '20px', border: '2px dashed #aaa', borderRadius: '15px', textAlign: 'center', marginBottom: '20px' }}>
           <p style={{ fontSize: '14px', marginBottom: '10px' }}>📡 <b>Server Hub:</b> 34 Features Synchronized</p>
           <button 
