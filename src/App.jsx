@@ -4,7 +4,7 @@ import { UserProvider } from './UserContext.jsx';
 import { AdProvider } from './AdProvider.jsx'; 
 import Layout from './Layout.jsx'; 
 
-// सभी पेज (Lazy Loading)
+// सभी पेज (Lazy Loading) - आपकी सभी फाइलें यहाँ मौजूद हैं
 const LoginPage = lazy(() => import('./LoginPage.jsx'));
 const HomePage = lazy(() => import('./HomePage.jsx'));
 const MessengerPage = lazy(() => import('./MessengerPage.jsx'));
@@ -14,7 +14,7 @@ const ProfilePage = lazy(() => import('./ProfilePage.jsx'));
 const SettingsPage = lazy(() => import('./SettingsPage.jsx'));
 const PremiumAdminPage = lazy(() => import('./PremiumAdminPage.jsx'));
 const PromotionForm = lazy(() => import('./PromotionForm.jsx'));
-const PartnershipForm = lazy(() => import('./PartnershipForm.jsx')); // नई फाइल जोड़ी
+const PartnershipForm = lazy(() => import('./PartnershipForm.jsx')); 
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
         <Router>
           <Suspense fallback={<div style={{textAlign:'center', marginTop:'20%', fontSize:'20px'}}>RangManch Loading...</div>}>
             <Routes>
-              {/* बिना लेआउट के */}
+              {/* लॉगिन पेज बिना लेआउट के */}
               <Route path="/" element={<LoginPage />} />
               
               {/* Layout के साथ सभी पेजेस */}
@@ -35,7 +35,7 @@ function App() {
               <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
               <Route path="/admin" element={<Layout><PremiumAdminPage /></Layout>} />
               
-              {/* प्रमोशन और पार्टनरशिप के नए राउट्स */}
+              {/* प्रमोशन और पार्टनरशिप के राउट्स - ये अब आपके ExplorePage के लॉजिक से जुड़ जाएंगे */}
               <Route path="/promote" element={<Layout><PromotionForm /></Layout>} />
               <Route path="/partnerships" element={<Layout><PartnershipForm /></Layout>} />
               
