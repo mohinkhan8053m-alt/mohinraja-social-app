@@ -14,6 +14,12 @@ const PremiumAdminPage = () => {
     'Coin Logic', 'Gift Engine', 'Voice AI', 'Video Filter', 'Moderation', 'Tax Docs'
   ];
 
+  // नया फीचर: विज्ञापन अप्रूवल लिस्ट
+  const [pendingAds, setPendingAds] = useState([
+    { id: 1, company: 'Global Brand X', budget: '$500' },
+    { id: 2, company: 'Local Partner Y', budget: '₹10,000' }
+  ]);
+
   const handleSync = () => {
     setIsSyncing(true);
     setTimeout(() => {
@@ -22,20 +28,37 @@ const PremiumAdminPage = () => {
     }, 2000);
   };
 
+  // जादुई बटन का लॉजिक
+  const approveAd = (id) => {
+    alert(`✅ Campaign ${id} Live हो गया है! विज्ञापन अब पूरी दुनिया में दिखेगा।`);
+    setPendingAds(pendingAds.filter(ad => ad.id !== id));
+  };
+
   return (
     <Layout>
       <div style={{ padding: '20px', fontFamily: 'Poppins' }}>
         {/* 1. एडमिन हेडर */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2>🛡️ Admin Dashboard</h2>
+          <h2>🛡️ RangManch Admin</h2>
           <button onClick={() => alert('Logout Successful')} style={{ background: '#ff4757', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>Logout</button>
         </div>
 
-        {/* 2. लाइव अर्निंग्स (सर्वर से जोड़ने के लिए जगह) */}
+        {/* 2. जादुई बटन सेक्शन - विज्ञापन अप्रूवल */}
+        <div style={{ background: '#f9f9f9', padding: '15px', borderRadius: '15px', marginBottom: '20px', border: '1px solid #ddd' }}>
+          <h4>🚀 Pending Advertisements</h4>
+          {pendingAds.map(ad => (
+            <div key={ad.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', background: '#fff', marginBottom: '5px', borderRadius: '8px' }}>
+              <span>{ad.company} ({ad.budget})</span>
+              <button onClick={() => approveAd(ad.id)} style={{ background: '#27ae60', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>Approve Live</button>
+            </div>
+          ))}
+        </div>
+
+        {/* 3. लाइव अर्निंग्स */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
           <div style={{ background: '#000', color: '#fff', padding: '15px', borderRadius: '15px' }}>
-            <p style={{ margin: 0, fontSize: '12px' }}>Total Earnings</p>
-            <h3>₹ 50,000+</h3>
+            <p style={{ margin: 0, fontSize: '12px' }}>Total Global Earnings</p>
+            <h3>₹ 50,000 / $600</h3>
           </div>
           <div style={{ background: '#FFD700', color: '#000', padding: '15px', borderRadius: '15px' }}>
             <p style={{ margin: 0, fontSize: '12px' }}>Active Users</p>
@@ -43,7 +66,7 @@ const PremiumAdminPage = () => {
           </div>
         </div>
 
-        {/* 3. मास्टर कंट्रोल सेंटर */}
+        {/* 4. मास्टर कंट्रोल सेंटर */}
         <h4>Control Center</h4>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
           {allFeatures.map(feature => (
@@ -53,7 +76,7 @@ const PremiumAdminPage = () => {
           ))}
         </div>
 
-        {/* 4. सर्वर सिंक (नया फीचर) */}
+        {/* 5. सर्वर सिंक */}
         <div style={{ marginTop: '30px', padding: '20px', border: '2px dashed #000', borderRadius: '15px', textAlign: 'center' }}>
           <p>📡 <b>Server Hub Status:</b> Live & Connected</p>
           <button 
