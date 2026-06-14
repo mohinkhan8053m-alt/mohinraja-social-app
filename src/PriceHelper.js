@@ -1,32 +1,37 @@
-// --- PriceHelper.js (सिर्फ कैलकुलेशन के लिए) ---
-
-export const getGlobalPricing = (originCountry) => {
-  // आपका फिक्स प्रीमियम टारगेट - कोई कॉम्प्रोमाइज नहीं
-  const PRICE_INDIA = 1000000;   // ₹10,00,000 फिक्स
-  const PRICE_FOREIGN = 2000000; // ₹20,00,000 की वैल्यू (फॉरेन करेंसी में)
-
-  // अगर इंडिया का क्लाइंट है
-  if (originCountry === 'IN') {
-    return { 
-      symbol: '₹', 
-      displayPrice: '₹10,00,000', 
-      value: PRICE_INDIA 
-    };
-  }
-
-  // अगर फॉरेन का क्लाइंट है - उनकी करेंसी में ₹20 लाख की सटीक वैल्यू
-  const foreignRates = {
-    'US': { symbol: '$', val: '24,000' }, // 20 Lakhs in USD
-    'UK': { symbol: '£', val: '19,000' }, // 20 Lakhs in GBP
-    'AE': { symbol: 'DH', val: '88,000' }, // 20 Lakhs in AED
-    'KW': { symbol: 'KD', val: '7,300' }  // 20 Lakhs in KWD
+export const getPriceData = (countryCode, category, scope) => {
+  // 1. बेस प्राइस (जो आपकी ओरिजिनल वैल्यूज पर आधारित है)
+  const basePrices = { 
+    'starter': 5000, 
+    'startup': 50000, 
+    'enterprise': 1000000 
+  };
+  
+  // 2. कंट्री-वाइज रेट (आपने जो 4 कंट्री दी थी, वो यहाँ हैं + पूरी दुनिया के लिए default)
+  const countryConfig = {
+    'IN': { symbol: '₹', mult: 1, cur: 'inr' },
+    'US': { symbol: '$', mult: 5, cur: 'usd' },
+    'UK': { symbol: '£', mult: 6, cur: 'gbp' },
+    'AE': { symbol: 'DH', mult: 5, cur: 'aed' },
+    'KW': { symbol: 'KD', mult: 8, cur: 'kwd' },
+    'default': { symbol: '$', mult: 5, cur: 'usd' }
   };
 
-  const data = foreignRates[originCountry] || { symbol: '$', val: '24,000' };
+  const config = countryConfig[countryCode] || countryConfig['default'];
+  
+  // 3. कैटेगरी का गणित (Base * Country Multiplier)
+  let finalPrice = basePrices[category] * config.mult;
+
+  // 4. ग्लोबल स्कोप: (आपने कहा था कि पूरी दुनिया का ऑप्शन होना चाहिए)
+  if (scope === 'global') {
+    finalPrice = finalPrice * 3;
+  }
 
   return {
-    symbol: data.symbol,
-    displayPrice: `${data.symbol}${data.val}`,
-    value: PRICE_FOREIGN
+    symbol: config.symbol,
+    displayPrice: `${config.symbol}${finalPrice.toLocaleString()}`,
+    value: finalPrice, // यह Stripe के लिए 'Amount' है
+    currency: config.cur, // यह Stripe के लिए 'Currency' कोड है
+    category: category,
+    scope: scope
   };
 };
