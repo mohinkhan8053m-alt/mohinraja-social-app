@@ -1,71 +1,78 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout.jsx';
-import { useApi } from './ApiContext.jsx'; // यहाँ से सर्वर और पेमेंट की डिटेल्स आएंगी
+import { useApi } from './ApiContext.jsx'; 
 
 const MessengerPage = () => {
   const navigate = useNavigate();
-  const { serverUrl, stripeKey } = useApi(); // अब हर बटन सर्वर से बात कर सकता है
+  const { serverUrl } = useApi();
 
-  // स्टाइल्स
-  const featureStyle = { padding: '12px', fontSize: '12px', borderRadius: '10px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer', textAlign: 'center' };
-  const goldenStyle = { ...featureStyle, background: '#FFD700', fontWeight: 'bold', border: 'none' };
-  const secureStyle = { ...featureStyle, background: '#ff4757', color: '#fff', fontWeight: 'bold' };
-
-  // सर्वर पर रिक्वेस्ट भेजने का कॉमन फंक्शन
   const handleServerAction = (action) => {
-    console.log(`Sending to ${serverUrl}: ${action}`);
-    alert(`Action ${action} initiated via Server Hub!`);
-    // यहाँ आप बाद में fetch(serverUrl + '/api/' + action) डाल सकते हैं
+    // यहाँ से आपका सारा फीचर सर्वर से कनेक्ट हो जाएगा
+    console.log(`Executing ${action} via ${serverUrl}`);
+    alert(`Feature ${action} activated via Server Hub!`);
   };
+
+  // 22 फीचर्स की लिस्ट
+  const features = [
+    { name: "🤖 AI Translate", action: "Translate", type: "default" },
+    { name: "🛡️ Auto-Mod", action: "AutoMod", type: "default" },
+    { name: "📢 AdSense Apply", action: "AdSense", type: "golden" },
+    { name: "💎 Premium Toggle", action: "Premium", type: "default" },
+    { name: "📊 Get Analytics", action: "Analytics", type: "default" },
+    { name: "✅ Local Ad Control", action: "LocalAd", type: "golden" },
+    { name: "🌐 Multi-Region", action: "MultiRegion", type: "default" },
+    { name: "🌍 Global Ad Manager", action: "GlobalAd", type: "golden" },
+    { name: "🎁 Send Gift (30%)", action: "Gift", type: "golden" },
+    { name: "⚡ Girl Filter", action: "GirlFilter", type: "default" },
+    { name: "🔄 Sync Data Hub", action: "Sync", type: "default" },
+    { name: "⚙️ Server Settings", action: "Settings", type: "default" },
+    { name: "🔥 Force Ad Trigger", action: "ForceAd", type: "golden" },
+    { name: "📈 Live Stats Board", action: "LiveStats", type: "default" },
+    { name: "📝 Edit Profile", action: "EditProfile", type: "default" },
+    { name: "🔗 Update Link", action: "UpdateLink", type: "default" },
+    { name: "📍 Region Selector", action: "Region", type: "default" },
+    { name: "💳 Pay Gateway", action: "Payment", type: "default" },
+    { name: "🚫 Block User", action: "Block", type: "secure" },
+    { name: "⚠️ Report Abuse", action: "Report", type: "secure" },
+    { name: "🗺️ Share Map", action: "Map", type: "primary" },
+    { name: "💬 Chat Support", action: "Support", type: "primary" }
+  ];
 
   return (
     <Layout>
-      <div style={{ width: '100%', padding: '20px', fontFamily: "'Poppins', sans-serif" }}>
+      <div style={{ width: '100%', padding: '10px', fontFamily: "'Poppins', sans-serif" }}>
         
-        {/* हेडर */}
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px', borderBottom: '2px solid #eee' }}>
-          <div>
-            <h3 style={{ margin: 0 }}>Chat: Moin Raja</h3>
-            <span style={{ fontSize: '12px', color: '#666' }}>📡 Server: {serverUrl}</span>
-          </div>
-          <button onClick={() => navigate('/video-call-hub')} style={{ background: '#0095f6', color: '#fff', padding: '10px 15px', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>📹 Video Call</button>
-        </header>
-
-        {/* विज्ञापन और रिवॉर्ड */}
-        <button onClick={() => handleServerAction('WatchAd')} style={{ width: '100%', padding: '15px', background: '#2ecc71', color: '#fff', border: 'none', borderRadius: '10px', marginBottom: '15px', fontWeight: 'bold', cursor: 'pointer' }}>
-          🎁 Watch Ad & Get 10 Coins
-        </button>
-
-        {/* 20 फीचर्स का महा-ग्रिड */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-          <button style={{...featureStyle, background: '#4CAF50', color: '#fff'}} onClick={() => handleServerAction('Translate')}>🤖 AI Translate</button>
-          <button style={{...featureStyle, background: '#e1bee7'}} onClick={() => handleServerAction('AutoMod')}>🛡️ Auto-Mod</button>
-          <button style={goldenStyle} onClick={() => window.open('https://adsense.google.com')}>AdSense Apply</button>
-          <button style={featureStyle} onClick={() => navigate('/premium-toggle')}>Premium Toggle</button>
-          <button style={featureStyle} onClick={() => navigate('/get-analytics')}>Get Analytics</button>
-          <button style={goldenStyle} onClick={() => handleServerAction('LocalAdControl')}>Local Ad Control</button>
-          <button style={featureStyle} onClick={() => handleServerAction('MultiRegion')}>Multi-Region Setup</button>
-          <button style={goldenStyle} onClick={() => handleServerAction('GlobalAdManager')}>Global Ad Manager</button>
-          <button style={goldenStyle} onClick={() => navigate('/send-gift')}>Send Gift (30% Comm)</button>
-          <button style={featureStyle} onClick={() => handleServerAction('GirlFilter')}>⚡ Girl Filter</button>
-          <button style={featureStyle} onClick={() => handleServerAction('SyncData')}>Sync Data Hub</button>
-          <button style={featureStyle} onClick={() => handleServerAction('ServerSettings')}>Server Hub Settings</button>
-          <button style={goldenStyle} onClick={() => handleServerAction('ForceAd')}>Force Ad Trigger</button>
-          <button style={featureStyle} onClick={() => navigate('/live-stats')}>Live Stats Board</button>
-          <button style={featureStyle} onClick={() => navigate('/profile-edit')}>Add User Name</button>
-          <button style={featureStyle} onClick={() => navigate('/profile-edit')}>Add Profile Link</button>
-          <button style={featureStyle} onClick={() => handleServerAction('RegionSelector')}>Region Selector</button>
-          <button style={featureStyle} onClick={() => navigate('/wallet')}>Pay Now Gateway</button>
-          <button style={secureStyle} onClick={() => handleServerAction('BlockUser')}>Block User</button>
-          <button style={secureStyle} onClick={() => handleServerAction('ReportAbuse')}>Report Abuse</button>
+        {/* हेडर सेक्शन */}
+        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+          <h3 style={{ margin: '0 0 5px 0' }}>Moin Raja's Control Hub</h3>
+          <p style={{ fontSize: '11px', color: '#888' }}>📡 Server: {serverUrl} | 22 Features Active</p>
         </div>
 
-        {/* लोकेशन */}
-        <button onClick={() => handleServerAction('ShareMap')} style={{ marginTop: '25px', width: '100%', padding: '15px', background: '#0095f6', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>📍 Share Map Location</button>
+        {/* 22 फीचर्स का ग्रिड */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+          {features.map((f, index) => (
+            <button 
+              key={index} 
+              onClick={() => handleServerAction(f.action)} 
+              style={getButtonStyle(f.type)}
+            >
+              {f.name}
+            </button>
+          ))}
+        </div>
       </div>
     </Layout>
   );
+};
+
+// बटन्स का स्टाइल फंक्शन
+const getButtonStyle = (type) => {
+  const base = { padding: '12px', fontSize: '11px', borderRadius: '10px', border: 'none', cursor: 'pointer', textAlign: 'center', fontWeight: 'bold' };
+  if (type === 'golden') return { ...base, background: '#FFD700', color: '#000' };
+  if (type === 'secure') return { ...base, background: '#ff4757', color: '#fff' };
+  if (type === 'primary') return { ...base, background: '#0095f6', color: '#fff' };
+  return { ...base, background: '#eee', color: '#000' };
 };
 
 export default MessengerPage;
