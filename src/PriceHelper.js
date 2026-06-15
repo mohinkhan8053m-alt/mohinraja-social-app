@@ -1,11 +1,5 @@
-// PriceHelper.js - फाइनल और फिक्स वर्जन
 export const getPriceData = (countryCode, category, scope) => {
-  // यह फंक्शन का नाम वही है जो तुमने पहले रखा था
-  const basePrices = { 
-    'starter': 5000, 
-    'startup': 50000, 
-    'enterprise': 1000000 
-  };
+  const basePrices = { 'starter': 5000, 'startup': 50000, 'enterprise': 1000000 };
   
   const countryConfig = {
     'IN': { symbol: '₹', mult: 1, cur: 'inr' },
@@ -17,10 +11,15 @@ export const getPriceData = (countryCode, category, scope) => {
   };
 
   const config = countryConfig[countryCode] || countryConfig['default'];
-  let finalPrice = basePrices[category] * config.mult;
+  
+  // 1. बेस प्राइस निकालें
+  let finalPrice = (basePrices[category] || 5000) * config.mult;
 
+  // 2. पूरी दुनिया वाला लॉजिक (Global System)
   if (scope === 'global') {
-    finalPrice = finalPrice * 3;
+    // यहाँ '5' एक ग्लोबल इंडेक्स है जो हर देश की करेंसी को बैलेंस करता है
+    // इससे किसी भी देश का यूजर हो, उसे एक वाजिब 'Global' रेट दिखेगा
+    finalPrice = (basePrices[category] || 5000) * 5; 
   }
 
   return {
@@ -31,9 +30,4 @@ export const getPriceData = (countryCode, category, scope) => {
     category: category,
     scope: scope
   };
-};
-
-// यह वो फंक्शन है जो तुम्हारी PromotionForm ढूंढ रही है!
-export const getGlobalPricing = (originCountry, category, scope) => {
-  return getPriceData(originCountry, category, scope);
 };
