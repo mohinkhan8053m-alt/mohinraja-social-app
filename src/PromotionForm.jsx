@@ -1,73 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Layout from './Layout.jsx'; 
 import { getGlobalPricing } from './PriceHelper'; 
 
 const PromotionForm = () => {
+  const { state } = useLocation();
+  // अगर कैटेगरी नहीं मिली तो डिफ़ॉल्ट 'starter'
+  const { category } = state || { category: 'starter' };
+
   const [formData, setFormData] = useState({
     companyName: '',
     targetLink: '',
-    contactEmail: '',
     origin: 'IN',
-    campaignType: 'Brand Awareness', // नया फीचर 1
-    priceInfo: getGlobalPricing('IN') 
+    scope: 'local', // यहाँ से कंट्रोल होगा ग्लोबल सेटिंग
+    campaignType: 'Brand Awareness'
   });
 
-  const handlePartnerRequest = () => {
-    if (!formData.companyName || !formData.contactEmail) {
-      alert("मोइन भाई, कंपनी का नाम और ईमेल जरूरी है!");
-      return;
-    }
-    alert(`प्रपोजल सबमिट! मोइन राजा की टीम ${formData.priceInfo.displayPrice} की डील के लिए संपर्क करेगी।`);
+  const [priceInfo, setPriceInfo] = useState(getGlobalPricing('IN', 'local'));
+
+  // जैसे ही कंट्री या स्कोप बदले, प्राइस अपडेट करो
+  useEffect(() => {
+    setPriceInfo(getGlobalPricing(formData.origin, formData.scope));
+  }, [formData.origin, formData.scope]);
+
+  const handleSubmit = () => {
+    alert(`प्रपोजल सबमिट! कैटेगरी: ${category.toUpperCase()} | प्राइस: ${priceInfo.displayPrice}`);
   };
 
   return (
     <Layout>
-      <div style={{ background: '#000', color: '#fff', padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius: '30px', border: '2px solid #FFD700' }}>
-        <h2 style={{ textAlign: 'center', color: '#FFD700', fontSize: '28px' }}>🚀 Global Enterprise Partner</h2>
+      <div style={{ background: '#000', color: '#fff', padding: '30px', maxWidth: '600px', margin: 'auto', borderRadius: '30px', border: '2px solid #FFD700' }}>
+        <h2 style={{ textAlign: 'center', color: '#FFD700' }}>🚀 {category.toUpperCase()} Promotion</h2>
         
-        {/* नया फीचर 2: मैजिक बटन (डील फाइनल करने के लिए) */}
-        <div style={{ textAlign: 'center', marginBottom: '20px', background: '#1a1a1a', padding: '10px', borderRadius: '15px' }}>
-            <p style={{ fontSize: '10px', color: '#aaa' }}>Admin Deal Control:</p>
-            <button onClick={() => alert('Ads Live!')} style={{ background: '#00ff00', border: 'none', padding: '8px 15px', cursor: 'pointer', borderRadius: '5px', marginRight: '10px' }}>✅ Start Ads</button>
-            <button onClick={() => alert('Ads Paused!')} style={{ background: '#ff0000', border: 'none', padding: '8px 15px', cursor: 'pointer', borderRadius: '5px', color: '#fff' }}>❌ Stop</button>
-        </div>
-
+        {/* फॉर्म फील्ड्स */}
         <input placeholder="Brand/Company Name" onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={inputStyle} />
-        <input placeholder="Business Website/Link" onChange={(e) => setFormData({...formData, targetLink: e.target.value})} style={inputStyle} />
-        <input placeholder="Official Email" onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} style={inputStyle} />
+        <input placeholder="Target Link" onChange={(e) => setFormData({...formData, targetLink: e.target.value})} style={inputStyle} />
 
-        {/* नया फीचर 3: कैंपेन का मकसद */}
-        <select onChange={(e) => setFormData({...formData, campaignType: e.target.value})} style={inputStyle}>
-          <option value="Brand Awareness">Brand Awareness</option>
-          <option value="Product Launch">Product Launch</option>
-          <option value="App Install">App Install</option>
-        </select>
-
-        <div style={{ margin: '20px 0' }}>
-          <label>Region of Origin:</label>
-          <select 
-            onChange={(e) => setFormData({...formData, origin: e.target.value, priceInfo: getGlobalPricing(e.target.value)})} 
-            style={inputStyle}
-          >
+        {/* ग्लोबल सेटिंग (यही वो खास सेटिंग है जो आपने मांगी) */}
+        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+          <select onChange={(e) => setFormData({...formData, origin: e.target.value})} style={inputStyle}>
             <option value="IN">India (INR)</option>
             <option value="US">USA (USD)</option>
             <option value="UK">UK (GBP)</option>
-            <option value="AE">UAE (AED)</option>
+            <option value="KW">Kuwait (KWD)</option>
+          </select>
+          
+          <select onChange={(e) => setFormData({...formData, scope: e.target.value})} style={inputStyle}>
+            <option value="local">Local</option>
+            <option value="global">Global (5x Reach)</option>
           </select>
         </div>
 
-        <div style={{ textAlign: 'center', margin: '30px 0', border: '1px solid #333', padding: '20px', borderRadius: '15px' }}>
-          <p>Package Price (30 Days):</p>
-          <h1 style={{ color: '#FFD700' }}>{formData.priceInfo.displayPrice}</h1>
+        {/* प्राइस डिस्प्ले */}
+        <div style={{ textAlign: 'center', margin: '20px 0', border: '1px solid #333', padding: '15px', borderRadius: '15px' }}>
+          <p>Final Price (30 Days):</p>
+          <h1 style={{ color: '#FFD700' }}>{priceInfo.displayPrice}</h1>
         </div>
 
-        <button onClick={handlePartnerRequest} style={btnStyle}>SUBMIT PARTNERSHIP PROPOSAL</button>
+        <button onClick={handleSubmit} style={btnStyle}>SUBMIT PROPOSAL & PAY</button>
       </div>
     </Layout>
   );
 };
 
-const inputStyle = { width: '100%', padding: '15px', margin: '10px 0', borderRadius: '10px', background: '#1a1a1a', border: '1px solid #444', color: '#fff', boxSizing: 'border-box' };
+const inputStyle = { width: '100%', padding: '15px', margin: '8px 0', borderRadius: '10px', background: '#1a1a1a', border: '1px solid #444', color: '#fff', boxSizing: 'border-box' };
 const btnStyle = { width: '100%', padding: '20px', background: '#FFD700', border: 'none', borderRadius: '10px', fontWeight: '900', fontSize: '18px', cursor: 'pointer', color: '#000' };
 
 export default PromotionForm;
