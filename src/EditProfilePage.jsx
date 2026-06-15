@@ -3,22 +3,36 @@ import { useNavigate } from 'react-router-dom';
 
 const EditProfilePage = () => {
   const navigate = useNavigate();
+  
+  // डेटा को localStorage से उठा रहे हैं ताकि सेव रहे
   const [profile, setProfile] = useState({
-    name: 'RangManch Global',
-    username: 'rangmanch_official',
-    bio: 'Official Global Portal | RangManch Team',
-    website: 'https://rangmanch.com',
-    email: 'contact@rangmanch.com'
+    name: localStorage.getItem('profileName') || 'RangManch Global',
+    username: localStorage.getItem('profileUsername') || 'rangmanch_official',
+    bio: localStorage.getItem('profileBio') || 'Official Global Portal | Digital Creator',
+    website: localStorage.getItem('profileWebsite') || 'https://rangmanch.com'
   });
-  const [image, setImage] = useState('https://www.w3schools.com/howto/img_avatar.png');
+  
+  const [image, setImage] = useState(localStorage.getItem('profileImage') || 'https://www.w3schools.com/howto/img_avatar.png');
 
   const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSave = () => {
+    // यहाँ डेटा localStorage में सेव हो रहा है
+    localStorage.setItem('profileName', profile.name);
+    localStorage.setItem('profileUsername', profile.username);
+    localStorage.setItem('profileBio', profile.bio);
+    localStorage.setItem('profileWebsite', profile.website);
+    localStorage.setItem('profileImage', image);
+
     alert("Profile Updated Successfully! ⚡");
     navigate('/profile');
   };
@@ -31,17 +45,16 @@ const EditProfilePage = () => {
         <button onClick={handleSave} style={{ background: 'none', border: 'none', fontSize: '16px', color: '#0095f6', fontWeight: 'bold' }}>Done</button>
       </header>
 
-      {/* फोटो अपलोडर */}
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <img src={image} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '10px', border: '1px solid #eee' }} />
         <br />
         <label style={{ color: '#0095f6', fontWeight: 'bold', cursor: 'pointer' }}>
           Change Profile Photo
-          <input type="file" onChange={handleImageChange} style={{ display: 'none' }} />
+          {/* accept="image/*" से सीधे गैलरी खुलेगी */}
+          <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
         </label>
       </div>
 
-      {/* इनपुट टूलकिट */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <InputField label="Name" value={profile.name} onChange={(val) => setProfile({...profile, name: val})} />
         <InputField label="Username" value={profile.username} onChange={(val) => setProfile({...profile, username: val})} />
@@ -55,7 +68,6 @@ const EditProfilePage = () => {
   );
 };
 
-// छोटी सी हेल्पर कंपोनेंट ताकि कोड साफ़ रहे
 const InputField = ({ label, value, onChange }) => (
   <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
     <label style={{ width: '100px', fontSize: '14px' }}>{label}</label>
