@@ -5,13 +5,16 @@ import { AdProvider } from './AdProvider.jsx';
 import { ApiProvider } from './ApiContext.jsx'; 
 import Layout from './Layout.jsx'; 
 
-// मुख्य पेज (सभी फाइल्स बरकरार)
+// मुख्य पेज
 const LoginPage = lazy(() => import('./LoginPage.jsx'));
 const HomePage = lazy(() => import('./HomePage.jsx'));
 const MessengerPage = lazy(() => import('./MessengerPage.jsx'));
 const VideoCallHub = lazy(() => import('./VideoCallHub.jsx'));
 const ExplorePage = lazy(() => import('./ExplorePage.jsx'));
-const MasterProfilePage = lazy(() => import('./MasterProfilePage.jsx')); 
+
+// यहाँ मैंने नाम ठीक कर दिया है (MasterProfilePage की जगह ProfilePage)
+const ProfilePage = lazy(() => import('./ProfilePage.jsx')); 
+
 const SettingsPage = lazy(() => import('./SettingsPage.jsx'));
 const PremiumAdminPage = lazy(() => import('./PremiumAdminPage.jsx'));
 const PromotionForm = lazy(() => import('./PromotionForm.jsx'));
@@ -20,8 +23,8 @@ const WalletPage = lazy(() => import('./WalletPage.jsx'));
 const BankPage = lazy(() => import('./BankPage.jsx'));
 const StatsPage = lazy(() => import('./StatsPage.jsx'));
 const PrivacyPage = lazy(() => import('./PrivacyPage.jsx'));
-const EditProfilePage = lazy(() => import('./EditProfilePage.jsx')); // नया: एडिट पेज
-const BoostDashboard = lazy(() => import('./BoostDashboard.jsx')); // नया: बूस्ट पेज
+const EditProfilePage = lazy(() => import('./EditProfilePage.jsx'));
+const BoostDashboard = lazy(() => import('./BoostDashboard.jsx'));
 
 function App() {
   return (
@@ -31,33 +34,25 @@ function App() {
           <Router>
             <Suspense fallback={<div style={{textAlign:'center', marginTop:'20%', color:'#555'}}>RangManch Loading...</div>}>
               <Routes>
-                {/* 1. ऑथेंटिकेशन */}
                 <Route path="/" element={<LoginPage />} />
-                
-                {/* 2. मुख्य डैशबोर्ड */}
                 <Route path="/home" element={<Layout><HomePage /></Layout>} />
                 <Route path="/messenger" element={<Layout><MessengerPage /></Layout>} />
                 <Route path="/video-call" element={<Layout><VideoCallHub /></Layout>} />
                 <Route path="/explore" element={<Layout><ExplorePage /></Layout>} />
                 
-                {/* 3. प्रोफाइल और मास्टर्स फीचर्स */}
-                <Route path="/profile" element={<Layout><MasterProfilePage /></Layout>} />
+                {/* यहाँ भी मैंने नाम अपडेट कर दिया है */}
+                <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
+                
                 <Route path="/profile-edit" element={<Layout><EditProfilePage /></Layout>} />
                 <Route path="/boost-dashboard" element={<Layout><BoostDashboard /></Layout>} />
-                
-                {/* 4. सेटिंग्स और एडमिन */}
                 <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
                 <Route path="/admin" element={<Layout><PremiumAdminPage /></Layout>} />
                 <Route path="/wallet" element={<Layout><WalletPage /></Layout>} />
                 <Route path="/bank" element={<Layout><BankPage /></Layout>} />
                 <Route path="/stats" element={<Layout><StatsPage /></Layout>} />
                 <Route path="/privacy" element={<Layout><PrivacyPage /></Layout>} />
-                
-                {/* 5. प्रमोशन और पार्टनरशिप */}
                 <Route path="/promote" element={<Layout><PromotionForm /></Layout>} />
                 <Route path="/partnerships" element={<Layout><PartnershipForm /></Layout>} />
-                
-                {/* 6. गलत राउट पर होम पर भेजें */}
                 <Route path="*" element={<Navigate to="/home" />} />
               </Routes>
             </Suspense>
