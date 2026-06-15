@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useApi } from './ApiContext.jsx'; // सर्वर कनेक्शन
 
 const BoostDashboard = () => {
   const navigate = useNavigate();
+  const { serverUrl } = useApi(); // अब सर्वर URL कनेक्ट हो गया
   const [url, setUrl] = useState('');
   const [target, setTarget] = useState('Local'); 
   const [currency, setCurrency] = useState('INR');
 
   const getPrice = () => {
-    if (currency === 'INR') {
-      return target === 'Local' ? 2999 : 8999;
-    } else {
-      return target === 'Local' ? 59 : 179;
-    }
+    return currency === 'INR' 
+      ? (target === 'Local' ? 2999 : 8999) 
+      : (target === 'Local' ? 59 : 179);
   };
 
   const handlePayment = () => {
     if (!url) { alert("लिंक डालना जरूरी है मेरे भाई!"); return; }
     
-    // यहाँ Stripe का असली पेमेंट गेटवे लिंक आएगा
+    // सर्वर और पेमेंट गेटवे यहाँ से जुड़ेंगे
+    console.log(`Payment initiated for ${url} via ${serverUrl}`);
     alert(`पेमेंट प्रोसेस शुरू: ${currency === 'INR' ? '₹' : '$'}${getPrice()} का बूस्ट एक्टिव हो रहा है...`);
     
-    // पेमेंट के बाद वापस प्रोफाइल भेज रहे हैं
     setTimeout(() => {
       alert("बूस्टिंग सक्सेसफुल! ⚡");
       navigate('/profile'); 
@@ -30,7 +30,7 @@ const BoostDashboard = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '400px', margin: 'auto' }}>
-      <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', marginBottom: '10px' }}>← पीछे जाएं</button>
+      {/* बैक बटन यहाँ से हटा दिया गया है क्योंकि Layout इसे संभालेगा */}
       <h2 style={{ textAlign: 'center' }}>🚀 Premium Global Boost</h2>
       
       <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '15px', background: '#fff' }}>
