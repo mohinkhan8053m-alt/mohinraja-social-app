@@ -1,10 +1,23 @@
 import React, { createContext, useContext } from 'react';
 
-// यहाँ अपनी सर्वर IP और API keys सेट करो
 const apiConfig = {
-  serverUrl: "https://your-server-api.com", // अपनी सर्वर IP यहाँ डालें
-  stripeKey: "pk_test_your_key",           // पेमेंट गेटवे की Key
-  currency: "INR"                          // जो तुमने CurrencyConfig में रखा होगा
+  serverUrl: "https://your-server-api.com", // यहाँ अपना असली बैकएंड सर्वर लिंक डालें
+  
+  // फॉलो बटन का लाइव सर्वर फंक्शन
+  handleFollow: async (followerId, followingId) => {
+    const response = await fetch(`${apiConfig.serverUrl}/api/follow`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ followerId, followingId })
+    });
+    return response.ok;
+  },
+
+  // विज्ञापन/बूस्टेड स्टोरी का सर्वर कॉल
+  fetchAds: async () => {
+    const response = await fetch(`${apiConfig.serverUrl}/api/ads`);
+    return await response.json();
+  }
 };
 
 const ApiContext = createContext();
