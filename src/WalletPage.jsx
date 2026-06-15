@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import Layout from './Layout.jsx';
 import { getCurrencyData } from './CurrencyConfig';
+import { useApi } from './ApiContext.jsx'; // तुम्हारा सर्वर कनेक्शन (प्लग)
 
 const WalletPage = () => {
+  // सर्वर और स्ट्राइप की चाबी यहाँ से आएगी
+  const { serverUrl, stripeKey } = useApi();
+  
   const [currency, setCurrency] = useState('IN');
   
-  // अलग-अलग कमाई का डेटा
-  const [directDealIncome, setDirectDealIncome] = useState(15000); // कंपनियों से डायरेक्ट 100%
-  const [socialEarnings, setSocialEarnings] = useState(2000);      // गिफ्ट/प्रीमियम (30% वाला)
+  // तुम्हारा ओरिजिनल कमाई का डेटा (इसे बाद में सर्वर से बदल सकते हो)
+  const [directDealIncome, setDirectDealIncome] = useState(15000); 
+  const [socialEarnings, setSocialEarnings] = useState(2000);      
   
   const data = getCurrencyData(currency);
 
-  // गणना (Calculations)
+  // गणना (Calculations) - यह तुम्हारा ओरिजिनल लॉजिक है
   const calculateTotal = () => {
-    const socialCommission = socialEarnings * 0.30; // सिर्फ 30% आपका
+    const socialCommission = socialEarnings * 0.30; 
     const total = directDealIncome + socialCommission;
     return total.toFixed(2);
+  };
+
+  // विड्रॉल बटन का लॉजिक (अब इसमें सर्वर का एड्रेस भी जुड़ गया है)
+  const handleWithdraw = () => {
+    alert(`Payout triggered! Stripe processing Direct Income (100%) and Commission (30%) separately. 
+    Server: ${serverUrl} | Key: ${stripeKey ? 'Active' : 'Missing'}`);
   };
 
   return (
@@ -23,7 +33,7 @@ const WalletPage = () => {
       <div style={{ padding: '20px', fontFamily: 'Poppins' }}>
         <h2>💰 Master Wallet</h2>
         
-        {/* करेंसी सेलेक्टर */}
+        {/* करेंसी सेलेक्टर - कोई बदलाव नहीं किया */}
         <select onChange={(e) => setCurrency(e.target.value)} style={{ padding: '10px', width: '100%', borderRadius: '10px', marginBottom: '20px' }}>
           <option value="IN">🇮🇳 India (INR)</option>
           <option value="US">🇺🇸 Global (USD)</option>
@@ -49,9 +59,9 @@ const WalletPage = () => {
           <h3>Total Payable: {data.symbol} {calculateTotal()}</h3>
         </div>
 
-        {/* विड्रॉल बटन */}
+        {/* विड्रॉल बटन - यहाँ तुम्हारा ओरिजिनल लॉजिक है, बस क्लिक इवेंट को हैंडलर से जोड़ दिया है */}
         <button 
-          onClick={() => alert("Payout triggered! Stripe processing Direct Income (100%) and Commission (30%) separately.")}
+          onClick={handleWithdraw}
           style={{ marginTop: '20px', background: '#FFD700', color: '#000', padding: '15px', border: 'none', borderRadius: '15px', width: '100%', fontWeight: 'bold' }}
         >
           Auto-Withdraw All Funds
