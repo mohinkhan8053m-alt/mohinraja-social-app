@@ -8,7 +8,7 @@ const ExplorePage = () => {
   const { serverUrl } = useApi();
   const [userRole, setUserRole] = useState('starter'); 
 
-  // आपके पूरे 27 फीचर्स यहाँ हैं, एक भी कम नहीं!
+  // आपके 27 ओरिजिनल फीचर्स
   const allFeatures = [
     { name: "🚀 Promote", path: "/promote" }, { name: "🔥 Boosting", path: "/boost" },
     { name: "🌍 Geo-Target", path: "/geo-targeting" }, { name: "💖 Premium", path: "/premium" },
@@ -26,11 +26,17 @@ const ExplorePage = () => {
     { name: "🛡️ Auto-Mod", path: "/auto-mod" }
   ];
 
+  // प्रमोशन का मास्टर हैंडलर
+  const handlePromotion = (category) => {
+    // ये तीनों बटन अब PromotionForm पर जाएंगे और वहां PriceHelper से प्राइस उठाएंगे
+    navigate('/promotion-form', { state: { category: category } });
+  };
+
   return (
     <Layout>
       <div style={{ padding: '20px 10px' }}>
         
-        {/* कैटेगरी सिलेक्शन - आपका रोल सिस्टम */}
+        {/* 1. कैटेगरी सिलेक्शन (Role System) */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
           {['starter', 'startup', 'enterprise'].map(role => (
             <button key={role} onClick={() => setUserRole(role)} style={{ 
@@ -43,28 +49,49 @@ const ExplorePage = () => {
           ))}
         </div>
         
-        {/* 27 फीचर्स का महा-ग्रिड */}
+        {/* 2. तीन प्रीमियम प्रमोशन बटन (कमाई के मुख्य साधन) */}
+        <div style={{ display: 'grid', gap: '10px', marginBottom: '25px' }}>
+          <button onClick={() => handlePromotion('starter')} style={premiumBtn('#FFD700')}>
+            🚀 Starter Boosting (Quick Form)
+          </button>
+          <button onClick={() => handlePromotion('startup')} style={premiumBtn('#f0f0f0')}>
+            🔥 Startup Launch (Detailed Promotion)
+          </button>
+          <button onClick={() => window.location.href='https://wa.me/918053756591?text=Hi, I want a Brand Deal'} style={premiumBtn('#000', '#fff')}>
+            💎 Enterprise Brand Deal (Contact Direct)
+          </button>
+        </div>
+
+        {/* 3. 27 फीचर्स की महा-ग्रिड */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {allFeatures.map((item) => (
             <button 
               key={item.name} 
-              onClick={() => navigate(item.path, { state: { role: userRole } })} 
-              style={{ 
-                padding: '15px', background: '#fff', border: '1px solid #ddd', 
-                borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' 
-              }}>
+              onClick={() => navigate(item.path)} 
+              style={featureStyle}>
               {item.name}
             </button>
           ))}
         </div>
 
-        {/* सर्वर स्टेटस */}
+        {/* 4. सर्वर स्टेटस */}
         <div style={{ marginTop: '30px', padding: '15px', background: '#f9f9f9', borderRadius: '10px', textAlign: 'center', border: '1px dashed #ccc' }}>
           <p style={{ fontSize: '11px', margin: 0 }}>📡 <b>Server Engine:</b> {serverUrl} | 27 Features Online</p>
         </div>
       </div>
     </Layout>
   );
+};
+
+// स्टाइल्स
+const premiumBtn = (bg, color='#000') => ({ 
+  padding: '16px', borderRadius: '12px', border: 'none', fontWeight: 'bold', 
+  background: bg, color: color, cursor: 'pointer', fontSize: '14px' 
+});
+
+const featureStyle = { 
+  padding: '15px', background: '#fff', border: '1px solid #ddd', 
+  borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' 
 };
 
 export default ExplorePage;
