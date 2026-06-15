@@ -2,23 +2,23 @@ import React, { useState, useContext } from 'react';
 import Layout from './Layout.jsx';
 import { UserContext } from './UserContext.jsx';
 import { useApi } from './ApiContext.jsx';
-import { getPricing } from './PriceHelper.js'; // आपका नया ग्लोबल प्राइसिंग इंजन
+// मास्टर इंजन से अपना नया फंक्शन मंगाया
+import { getLocalizedPrice } from './PriceHelper.js'; 
 
 const WalletPage = () => {
-  const { user, setUser } = useContext(UserContext); // यूजर डेटा का एक्सेस
-  const { serverUrl } = useApi(); // सर्वर का लिंक
+  const { user, setUser } = useContext(UserContext);
+  const { serverUrl } = useApi();
   const [processing, setProcessing] = useState(false);
 
-  // ग्लोबल प्राइसिंग उठा रहे हैं यूजर की लोकेशन के हिसाब से
-  const prices = getPricing(user.countryCode || 'IN'); 
+  // ग्लोबल करेंसी कन्वर्जन (यूजर की कंट्री के हिसाब से)
+  const currencyInfo = getLocalizedPrice(user.countryCode || 'IN', 1); // 1 USD का बेस रेट
 
-  // कुल कमाई की गणना (Direct + 30% Social Share)
+  // कुल कमाई की गणना
   const calculateTotal = () => {
     const socialCommission = user.totalEarnings * 0.30; 
     return (user.walletBalance + socialCommission).toFixed(2);
   };
 
-  // विड्रॉल फंक्शन - सीधा सर्वर से कनेक्टेड
   const handleWithdraw = async () => {
     setProcessing(true);
     try {
@@ -30,12 +30,12 @@ const WalletPage = () => {
         },
         body: JSON.stringify({ 
           userId: user.userId, 
-          amount: calculateTotal() 
+          amount: calculateTotal(),
+          currency: currencyInfo.currency // सर्वर को करेंसी भी भेज रहे हैं
         })
       });
 
       if (response.ok) {
-        // विड्रॉल के बाद यूजर का बैलेंस 0 कर देंगे (सक्सेस पर)
         setUser(prev => ({ ...prev, walletBalance: 0, totalEarnings: 0 }));
       }
     } catch (error) {
@@ -48,23 +48,23 @@ const WalletPage = () => {
   return (
     <Layout>
       <div style={{ padding: '20px', fontFamily: 'Poppins', color: '#000' }}>
-        <h2>💰 Master Wallet</h2>
+        <h2>💰 Master Wallet ({currencyInfo.currency.toUpperCase()})</h2>
 
         {/* 1. Direct Income Box */}
         <div style={cardStyle('#27ae60')}>
           <p style={{ margin: 0 }}>Direct Company Deals (100%)</p>
-          <h2>₹ {user.walletBalance.toFixed(2)}</h2>
+          <h2>{currencyInfo.currency.toUpperCase()} {user.walletBalance.toFixed(2)}</h2>
         </div>
 
         {/* 2. Social Revenue Box */}
         <div style={cardStyle('#000', '#fff')}>
           <p style={{ margin: 0, opacity: 0.8 }}>Social/Gifting Share (30%)</p>
-          <h2>₹ {(user.totalEarnings * 0.30).toFixed(2)}</h2>
+          <h2>{currencyInfo.currency.toUpperCase()} {(user.totalEarnings * 0.30).toFixed(2)}</h2>
         </div>
 
         {/* Total Box */}
         <div style={{ marginTop: '20px', textAlign: 'center' }}>
-          <h3>Total Payable: {calculateTotal()}</h3>
+          <h3>Total Payable: {calculateTotal()} {currencyInfo.currency.toUpperCase()}</h3>
         </div>
 
         {/* Withdraw Button */}
@@ -80,7 +80,6 @@ const WalletPage = () => {
   );
 };
 
-// Styles
 const cardStyle = (bg, color = '#fff') => ({ 
   background: bg, color: color, padding: '20px', borderRadius: '20px', marginBottom: '15px' 
 });
