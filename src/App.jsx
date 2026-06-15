@@ -5,7 +5,7 @@ import { AdProvider } from './AdProvider.jsx';
 import { ApiProvider } from './ApiContext.jsx'; 
 import Layout from './Layout.jsx'; 
 
-// सभी पेजों की लोडिंग
+// मुख्य पेजों की लोडिंग
 const LoginPage = lazy(() => import('./LoginPage.jsx'));
 const HomePage = lazy(() => import('./HomePage.jsx'));
 const MessengerPage = lazy(() => import('./MessengerPage.jsx'));
@@ -22,6 +22,9 @@ const BankPage = lazy(() => import('./BankPage.jsx'));
 const StatsPage = lazy(() => import('./StatsPage.jsx'));
 const PrivacyPage = lazy(() => import('./PrivacyPage.jsx'));
 const BoostDashboard = lazy(() => import('./BoostDashboard.jsx'));
+
+// यह वो फाइल है जो बाकी बचे हुए सभी 60+ बटनों को संभालेगी (ताकि एरर न आए)
+const FeaturePage = lazy(() => import('./FeaturePage.jsx'));
 
 function App() {
   return (
@@ -47,6 +50,10 @@ function App() {
                 <Route path="/privacy" element={<Layout><PrivacyPage /></Layout>} />
                 <Route path="/promote" element={<Layout><PromotionForm /></Layout>} />
                 <Route path="/partnerships" element={<Layout><PartnershipForm /></Layout>} />
+                
+                {/* डायनामिक रूट: ये उन सभी बटनों को संभालेगा जिनकी अलग फाइल नहीं है */}
+                <Route path="/:featureName" element={<Layout><FeaturePage /></Layout>} />
+                
                 <Route path="*" element={<Navigate to="/home" />} />
               </Routes>
             </Suspense>
