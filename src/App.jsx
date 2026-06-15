@@ -5,16 +5,14 @@ import { AdProvider } from './AdProvider.jsx';
 import { ApiProvider } from './ApiContext.jsx'; 
 import Layout from './Layout.jsx'; 
 
-// मुख्य पेज
+// सभी पेजों की लोडिंग
 const LoginPage = lazy(() => import('./LoginPage.jsx'));
 const HomePage = lazy(() => import('./HomePage.jsx'));
 const MessengerPage = lazy(() => import('./MessengerPage.jsx'));
 const VideoCallHub = lazy(() => import('./VideoCallHub.jsx'));
 const ExplorePage = lazy(() => import('./ExplorePage.jsx'));
-
-// यहाँ मैंने नाम ठीक कर दिया है (MasterProfilePage की जगह ProfilePage)
 const ProfilePage = lazy(() => import('./ProfilePage.jsx')); 
-
+const EditProfilePage = lazy(() => import('./EditProfilePage.jsx'));
 const SettingsPage = lazy(() => import('./SettingsPage.jsx'));
 const PremiumAdminPage = lazy(() => import('./PremiumAdminPage.jsx'));
 const PromotionForm = lazy(() => import('./PromotionForm.jsx'));
@@ -23,7 +21,6 @@ const WalletPage = lazy(() => import('./WalletPage.jsx'));
 const BankPage = lazy(() => import('./BankPage.jsx'));
 const StatsPage = lazy(() => import('./StatsPage.jsx'));
 const PrivacyPage = lazy(() => import('./PrivacyPage.jsx'));
-const EditProfilePage = lazy(() => import('./EditProfilePage.jsx'));
 const BoostDashboard = lazy(() => import('./BoostDashboard.jsx'));
 
 function App() {
@@ -39,10 +36,7 @@ function App() {
                 <Route path="/messenger" element={<Layout><MessengerPage /></Layout>} />
                 <Route path="/video-call" element={<Layout><VideoCallHub /></Layout>} />
                 <Route path="/explore" element={<Layout><ExplorePage /></Layout>} />
-                
-                {/* यहाँ भी मैंने नाम अपडेट कर दिया है */}
                 <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
-                
                 <Route path="/profile-edit" element={<Layout><EditProfilePage /></Layout>} />
                 <Route path="/boost-dashboard" element={<Layout><BoostDashboard /></Layout>} />
                 <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
