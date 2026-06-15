@@ -7,7 +7,7 @@ const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // अगर प्रोफाइल पेज है, तो हेडर पूरी तरह गायब रहेगा
+  // यहाँ हमने चेक किया है: अगर प्रोफाइल पेज है तो हेडर पूरी तरह गायब रहेगा
   const isProfilePage = location.pathname === '/profile'; 
   const showHeader = !hideHeader && !isProfilePage;
   const isHomePage = location.pathname === '/home' || location.pathname === '/';
@@ -28,17 +28,7 @@ const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
           )}
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* यहाँ पार्टनर और कॉइन की जगह अब मल्टी-कंट्री सेलेक्टर आ गया है */}
-            <select 
-              onChange={(e) => console.log("Region:", e.target.value)} 
-              style={{ padding: '5px', borderRadius: '15px', border: '1px solid #ccc', fontSize: '12px' }}
-            >
-              <option value="Global">🌍 Global</option>
-              <option value="India">🇮🇳 India</option>
-              <option value="USA">🇺🇸 USA</option>
-              <option value="UAE">🇦🇪 UAE</option>
-            </select>
-
+            {/* यहाँ से कंट्री और पार्टनरशिप/कॉइन वाला सारा सिस्टम हटा दिया है */}
             <button onClick={() => setShowTopMenu(!showTopMenu)} style={{ background: 'none', border: 'none', fontSize: '28px', cursor: 'pointer' }}>⋮</button>
           </div>
           
@@ -53,6 +43,7 @@ const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
       )}
 
       <main style={{ padding: '20px' }}>{children}</main>
+
       {!hideFooter && <BottomNav />}
     </div>
   );
