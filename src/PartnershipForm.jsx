@@ -1,69 +1,65 @@
 import React, { useState } from 'react';
+import Layout from './Layout.jsx';
+import { useApi } from './ApiContext.jsx';
+import { getCurrencyData } from './CurrencyConfig.js'; // यहाँ से रेट्स आएंगे
 
 const PartnershipForm = () => {
+  const { serverUrl } = useApi();
   const [formData, setFormData] = useState({
-    companyName: '', industry: '', type: 'Product', monthlyBudget: '',
-    contactEmail: '', phoneNumber: '', website: '', message: '', dealStatus: 'Pending'
+    companyName: '', country: 'IN', target: 'Local', monthlyBudget: 0
   });
+
+  // देश और टारगेट के हिसाब से प्राइसिंग
+  const config = getCurrencyData(formData.country);
+  const basePrice = formData.target === 'Local' ? config.price : config.price * 5; // ग्लोबल पर 5 गुना
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // बजट को Number में बदल दिया ताकि NaN एरर न आए
-    const finalData = { 
-      ...formData, 
-      monthlyBudget: Number(formData.monthlyBudget) || 0 
-    };
-    console.log("Global Partner Data Submitted:", finalData);
-    alert("🚀 प्रपोजल सबमिट हो गया! मोइन राजा की टीम रिव्यू कर रही है।");
-  };
-
-  const toggleAdActivation = (status) => {
-    setFormData({...formData, dealStatus: status});
-    alert(`Ads for this Partner are now: ${status}`);
+    alert(`प्रपोजल सबमिट! टोटल बजट: ${config.symbol}${basePrice} | सर्वर: ${serverUrl}`);
   };
 
   return (
-    <div style={{ background: '#000', color: '#fff', padding: '40px', borderRadius: '30px', border: '2px solid #FFD700', maxWidth: '600px', margin: 'auto' }}>
-      <h2 style={{ color: '#FFD700', textAlign: 'center' }}>🌍 Global Enterprise Partnership</h2>
-      
-      <div style={{ textAlign: 'center', margin: '20px 0', padding: '15px', background: '#111', borderRadius: '15px' }}>
-        <p style={{ fontSize: '12px', color: '#888' }}>Admin Deal Control:</p>
-        <button onClick={() => toggleAdActivation('Active')} style={{ background: '#00ff00', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', margin: '5px' }}>✅ Activate Deal & Ads</button>
-        <button onClick={() => toggleAdActivation('Inactive')} style={{ background: '#ff0000', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', margin: '5px', color: '#fff' }}>❌ Cancel Deal</button>
+    <Layout>
+      <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', fontFamily: 'Poppins' }}>
+        <div style={{ background: '#000', color: '#fff', padding: '30px', borderRadius: '25px', border: '2px solid #FFD700' }}>
+          <h2 style={{ color: '#FFD700', textAlign: 'center' }}>🌍 Global Enterprise Deal</h2>
+          
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            {/* कंपनी पूरी जानकारी भरे */}
+            <input placeholder="Company Name" required onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={inputStyle} />
+            
+            {/* देश सिलेक्शन */}
+            <select onChange={(e) => setFormData({...formData, country: e.target.value})} style={inputStyle}>
+              <option value="IN">🇮🇳 India (INR)</option>
+              <option value="US">🇺🇸 USA (USD)</option>
+              <option value="KW">🇰🇼 Kuwait (KWD)</option>
+              <option value="UAE">🇦🇪 UAE (AED)</option>
+            </select>
+
+            {/* लोकल या ग्लोबल टारगेट */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="button" onClick={() => setFormData({...formData, target: 'Local'})} style={btnToggle(formData.target === 'Local')}>सिर्फ मेरी कंट्री</button>
+              <button type="button" onClick={() => setFormData({...formData, target: 'Global'})} style={btnToggle(formData.target === 'Global')}>पूरी दुनिया</button>
+            </div>
+
+            {/* डायनामिक प्राइसिंग डिस्प्ले */}
+            <div style={{ padding: '15px', background: '#222', borderRadius: '10px', textAlign: 'center' }}>
+              <p style={{ fontSize: '12px', color: '#888' }}>कुल बजट (Monthly Cost):</p>
+              <h3 style={{ margin: '5px 0', color: '#FFD700' }}>{config.symbol} {basePrice}</h3>
+            </div>
+
+            <textarea placeholder="प्रोडक्ट क्या है? वेबसाइट लिंक? ऐप का नाम?" required style={{...inputStyle, height: '100px'}} />
+            
+            <button type="submit" style={submitBtn}>SUBMIT PROPOSAL 🚀</button>
+          </form>
+        </div>
       </div>
-
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <input placeholder="Brand/Company Name" required onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={inputStyle} />
-        <input type="email" placeholder="Official Business Email" required onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} style={inputStyle} />
-        <input type="tel" placeholder="WhatsApp/Phone (+Country Code)" onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})} style={inputStyle} />
-        <input placeholder="Company Website URL" onChange={(e) => setFormData({...formData, website: e.target.value})} style={inputStyle} />
-
-        <select onChange={(e) => setFormData({...formData, type: e.target.value})} style={inputStyle}>
-          <option value="Product">Product Launch</option>
-          <option value="Brand">Established Brand</option>
-          <option value="App">Mobile App</option>
-          <option value="Website">Digital Website</option>
-        </select>
-
-        <input placeholder="Industry (e.g., Tech, Fashion, Crypto)" onChange={(e) => setFormData({...formData, industry: e.target.value})} style={inputStyle} />
-        
-        {/* यहाँ type="number" लगा दिया है ताकि NaN न आए */}
-        <input type="number" placeholder="Expected Monthly Budget (Global Units)" onChange={(e) => setFormData({...formData, monthlyBudget: e.target.value})} style={inputStyle} />
-        
-        <textarea placeholder="Global reach goal..." onChange={(e) => setFormData({...formData, message: e.target.value})} style={{...inputStyle, height: '80px'}} />
-        
-        <button type="submit" style={{ padding: '20px', background: '#FFD700', border: 'none', borderRadius: '10px', fontWeight: '900', cursor: 'pointer', color: '#000' }}>
-          SUBMIT GLOBAL PROPOSAL 🚀
-        </button>
-      </form>
-
-      <div style={{ marginTop: '20px', padding: '10px', border: '1px dashed #FFD700', borderRadius: '10px', textAlign: 'center' }}>
-        <p style={{ fontSize: '10px' }}>📡 <b>Server Engine:</b> Ready for Global Lead Integration</p>
-      </div>
-    </div>
+    </Layout>
   );
 };
 
-const inputStyle = { width: '100%', padding: '15px', borderRadius: '10px', background: '#222', border: '1px solid #444', color: '#fff', boxSizing: 'border-box' };
+const inputStyle = { width: '100%', padding: '15px', borderRadius: '8px', background: '#222', border: '1px solid #444', color: '#fff' };
+const btnToggle = (active) => ({ flex: 1, padding: '10px', background: active ? '#FFD700' : '#333', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' });
+const submitBtn = { padding: '15px', background: '#FFD700', border: 'none', borderRadius: '8px', fontWeight: '900', color: '#000', cursor: 'pointer' };
 
 export default PartnershipForm;
