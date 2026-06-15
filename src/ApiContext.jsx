@@ -1,11 +1,12 @@
 import React, { createContext, useContext } from 'react';
+// अपनी मास्टर फाइल को इम्पोर्ट कर लिया
+import { calculateCommission, getLocalizedPrice, getGlobalPricing } from './PriceHelper.js';
 
 const apiConfig = {
-  // यहाँ अपने असली सर्वर लिंक डालना
-  mainServer: "https://your-main-server.com", // फ्री वाला सर्वर
-  proServer: "https://your-pro-server.com",   // प्रो वाला सर्वर
+  mainServer: "https://your-main-server.com",
+  proServer: "https://your-pro-server.com",
 
-  // 1. फ्री फीचर्स के लिए
+  // --- 1. फ्री फीचर्स (कोई बदलाव नहीं) ---
   handleFollow: async (followerId, followingId) => {
     const response = await fetch(`${apiConfig.mainServer}/api/follow`, {
       method: 'POST',
@@ -15,8 +16,14 @@ const apiConfig = {
     return response.ok;
   },
 
-  // 2. प्रो वीडियो कॉल के लिए (आपका नया फीचर)
+  // --- 2. प्रो वीडियो कॉल (फाइनेंशियल इंजन के साथ) ---
   callProVideo: async (data) => {
+    // अगर डेटा में गिफ्टिंग है, तो कमीशन कैलकुलेट करें
+    if (data.feature && data.feature.startsWith('🎁')) {
+      const commission = calculateCommission(data.amount || 0);
+      data.moinRajaProfit = commission.platformShare; // सर्वर को आपका 30% हिस्सा भेजें
+    }
+
     const response = await fetch(`${apiConfig.proServer}/api/pro-video`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -25,7 +32,7 @@ const apiConfig = {
     return await response.json();
   },
 
-  // 3. प्रो मैसेंजर के लिए (AI Translate आदि)
+  // --- 3. प्रो मैसेंजर एक्शन (AI/Translate आदि) ---
   handleProAction: async (data) => {
     const response = await fetch(`${apiConfig.proServer}/api/pro-action`, {
       method: 'POST',
@@ -34,6 +41,10 @@ const apiConfig = {
     });
     return await response.json();
   },
+
+  // --- 4. फाइनेंशियल हेल्पर मेथड्स (सर्वर कॉल में इस्तेमाल के लिए) ---
+  getPricing: (country, scope, category) => getGlobalPricing(country, scope, category),
+  getPaymentDetails: (country, amount) => getLocalizedPrice(country, amount),
 
   fetchAds: async () => {
     const response = await fetch(`${apiConfig.mainServer}/api/ads`);
