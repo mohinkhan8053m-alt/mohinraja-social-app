@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [name, setName] = useState('RangManch Global');
+  const [bio, setBio] = useState('Official Global Portal | Digital Creator');
   const navigate = useNavigate();
+
+  // नाम और बायो को हमेशा अपडेट रखने के लिए
+  useEffect(() => {
+    setName(localStorage.getItem('profileName') || 'RangManch Global');
+    setBio(localStorage.getItem('profileBio') || 'Official Global Portal | Digital Creator');
+  }, []);
 
   const allExtraButtons = [
     "Wallet", "Bank", "Stats", "Posts", "Live", "Ads", "Help", "Privacy", "Security", 
@@ -26,49 +34,51 @@ const ProfilePage = () => {
     <div style={{ padding: '20px', background: '#fff', minHeight: '100vh', fontFamily: 'sans-serif' }}>
       
       {/* 1. सर्वर हब */}
-      <div style={{ padding: '10px', background: '#eef6ff', borderRadius: '10px', textAlign: 'center', marginBottom: '20px', border: '1px solid #d1e4ff' }}>
-        <h4 style={{ margin: '0 0 5px 0', fontSize: '12px', color: '#0056b3' }}>📡 Server Hub: System Online</h4>
-        <button onClick={() => alert('Syncing All 75+ Modules...')} style={{ background: '#0095f6', color: '#fff', border: 'none', padding: '4px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '10px' }}>Sync Database</button>
+      <div style={{ padding: '12px', background: '#f8f8f8', borderRadius: '8px', textAlign: 'center', marginBottom: '25px', border: '1px solid #eee' }}>
+        <h4 style={{ margin: '0 0 5px 0', fontSize: '13px', color: '#555' }}>📡 Server Hub: Online</h4>
+        <button onClick={() => alert('Syncing...')} style={{ background: '#000', color: '#fff', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}>Sync Database</button>
       </div>
 
       {/* 2. हेडर */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h2 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>rangmanch_official</h2>
-        <button onClick={() => setShowMenu(!showMenu)} style={{ border: 'none', background: 'none', fontSize: '22px', cursor: 'pointer' }}>☰</button>
+        <button onClick={() => setShowMenu(!showMenu)} style={{ border: 'none', background: 'none', fontSize: '24px', cursor: 'pointer' }}>☰</button>
       </div>
 
-      {/* 3. प्रोफाइल फोटो और Stats */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-        <img src="https://www.w3schools.com/howto/img_avatar.png" style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid #ddd' }} />
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>1.2K</div><div style={{ fontSize: '11px', color: '#666' }}>Posts</div></div>
-          <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>50K</div><div style={{ fontSize: '11px', color: '#666' }}>Followers</div></div>
-          <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>150</div><div style={{ fontSize: '11px', color: '#666' }}>Following</div></div>
+      {/* 3. फोटो और Stats */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+        <img src="https://www.w3schools.com/howto/img_avatar.png" style={{ width: '85px', height: '85px', borderRadius: '50%', border: '1px solid #ddd' }} />
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>1.2K</div><div style={{ fontSize: '12px', color: '#666' }}>Posts</div></div>
+          <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>50K</div><div style={{ fontSize: '12px', color: '#666' }}>Followers</div></div>
+          <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>150</div><div style={{ fontSize: '12px', color: '#666' }}>Following</div></div>
         </div>
       </div>
 
-      {/* 4. बायो */}
-      <div style={{ marginBottom: '15px' }}>
-        <div style={{ fontWeight: 'bold', fontSize: '14px' }}>RangManch Global</div>
-        <div style={{ fontSize: '13px', color: '#444' }}>Official Global Portal | Digital Creator</div>
+      {/* 4. नाम और बायो */}
+      <div style={{ marginBottom: '20px' }}>
+        <div style={{ fontWeight: 'bold', fontSize: '15px' }}>{name}</div>
+        <div style={{ fontSize: '14px', color: '#333' }}>{bio}</div>
       </div>
 
-      {/* 5. किट: Edit, Story, Boost, Message, Follow */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '20px', flexWrap: 'wrap' }}>
-        <button onClick={() => navigate('/profile-edit')} style={btnStyle}>Edit</button>
-        <button onClick={() => navigate('/story-create')} style={{...btnStyle, background: '#ff4757', color: '#fff', border:'none'}}>+ Story</button>
-        <button onClick={() => navigate('/boost-dashboard')} style={{...btnStyle, background: '#2ed573', color: '#fff', border:'none'}}>Boost</button>
-        <button onClick={() => navigate('/messenger')} style={btnStyle}>Msg</button>
-        <button onClick={() => alert('Followed! ✅')} style={{...btnStyle, background: '#0095f6', color: '#fff', border:'none'}}>Follow</button>
+      {/* 5. बड़े और क्लीन बटन्स */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+        <button onClick={() => navigate('/profile-edit')} style={bigBtn}>Edit</button>
+        <button onClick={() => navigate('/messenger')} style={bigBtn}>Message</button>
+        <button onClick={() => alert('Followed!')} style={{...bigBtn, background: '#000', color: '#fff'}}>Follow</button>
       </div>
 
-      {/* 6. मेनू (3 लाइन वाला) */}
+      {/* 6. स्टोरी और बूस्ट बटन */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '25px' }}>
+        <button onClick={() => navigate('/story-create')} style={bigBtn}>+ Story</button>
+        <button onClick={() => navigate('/boost-dashboard')} style={bigBtn}>Boost</button>
+      </div>
+
+      {/* मेनू */}
       {showMenu && (
-        <div style={{ position: 'absolute', top: '80px', right: '15px', background: '#fff', border: '1px solid #ddd', borderRadius: '8px', padding: '10px', width: '200px', maxHeight: '350px', overflowY: 'auto', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', zIndex: 1000 }}>
+        <div style={{ position: 'absolute', top: '80px', right: '15px', background: '#fff', border: '1px solid #ddd', borderRadius: '8px', padding: '10px', width: '200px', maxHeight: '300px', overflowY: 'auto', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', zIndex: 1000 }}>
           {allExtraButtons.map(item => (
-            <div key={item} onClick={() => { setShowMenu(false); navigate(`/${item.toLowerCase().replace(/\s+/g, '-')}`); }} style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>
-              {item}
-            </div>
+            <div key={item} onClick={() => { setShowMenu(false); navigate(`/${item.toLowerCase().replace(/\s+/g, '-')}`); }} style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</div>
           ))}
         </div>
       )}
@@ -76,6 +86,6 @@ const ProfilePage = () => {
   );
 };
 
-const btnStyle = { padding: '8px 10px', borderRadius: '5px', border: '1px solid #ddd', background: '#f8f8f8', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' };
+const bigBtn = { padding: '12px 0', borderRadius: '8px', border: '1px solid #ddd', background: '#f0f0f0', cursor: 'pointer', flex: 1, fontSize: '13px', fontWeight: 'bold', color: '#000' };
 
 export default ProfilePage;
