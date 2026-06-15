@@ -5,7 +5,7 @@ import { AdProvider } from './AdProvider.jsx';
 import { ApiProvider } from './ApiContext.jsx'; 
 import Layout from './Layout.jsx'; 
 
-// मुख्य पेजों की लोडिंग
+// --- मुख्य पेजों की लोडिंग ---
 const LoginPage = lazy(() => import('./LoginPage.jsx'));
 const HomePage = lazy(() => import('./HomePage.jsx'));
 const MessengerPage = lazy(() => import('./MessengerPage.jsx'));
@@ -24,9 +24,10 @@ const PrivacyPage = lazy(() => import('./PrivacyPage.jsx'));
 const BoostDashboard = lazy(() => import('./BoostDashboard.jsx'));
 const FeaturePage = lazy(() => import('./FeaturePage.jsx'));
 
-// --- मोइन भाई, ये रही आपकी नई प्रो फाइलें ---
+// --- प्रो और नई क्रिएटेड फाइलें ---
 const ProVideoCall = lazy(() => import('./ProVideoCall.jsx'));
 const ProMessenger = lazy(() => import('./ProMessenger.jsx'));
+const JoinAsCreator = lazy(() => import('./JoinAsCreator.jsx'));
 
 function App() {
   return (
@@ -34,17 +35,19 @@ function App() {
       <UserProvider>
         <AdProvider>
           <Router>
-            <Suspense fallback={<div style={{textAlign:'center', marginTop:'20%', color:'#555'}}>RangManch Loading...</div>}>
+            <Suspense fallback={<div style={{textAlign:'center', marginTop:'20%', color:'#555'}}>Loading...</div>}>
               <Routes>
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/home" element={<Layout><HomePage /></Layout>} />
                 <Route path="/messenger" element={<Layout><MessengerPage /></Layout>} />
                 <Route path="/video-call" element={<Layout><VideoCallHub /></Layout>} />
                 
-                {/* --- प्रो रूट्स यहाँ जोड़ दिए --- */}
+                {/* --- प्रो और क्रिएटर रूट्स --- */}
                 <Route path="/pro-video-call/:id" element={<ProVideoCall />} />
                 <Route path="/pro-messenger" element={<ProMessenger />} />
+                <Route path="/join-creator" element={<Layout><JoinAsCreator /></Layout>} />
                 
+                {/* --- अन्य सभी रूट्स --- */}
                 <Route path="/explore" element={<Layout><ExplorePage /></Layout>} />
                 <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
                 <Route path="/profile-edit" element={<Layout><EditProfilePage /></Layout>} />
