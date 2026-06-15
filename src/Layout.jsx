@@ -7,10 +7,9 @@ const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // यहाँ हमने चेक किया है कि अगर आप 'profile' पेज पर हैं, तो हेडर को पूरी तरह हटा दो
+  // अगर प्रोफाइल पेज है, तो हेडर पूरी तरह गायब रहेगा
   const isProfilePage = location.pathname === '/profile'; 
   const showHeader = !hideHeader && !isProfilePage;
-
   const isHomePage = location.pathname === '/home' || location.pathname === '/';
 
   return (
@@ -29,8 +28,17 @@ const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
           )}
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <button onClick={() => navigate('/partnerships')} style={{ background: '#FFD700', border: 'none', padding: '5px 10px', borderRadius: '15px', fontSize: '12px', fontWeight: 'bold' }}>🤝 Partner</button>
-            <div onClick={() => navigate('/wallet')} style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24', background: '#fff9e6', padding: '5px 10px', borderRadius: '15px', border: '1px solid #fbbf24' }}>💰 500</div>
+            {/* यहाँ पार्टनर और कॉइन की जगह अब मल्टी-कंट्री सेलेक्टर आ गया है */}
+            <select 
+              onChange={(e) => console.log("Region:", e.target.value)} 
+              style={{ padding: '5px', borderRadius: '15px', border: '1px solid #ccc', fontSize: '12px' }}
+            >
+              <option value="Global">🌍 Global</option>
+              <option value="India">🇮🇳 India</option>
+              <option value="USA">🇺🇸 USA</option>
+              <option value="UAE">🇦🇪 UAE</option>
+            </select>
+
             <button onClick={() => setShowTopMenu(!showTopMenu)} style={{ background: 'none', border: 'none', fontSize: '28px', cursor: 'pointer' }}>⋮</button>
           </div>
           
@@ -45,7 +53,6 @@ const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
       )}
 
       <main style={{ padding: '20px' }}>{children}</main>
-
       {!hideFooter && <BottomNav />}
     </div>
   );
