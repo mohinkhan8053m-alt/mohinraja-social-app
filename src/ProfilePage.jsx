@@ -3,14 +3,20 @@ import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [name, setName] = useState('RangManch Global');
-  const [bio, setBio] = useState('Official Global Portal | Digital Creator');
+  const [profile, setProfile] = useState({
+    name: 'RangManch Global',
+    bio: 'Official Global Portal | Digital Creator',
+    image: 'https://www.w3schools.com/howto/img_avatar.png'
+  });
   const navigate = useNavigate();
 
-  // नाम और बायो को हमेशा अपडेट रखने के लिए
+  // पेज लोड होते ही सारा डेटा यहाँ से अपडेट हो जाएगा
   useEffect(() => {
-    setName(localStorage.getItem('profileName') || 'RangManch Global');
-    setBio(localStorage.getItem('profileBio') || 'Official Global Portal | Digital Creator');
+    setProfile({
+      name: localStorage.getItem('profileName') || 'RangManch Global',
+      bio: localStorage.getItem('profileBio') || 'Official Global Portal | Digital Creator',
+      image: localStorage.getItem('profileImage') || 'https://www.w3schools.com/howto/img_avatar.png'
+    });
   }, []);
 
   const allExtraButtons = [
@@ -36,7 +42,7 @@ const ProfilePage = () => {
       {/* 1. सर्वर हब */}
       <div style={{ padding: '12px', background: '#f8f8f8', borderRadius: '8px', textAlign: 'center', marginBottom: '25px', border: '1px solid #eee' }}>
         <h4 style={{ margin: '0 0 5px 0', fontSize: '13px', color: '#555' }}>📡 Server Hub: Online</h4>
-        <button onClick={() => alert('Syncing...')} style={{ background: '#000', color: '#fff', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}>Sync Database</button>
+        <button onClick={() => alert('Syncing All 75+ Features...')} style={{ background: '#000', color: '#fff', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}>Sync Database</button>
       </div>
 
       {/* 2. हेडर */}
@@ -45,9 +51,9 @@ const ProfilePage = () => {
         <button onClick={() => setShowMenu(!showMenu)} style={{ border: 'none', background: 'none', fontSize: '24px', cursor: 'pointer' }}>☰</button>
       </div>
 
-      {/* 3. फोटो और Stats */}
+      {/* 3. फोटो (जो अब अपडेट होगी) और Stats */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
-        <img src="https://www.w3schools.com/howto/img_avatar.png" style={{ width: '85px', height: '85px', borderRadius: '50%', border: '1px solid #ddd' }} />
+        <img src={profile.image} style={{ width: '85px', height: '85px', borderRadius: '50%', border: '1px solid #ddd', objectFit: 'cover' }} />
         <div style={{ display: 'flex', gap: '20px' }}>
           <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>1.2K</div><div style={{ fontSize: '12px', color: '#666' }}>Posts</div></div>
           <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 'bold' }}>50K</div><div style={{ fontSize: '12px', color: '#666' }}>Followers</div></div>
@@ -55,13 +61,13 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {/* 4. नाम और बायो */}
+      {/* 4. नाम और बायो (अब सही से अपडेट होंगे) */}
       <div style={{ marginBottom: '20px' }}>
-        <div style={{ fontWeight: 'bold', fontSize: '15px' }}>{name}</div>
-        <div style={{ fontSize: '14px', color: '#333' }}>{bio}</div>
+        <div style={{ fontWeight: 'bold', fontSize: '15px' }}>{profile.name}</div>
+        <div style={{ fontSize: '14px', color: '#333' }}>{profile.bio}</div>
       </div>
 
-      {/* 5. बड़े और क्लीन बटन्स */}
+      {/* 5. बड़े बटन्स */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
         <button onClick={() => navigate('/profile-edit')} style={bigBtn}>Edit</button>
         <button onClick={() => navigate('/messenger')} style={bigBtn}>Message</button>
