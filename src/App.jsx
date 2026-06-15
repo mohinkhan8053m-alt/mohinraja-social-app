@@ -22,9 +22,11 @@ const BankPage = lazy(() => import('./BankPage.jsx'));
 const StatsPage = lazy(() => import('./StatsPage.jsx'));
 const PrivacyPage = lazy(() => import('./PrivacyPage.jsx'));
 const BoostDashboard = lazy(() => import('./BoostDashboard.jsx'));
-
-// यह वो फाइल है जो बाकी बचे हुए सभी 60+ बटनों को संभालेगी (ताकि एरर न आए)
 const FeaturePage = lazy(() => import('./FeaturePage.jsx'));
+
+// --- मोइन भाई, ये रही आपकी नई प्रो फाइलें ---
+const ProVideoCall = lazy(() => import('./ProVideoCall.jsx'));
+const ProMessenger = lazy(() => import('./ProMessenger.jsx'));
 
 function App() {
   return (
@@ -38,6 +40,11 @@ function App() {
                 <Route path="/home" element={<Layout><HomePage /></Layout>} />
                 <Route path="/messenger" element={<Layout><MessengerPage /></Layout>} />
                 <Route path="/video-call" element={<Layout><VideoCallHub /></Layout>} />
+                
+                {/* --- प्रो रूट्स यहाँ जोड़ दिए --- */}
+                <Route path="/pro-video-call/:id" element={<ProVideoCall />} />
+                <Route path="/pro-messenger" element={<ProMessenger />} />
+                
                 <Route path="/explore" element={<Layout><ExplorePage /></Layout>} />
                 <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
                 <Route path="/profile-edit" element={<Layout><EditProfilePage /></Layout>} />
@@ -51,9 +58,7 @@ function App() {
                 <Route path="/promote" element={<Layout><PromotionForm /></Layout>} />
                 <Route path="/partnerships" element={<Layout><PartnershipForm /></Layout>} />
                 
-                {/* डायनामिक रूट: ये उन सभी बटनों को संभालेगा जिनकी अलग फाइल नहीं है */}
                 <Route path="/:featureName" element={<Layout><FeaturePage /></Layout>} />
-                
                 <Route path="*" element={<Navigate to="/home" />} />
               </Routes>
             </Suspense>
