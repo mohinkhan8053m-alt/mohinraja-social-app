@@ -1,72 +1,79 @@
 import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Layout from './Layout.jsx';
 import { UserContext } from './UserContext.jsx';
 import { useApi } from './ApiContext.jsx';
 
 const MessengerPage = () => {
-  const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const { serverUrl } = useApi();
-  const [msg, setMsg] = useState('');
+  const [activeSubMenu, setActiveSubMenu] = useState(null);
 
-  // AI Translate फंक्शन (किसी भी भाषा को हिंदी/इंग्लिश में बदलेगा)
-  const handleTranslate = async (text) => {
-    const res = await fetch(`${serverUrl}/api/ai-translate`, {
-      method: 'POST',
-      body: JSON.stringify({ text, targetLang: 'auto' })
-    });
-    // अनुवादित मैसेज यहाँ आएगा
+  // 1. 49 मुख्य फीचर्स की लिस्ट
+  const mainFeatures = [
+    '🤖AI', '🛡️Mod', '📢AdS', '💎Prem', '📊Ana', '✅Loc', '🌐Reg', '🌍Glob', '⚡Girl', '🔄Sync', 
+    '⚙️Set', '🎥VidCall', '📸Cam', '🎙️Mic', '📞Tel', '💾Save', '☁️Cloud', '🔑Auth', '🔔Noti', '🎨Theme',
+    '📝Note', '📂File', '🔗Link', '📍Map', '🗓️Cal', '🧮Calc', '⏳Timer', '⏱️Stop', '🔦Flash', '🌡️Temp',
+    '🚗Auto', '✈️Fly', '🍔Food', '🎮Game', '🎵Music', '🎬Video', '📖Read', '✍️Edit', '🧩Plug', '📦Pack',
+    '🛡️Fire', '🛸Drone', '📡Signal', '💡Bulb', '🚪Lock', '🌡️AC', '💧Water', '🔌Power', '📡Wifi'
+  ];
+
+  // 2. 10 गिफ्टिंग फीचर्स
+  const giftFeatures = ['🎁G1', '🎁G2', '🎁G3', '🎁G4', '🎁G5', '🎁G6', '🎁G7', '🎁G8', '🎁G9', '🎁G10'];
+
+  // मास्टर फंक्शन: जो सीधा आपके सर्वर को हिट करेगा
+  const executeFeature = async (featureName) => {
+    if (featureName === '🎁GiftMenu') {
+      setActiveSubMenu(activeSubMenu === 'gifts' ? null : 'gifts');
+      return;
+    }
+
+    try {
+      // यह सीधा आपकी ApiContext के सर्वर से जुड़ेगा
+      const response = await fetch(`${serverUrl}/api/execute-feature`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feature: featureName, userId: user?.id })
+      });
+      const data = await response.json();
+      alert(`मोइन भाई, ${featureName} कमांड सर्वर पर भेजी गई! ✅`);
+    } catch (error) {
+      alert(`सर्वर एरर: ${featureName} अभी नहीं चल रहा, सर्वर लिंक चेक करें!`);
+    }
   };
 
   return (
     <Layout>
-      <div style={{ padding: '10px', fontFamily: 'Poppins' }}>
-        {/* प्रीमियम बैनर */}
-        <div style={premiumBanner}>
-          <p style={{ margin: '0 0 5px 0', fontSize: '12px' }}>👑 Unlock AI Translation & Ad-Free Mode</p>
-          <button onClick={() => navigate('/premium')} style={premiumBtn}>Go Premium</button>
+      <div style={{ padding: '15px' }}>
+        {/* चैट सेक्शन */}
+        <div style={{ height: '35vh', background: '#fff', borderRadius: '15px', padding: '10px', overflowY: 'auto' }}>
+          <div style={chatBubble}>Hello! Server is ready for 59 features. 🚀</div>
         </div>
 
-        {/* चैट लिस्ट (फेसबुक स्टाइल) */}
-        <div style={{ height: '60vh', overflowY: 'scroll', background: '#fff', padding: '10px' }}>
-          {/* यहाँ आपके फॉलोअर्स और उनकी चैट आएगी */}
-          <div style={chatBubble}>Hello! How are you? <small style={{fontSize:'8px', float:'right'}}>✓✓</small></div>
-        </div>
-
-        {/* 'धाकड़' चैट इनपुट बार (AI + Voice + Translate) */}
-        <div style={inputBarStyle}>
-          <button onClick={() => alert('Opening Camera...')}>📷</button>
-          <button onClick={() => alert('Recording Voice...')}>🎙️</button>
-          <input 
-            value={msg} 
-            onChange={(e) => setMsg(e.target.value)} 
-            placeholder="Type a message..." 
-            style={inputStyle} 
-          />
-          <button onClick={() => handleTranslate(msg)}>🌐</button> {/* AI Translate Button */}
-          <button style={sendBtn}>🚀</button>
-        </div>
-
-        {/* 49+ फीचर्स का ग्रिड (बटन के अंदर बटन) */}
-        <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '5px' }}>
-          {/* ये रहे आपके सभी पुराने फीचर्स */}
-          {['🤖AI', '🛡️Mod', '📢AdS', '💎Prem', '📊Ana', '✅Loc', '🌐Reg', '🌍Glob', '🎁Gift', '⚡Girl', '🔄Sync', '⚙️Set'].map((f, i) => (
-             <button key={i} style={featureBtn}>{f}</button>
+        {/* 49 फीचर्स का ग्रिड */}
+        <div style={gridStyle}>
+          {mainFeatures.map((f, i) => (
+            <button key={i} style={featureBtn} onClick={() => executeFeature(f)}>{f}</button>
           ))}
+          {/* गिफ्टिंग मेनू का बटन */}
+          <button style={{...featureBtn, background: '#FFD700'}} onClick={() => executeFeature('🎁GiftMenu')}>🎁Gifts</button>
         </div>
+
+        {/* 10 गिफ्टिंग बटनों का सब-मेनू */}
+        {activeSubMenu === 'gifts' && (
+          <div style={{...gridStyle, background: '#e1ffc7', padding: '10px', borderRadius: '10px', marginTop: '10px'}}>
+            {giftFeatures.map((g, i) => (
+              <button key={i} style={featureBtn} onClick={() => executeFeature(g)}>{g}</button>
+            ))}
+          </div>
+        )}
       </div>
     </Layout>
   );
 };
 
 // Styles
-const premiumBanner = { background: '#000', color: '#FFD700', padding: '10px', borderRadius: '15px', textAlign: 'center', marginBottom: '10px' };
-const premiumBtn = { background: '#FFD700', border: 'none', padding: '5px 10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' };
-const inputBarStyle = { display: 'flex', gap: '5px', background: '#f0f0f0', padding: '10px', borderRadius: '20px', marginTop: '10px' };
-const inputStyle = { flex: 1, border: 'none', background: 'transparent', outline: 'none' };
-const sendBtn = { background: '#0095f6', color: '#fff', border: 'none', padding: '5px 15px', borderRadius: '15px' };
-const chatBubble = { background: '#e1ffc7', padding: '10px', borderRadius: '10px', marginBottom: '5px', maxWidth: '80%' };
-const featureBtn = { background: '#eee', border: 'none', padding: '8px', fontSize: '9px', borderRadius: '5px', fontWeight: 'bold' };
+const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginTop: '15px' };
+const featureBtn = { background: '#eee', border: 'none', padding: '8px 5px', fontSize: '9px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' };
+const chatBubble = { background: '#0095f6', color: '#fff', padding: '10px', borderRadius: '10px', fontSize: '14px' };
 
 export default MessengerPage;
