@@ -8,11 +8,15 @@ const PartnershipForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Global Partner Data:", formData);
+    // बजट को Number में बदल दिया ताकि NaN एरर न आए
+    const finalData = { 
+      ...formData, 
+      monthlyBudget: Number(formData.monthlyBudget) || 0 
+    };
+    console.log("Global Partner Data Submitted:", finalData);
     alert("🚀 प्रपोजल सबमिट हो गया! मोइन राजा की टीम रिव्यू कर रही है।");
   };
 
-  // 'जादुई बटन' (एडमिन पैनल के लिए)
   const toggleAdActivation = (status) => {
     setFormData({...formData, dealStatus: status});
     alert(`Ads for this Partner are now: ${status}`);
@@ -22,7 +26,6 @@ const PartnershipForm = () => {
     <div style={{ background: '#000', color: '#fff', padding: '40px', borderRadius: '30px', border: '2px solid #FFD700', maxWidth: '600px', margin: 'auto' }}>
       <h2 style={{ color: '#FFD700', textAlign: 'center' }}>🌍 Global Enterprise Partnership</h2>
       
-      {/* एडमिन कंट्रोल: केवल आप डील्स फाइनल करेंगे */}
       <div style={{ textAlign: 'center', margin: '20px 0', padding: '15px', background: '#111', borderRadius: '15px' }}>
         <p style={{ fontSize: '12px', color: '#888' }}>Admin Deal Control:</p>
         <button onClick={() => toggleAdActivation('Active')} style={{ background: '#00ff00', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', margin: '5px' }}>✅ Activate Deal & Ads</button>
@@ -43,7 +46,10 @@ const PartnershipForm = () => {
         </select>
 
         <input placeholder="Industry (e.g., Tech, Fashion, Crypto)" onChange={(e) => setFormData({...formData, industry: e.target.value})} style={inputStyle} />
-        <input placeholder="Expected Monthly Budget (Global Units)" onChange={(e) => setFormData({...formData, monthlyBudget: e.target.value})} style={inputStyle} />
+        
+        {/* यहाँ type="number" लगा दिया है ताकि NaN न आए */}
+        <input type="number" placeholder="Expected Monthly Budget (Global Units)" onChange={(e) => setFormData({...formData, monthlyBudget: e.target.value})} style={inputStyle} />
+        
         <textarea placeholder="Global reach goal..." onChange={(e) => setFormData({...formData, message: e.target.value})} style={{...inputStyle, height: '80px'}} />
         
         <button type="submit" style={{ padding: '20px', background: '#FFD700', border: 'none', borderRadius: '10px', fontWeight: '900', cursor: 'pointer', color: '#000' }}>
@@ -51,7 +57,6 @@ const PartnershipForm = () => {
         </button>
       </form>
 
-      {/* सर्वर की खाली जगह (यहाँ बाद में आप बैकएंड जोड़ेंगे) */}
       <div style={{ marginTop: '20px', padding: '10px', border: '1px dashed #FFD700', borderRadius: '10px', textAlign: 'center' }}>
         <p style={{ fontSize: '10px' }}>📡 <b>Server Engine:</b> Ready for Global Lead Integration</p>
       </div>
