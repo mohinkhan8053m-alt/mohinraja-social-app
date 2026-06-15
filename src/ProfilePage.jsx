@@ -7,7 +7,7 @@ const ProfilePage = () => {
     name: 'RangManch Global',
     bio: 'Official Global Portal | Digital Creator',
     website: 'https://rangmanch.com',
-    country: '🇮🇳' // यहाँ से आप देश का झंडा बदल सकते हैं
+    country: '🇮🇳'
   });
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ const ProfilePage = () => {
       {/* 1. सर्वर हब */}
       <div style={{ padding: '12px', background: '#f8f8f8', borderRadius: '8px', textAlign: 'center', marginBottom: '20px', border: '1px solid #eee' }}>
         <h4 style={{ margin: '0 0 5px 0', fontSize: '12px', color: '#555' }}>📡 Server Hub: Online</h4>
-        <button onClick={() => alert('Syncing 80+ Modules...')} style={{ background: '#000', color: '#fff', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '10px' }}>Sync Database</button>
+        <button onClick={() => navigate('/database-sync')} style={{ background: '#000', color: '#fff', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '10px' }}>Sync Database</button>
       </div>
 
       {/* 2. हेडर */}
@@ -51,7 +51,7 @@ const ProfilePage = () => {
         <button onClick={() => setShowMenu(!showMenu)} style={{ border: 'none', background: 'none', fontSize: '24px', cursor: 'pointer' }}>☰</button>
       </div>
 
-      {/* 3. फोटो और नाम-कंट्री-बायो */}
+      {/* 3. फोटो और Stats */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
         <img src={localStorage.getItem('profileImage') || 'https://www.w3schools.com/howto/img_avatar.png'} style={{ width: '85px', height: '85px', borderRadius: '50%', border: '1px solid #ddd', objectFit: 'cover' }} />
         <div style={{ display: 'flex', gap: '20px' }}>
@@ -67,21 +67,23 @@ const ProfilePage = () => {
           <span>{profile.country}</span>
         </div>
         <div style={{ fontSize: '14px', color: '#333', marginTop: '5px' }}>{profile.bio}</div>
-        <a href={profile.website} target="_blank" style={{ fontSize: '14px', color: '#0095f6', textDecoration: 'none', fontWeight: 'bold' }}>{profile.website.replace('https://', '')}</a>
+        <a href={profile.website} target="_blank" rel="noreferrer" style={{ fontSize: '14px', color: '#0095f6', textDecoration: 'none', fontWeight: 'bold' }}>{profile.website.replace('https://', '')}</a>
       </div>
 
-      {/* 4. बड़े बटन्स (Kit) */}
+      {/* 4. बड़े बटन्स (एक्टिव) */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
         <button onClick={() => navigate('/profile-edit')} style={bigBtn}>Edit</button>
         <button onClick={() => navigate('/messenger')} style={bigBtn}>Message</button>
-        <button onClick={() => alert('Followed!')} style={{...bigBtn, background: '#000', color: '#fff'}}>Follow</button>
+        <button onClick={() => navigate('/follow-action')} style={{...bigBtn, background: '#000', color: '#fff'}}>Follow</button>
       </div>
+      
+      {/* 5. स्टोरी और बूस्ट बटन (अब सीधे पेज पर ले जाएंगे) */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '25px' }}>
         <button onClick={() => navigate('/story-create')} style={bigBtn}>+ Story</button>
         <button onClick={() => navigate('/boost-dashboard')} style={bigBtn}>Boost</button>
       </div>
 
-      {/* 5. मेनू */}
+      {/* 6. मेनू */}
       {showMenu && (
         <div style={{ position: 'absolute', top: '80px', right: '15px', background: '#fff', border: '1px solid #ddd', borderRadius: '8px', padding: '10px', width: '200px', maxHeight: '350px', overflowY: 'auto', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', zIndex: 1000 }}>
           {allExtraButtons.map(item => (
