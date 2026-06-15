@@ -1,6 +1,8 @@
 export const getPriceData = (countryCode, category, scope) => {
+  // बड़ी कंपनियों के लिए बेस प्राइस
   const basePrices = { 'starter': 5000, 'startup': 50000, 'enterprise': 1000000 };
   
+  // सुरक्षित कैटेगरी चेक
   const safeCategory = basePrices[category] ? category : 'starter';
   
   const countryConfig = {
@@ -14,23 +16,27 @@ export const getPriceData = (countryCode, category, scope) => {
 
   const config = countryConfig[countryCode] || countryConfig['default'];
   
-  let finalPrice = basePrices[safeCategory] * config.mult;
-
+  // कैलकुलेशन लॉजिक
+  let finalPrice;
   if (scope === 'global') {
-    finalPrice = basePrices[safeCategory] * 5; 
+    // ग्लोबल: बेस * 5 (ग्लोबल रीच फीस) * कंट्री मल्टीप्लायर
+    finalPrice = basePrices[safeCategory] * 5 * config.mult;
+  } else {
+    // लोकल: बेस * कंट्री मल्टीप्लायर
+    finalPrice = basePrices[safeCategory] * config.mult;
   }
 
-  if (isNaN(finalPrice)) finalPrice = 0;
+  // अगर वैल्यू गलत है तो 0 सेट करें
+  const safePrice = isNaN(finalPrice) ? 0 : finalPrice;
 
   return {
     symbol: config.symbol,
-    displayPrice: `${config.symbol}${finalPrice.toLocaleString()}`,
-    value: finalPrice,
+    displayPrice: `${config.symbol}${safePrice.toLocaleString()}`,
+    value: safePrice,
     currency: config.cur,
     category: safeCategory,
     scope: scope
   };
 };
 
-// यह लाइन जोड़ते ही आपका एरर खत्म हो जाएगा!
-export const getGlobalPricing = getPriceData;
+// अब ये फाइल पूरी तरह 'स्मार्ट' है!
