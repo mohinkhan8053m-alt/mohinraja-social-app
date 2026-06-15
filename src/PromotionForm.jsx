@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Layout from './Layout.jsx'; 
-import { getGlobalPricing } from './PriceHelper'; 
+import { getGlobalPricing } from './PriceHelper'; // यह फाइल से प्राइस उठाएगा
 
 const PromotionForm = () => {
   const { state } = useLocation();
-  // अगर कैटेगरी नहीं मिली तो डिफ़ॉल्ट 'starter'
   const { category } = state || { category: 'starter' };
 
   const [formData, setFormData] = useState({
     companyName: '',
     targetLink: '',
     origin: 'IN',
-    scope: 'local', // यहाँ से कंट्रोल होगा ग्लोबल सेटिंग
+    scope: 'local',
     campaignType: 'Brand Awareness'
   });
 
-  const [priceInfo, setPriceInfo] = useState(getGlobalPricing('IN', 'local'));
+  // PriceHelper को सही पैरामीटर भेज रहे हैं: (कंट्री, स्कोप, कैटेगरी)
+  const [priceInfo, setPriceInfo] = useState(getGlobalPricing('IN', 'local', category));
 
-  // जैसे ही कंट्री या स्कोप बदले, प्राइस अपडेट करो
   useEffect(() => {
-    setPriceInfo(getGlobalPricing(formData.origin, formData.scope));
-  }, [formData.origin, formData.scope]);
+    // यहाँ डेटा अपडेट होगा
+    const updatedPrice = getGlobalPricing(formData.origin, formData.scope, category);
+    setPriceInfo(updatedPrice);
+  }, [formData.origin, formData.scope, category]);
 
   const handleSubmit = () => {
     alert(`प्रपोजल सबमिट! कैटेगरी: ${category.toUpperCase()} | प्राइस: ${priceInfo.displayPrice}`);
@@ -32,11 +33,9 @@ const PromotionForm = () => {
       <div style={{ background: '#000', color: '#fff', padding: '30px', maxWidth: '600px', margin: 'auto', borderRadius: '30px', border: '2px solid #FFD700' }}>
         <h2 style={{ textAlign: 'center', color: '#FFD700' }}>🚀 {category.toUpperCase()} Promotion</h2>
         
-        {/* फॉर्म फील्ड्स */}
         <input placeholder="Brand/Company Name" onChange={(e) => setFormData({...formData, companyName: e.target.value})} style={inputStyle} />
         <input placeholder="Target Link" onChange={(e) => setFormData({...formData, targetLink: e.target.value})} style={inputStyle} />
 
-        {/* ग्लोबल सेटिंग (यही वो खास सेटिंग है जो आपने मांगी) */}
         <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
           <select onChange={(e) => setFormData({...formData, origin: e.target.value})} style={inputStyle}>
             <option value="IN">India (INR)</option>
@@ -51,9 +50,8 @@ const PromotionForm = () => {
           </select>
         </div>
 
-        {/* प्राइस डिस्प्ले */}
         <div style={{ textAlign: 'center', margin: '20px 0', border: '1px solid #333', padding: '15px', borderRadius: '15px' }}>
-          <p>Final Price (30 Days):</p>
+          <p>Package Price (30 Days):</p>
           <h1 style={{ color: '#FFD700' }}>{priceInfo.displayPrice}</h1>
         </div>
 
