@@ -12,9 +12,16 @@ const BottomNav = () => {
 
   useEffect(() => {
     const closeMenu = () => setShowMenu(false);
-    if (showMenu) document.addEventListener('click', closeMenu);
+    document.addEventListener('click', closeMenu);
     return () => document.removeEventListener('click', closeMenu);
-  }, [showMenu]);
+  }, []);
+
+  // नेविगेशन और मेनू क्लोजिंग का स्मार्ट फंक्शन
+  const handleMenuClick = (path, e) => {
+    e.stopPropagation(); // क्लिक को बाहर न जाने दें
+    navigate(path);      // पेज पर ले जाएं
+    setShowMenu(false);  // मेनू तुरंत बंद करें
+  };
 
   return (
     <nav style={{ 
@@ -29,7 +36,6 @@ const BottomNav = () => {
       <button style={navBtn} onClick={() => navigate('/video-call')}>📹</button>
       <button style={navBtn} onClick={() => navigate('/profile')}>👤</button>
       
-      {/* ⋮ मेनू बटन */}
       <button style={navBtn} onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}>⋮</button>
 
       {showMenu && (
@@ -37,14 +43,13 @@ const BottomNav = () => {
           position: 'fixed', bottom: '75px', right: '15px', background: '#fff',
           border: '1px solid #ddd', borderRadius: '15px', padding: '10px', 
           boxShadow: '0 5px 20px rgba(0,0,0,0.25)', width: '180px', zIndex: 10000
-        }}>
-          {/* तुम्हारे सारे फीचर्स बरकरार हैं */}
-          <div onClick={() => navigate('/partnerships')} style={menuItemStyle}>🤝 Partnerships</div>
-          <div onClick={() => navigate('/promote')} style={menuItemStyle}>🚀 Promote</div>
-          <div onClick={() => navigate('/settings')} style={menuItemStyle}>⚙️ Settings</div>
-          <div onClick={() => navigate('/admin')} style={{...menuItemStyle, borderBottom: 'none'}}>📈 Admin</div>
+        }} onClick={(e) => e.stopPropagation()}> 
           
-          {/* यहाँ सर्वर स्टेटस के लिए जगह छोड़ दी है */}
+          <div onClick={(e) => handleMenuClick('/partnerships', e)} style={menuItemStyle}>🤝 Partnerships</div>
+          <div onClick={(e) => handleMenuClick('/promote', e)} style={menuItemStyle}>🚀 Promote</div>
+          <div onClick={(e) => handleMenuClick('/settings', e)} style={menuItemStyle}>⚙️ Settings</div>
+          <div onClick={(e) => handleMenuClick('/admin', e)} style={{...menuItemStyle, borderBottom: 'none'}}>📈 Admin</div>
+          
           <div style={{ padding: '8px', fontSize: '10px', color: '#999', textAlign: 'center' }}>
             📡 Server Engine: Ready
           </div>
