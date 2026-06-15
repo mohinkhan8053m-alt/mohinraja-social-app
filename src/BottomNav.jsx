@@ -10,17 +10,21 @@ const BottomNav = () => {
     cursor: 'pointer', padding: '10px', display: 'flex', alignItems: 'center'
   };
 
+  const menuItemStyle = { 
+    padding: '12px', cursor: 'pointer', borderBottom: '1px solid #f9f9f9', 
+    display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500' 
+  };
+
   useEffect(() => {
     const closeMenu = () => setShowMenu(false);
     document.addEventListener('click', closeMenu);
     return () => document.removeEventListener('click', closeMenu);
   }, []);
 
-  // नेविगेशन और मेनू क्लोजिंग का स्मार्ट फंक्शन
   const handleMenuClick = (path, e) => {
-    e.stopPropagation(); // क्लिक को बाहर न जाने दें
-    navigate(path);      // पेज पर ले जाएं
-    setShowMenu(false);  // मेनू तुरंत बंद करें
+    e.stopPropagation();
+    navigate(path);
+    setShowMenu(false);
   };
 
   return (
@@ -30,17 +34,18 @@ const BottomNav = () => {
       display: 'flex', justifyContent: 'space-around', padding: '5px 0',
       zIndex: 9999, boxShadow: '0 -2px 10px rgba(0,0,0,0.05)'
     }}>
-      <button style={navBtn} onClick={() => navigate('/home')}>🏠</button>
+      <button style={navBtn} onClick={() => navigate('/')}>🏠</button>
       <button style={navBtn} onClick={() => navigate('/explore')}>🔍</button>
       <button style={navBtn} onClick={() => navigate('/messenger')}>💬</button>
       <button style={navBtn} onClick={() => navigate('/video-call')}>📹</button>
       <button style={navBtn} onClick={() => navigate('/profile')}>👤</button>
       
+      {/* 3 डॉट मेनू - सर्वर के लिए सुरक्षित */}
       <button style={navBtn} onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}>⋮</button>
 
       {showMenu && (
         <div style={{
-          position: 'fixed', bottom: '75px', right: '15px', background: '#fff',
+          position: 'fixed', bottom: '70px', right: '15px', background: '#fff',
           border: '1px solid #ddd', borderRadius: '15px', padding: '10px', 
           boxShadow: '0 5px 20px rgba(0,0,0,0.25)', width: '180px', zIndex: 10000
         }} onClick={(e) => e.stopPropagation()}> 
@@ -50,15 +55,13 @@ const BottomNav = () => {
           <div onClick={(e) => handleMenuClick('/settings', e)} style={menuItemStyle}>⚙️ Settings</div>
           <div onClick={(e) => handleMenuClick('/admin', e)} style={{...menuItemStyle, borderBottom: 'none'}}>📈 Admin</div>
           
-          <div style={{ padding: '8px', fontSize: '10px', color: '#999', textAlign: 'center' }}>
-            📡 Server Engine: Ready
+          <div style={{ padding: '10px', fontSize: '11px', color: '#4caf50', textAlign: 'center', borderTop: '1px solid #eee', marginTop: '5px' }}>
+            📡 <b>Engine:</b> Server Online
           </div>
         </div>
       )}
     </nav>
   );
 };
-
-const menuItemStyle = { padding: '12px', cursor: 'pointer', borderBottom: '1px solid #f9f9f9', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500' };
 
 export default BottomNav;
