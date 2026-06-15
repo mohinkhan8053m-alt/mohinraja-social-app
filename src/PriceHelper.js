@@ -1,6 +1,9 @@
 export const getPriceData = (countryCode, category, scope) => {
   const basePrices = { 'starter': 5000, 'startup': 50000, 'enterprise': 1000000 };
   
+  // अगर कैटेगरी या कंट्री कोड गलत है, तो उन्हें सुरक्षित वैल्यू दें
+  const safeCategory = basePrices[category] ? category : 'starter';
+  
   const countryConfig = {
     'IN': { symbol: '₹', mult: 1, cur: 'inr' },
     'US': { symbol: '$', mult: 5, cur: 'usd' },
@@ -10,24 +13,26 @@ export const getPriceData = (countryCode, category, scope) => {
     'default': { symbol: '$', mult: 5, cur: 'usd' }
   };
 
+  // अगर countryCode नहीं मिला, तो डिफॉल्ट इस्तेमाल करें
   const config = countryConfig[countryCode] || countryConfig['default'];
   
-  // 1. बेस प्राइस निकालें
-  let finalPrice = (basePrices[category] || 5000) * config.mult;
+  // कैलकुलेशन: सुरक्षित तरीके से
+  let finalPrice = basePrices[safeCategory] * config.mult;
 
-  // 2. पूरी दुनिया वाला लॉजिक (Global System)
+  // ग्लोबल लॉजिक
   if (scope === 'global') {
-    // यहाँ '5' एक ग्लोबल इंडेक्स है जो हर देश की करेंसी को बैलेंस करता है
-    // इससे किसी भी देश का यूजर हो, उसे एक वाजिब 'Global' रेट दिखेगा
-    finalPrice = (basePrices[category] || 5000) * 5; 
+    finalPrice = basePrices[safeCategory] * 5; 
   }
+
+  // अगर किसी वजह से फिर भी NaN बने, तो इसे 0 कर दें
+  if (isNaN(finalPrice)) finalPrice = 0;
 
   return {
     symbol: config.symbol,
     displayPrice: `${config.symbol}${finalPrice.toLocaleString()}`,
     value: finalPrice,
     currency: config.cur,
-    category: category,
+    category: safeCategory,
     scope: scope
   };
 };
