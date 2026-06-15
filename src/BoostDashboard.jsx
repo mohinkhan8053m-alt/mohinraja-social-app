@@ -1,55 +1,55 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApi } from './ApiContext.jsx'; // सर्वर कनेक्शन
+import { useApi } from './ApiContext.jsx'; 
+import { getCurrencyData } from './CurrencyConfig.js'; // यहाँ से डेटा आएगा
 
 const BoostDashboard = () => {
   const navigate = useNavigate();
-  const { serverUrl } = useApi(); // अब सर्वर URL कनेक्ट हो गया
+  const { serverUrl } = useApi();
   const [url, setUrl] = useState('');
   const [target, setTarget] = useState('Local'); 
-  const [currency, setCurrency] = useState('INR');
+  const [country, setCountry] = useState('IN'); // डिफ़ॉल्ट इंडिया
 
-  const getPrice = () => {
-    return currency === 'INR' 
-      ? (target === 'Local' ? 2999 : 8999) 
-      : (target === 'Local' ? 59 : 179);
-  };
+  // करेंसी डेटा यहाँ से उठा रहे हैं
+  const config = getCurrencyData(country);
+
+  // ग्लोबल और लोकल का कैलकुलेशन (Global होने पर 3 गुना दाम)
+  const finalPrice = target === 'Local' ? config.price : config.price * 3;
 
   const handlePayment = () => {
     if (!url) { alert("लिंक डालना जरूरी है मेरे भाई!"); return; }
     
-    // सर्वर और पेमेंट गेटवे यहाँ से जुड़ेंगे
-    console.log(`Payment initiated for ${url} via ${serverUrl}`);
-    alert(`पेमेंट प्रोसेस शुरू: ${currency === 'INR' ? '₹' : '$'}${getPrice()} का बूस्ट एक्टिव हो रहा है...`);
+    alert(`पेमेंट शुरू: ${config.symbol}${finalPrice} | सर्वर: ${serverUrl}`);
     
     setTimeout(() => {
       alert("बूस्टिंग सक्सेसफुल! ⚡");
       navigate('/profile'); 
-    }, 2000);
+    }, 1500);
   };
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '400px', margin: 'auto' }}>
-      {/* बैक बटन यहाँ से हटा दिया गया है क्योंकि Layout इसे संभालेगा */}
       <h2 style={{ textAlign: 'center' }}>🚀 Premium Global Boost</h2>
       
       <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '15px', background: '#fff' }}>
-        <input placeholder="बूस्ट के लिए अपना पोस्ट लिंक डालें..." onChange={(e) => setUrl(e.target.value)} style={inputStyle} />
+        <input placeholder="अपना पोस्ट लिंक..." onChange={(e) => setUrl(e.target.value)} style={inputStyle} />
         
-        <label>आपकी लोकेशन:</label>
-        <select onChange={(e) => setCurrency(e.target.value)} style={inputStyle}>
-          <option value="INR">India (INR)</option>
-          <option value="USD">Other Country (USD)</option>
+        <label>कंट्री चुनें:</label>
+        <select onChange={(e) => setCountry(e.target.value)} style={inputStyle}>
+          <option value="IN">🇮🇳 India</option>
+          <option value="US">🇺🇸 USA</option>
+          <option value="KW">🇰🇼 Kuwait</option>
+          <option value="UAE">🇦🇪 UAE</option>
         </select>
 
-        <label>बूस्टिंग टारगेट:</label>
+        <label>टारगेट:</label>
         <div style={{ display: 'flex', gap: '10px', margin: '10px 0' }}>
           <button onClick={() => setTarget('Local')} style={btnStyle(target === 'Local')}>सिर्फ मेरे देश में</button>
-          <button onClick={() => setTarget('Global')} style={btnStyle(target === 'Global')}>पूरी दुनिया में</button>
+          <button onClick={() => setTarget('Global')} style={btnStyle(target === 'Global')}>पूरी दुनिया</button>
         </div>
 
         <div style={{ fontSize: '22px', fontWeight: 'bold', margin: '20px 0', textAlign: 'center', color: '#0095f6' }}>
-          कुल कीमत: {currency === 'INR' ? '₹' : '$'}{getPrice()}
+          कुल कीमत: {config.symbol} {finalPrice}
         </div>
 
         <button onClick={handlePayment} style={payBtn}>Pay & Boost Now</button>
