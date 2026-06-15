@@ -4,49 +4,48 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({
-    userId: 'mohin_raja_10',
+    userId: 'moin_raja_10',
     name: 'Moin Raja',
     isPremium: false,
-    premiumExpiry: null, 
     walletBalance: 0,
-    totalEarnings: 0,    
-    language: 'hi', // आपकी भाषा का प्रेफरेंस
-    countryCode: 'IN', // यह ग्लोबल प्राइसिंग के लिए जरूरी है
+    totalEarnings: 0,
+    language: 'hi',
+    countryCode: 'IN', // यह प्राइसिंग के लिए बहुत महत्वपूर्ण है
     isChatGuardOn: true,
     socialLinks: {
       youtube: 'https://youtube.com/@mohinraja-r2m',
       facebook: 'https://www.facebook.com/share/1ArteE1FzG/',
       instagram: 'https://www.instagram.com/moin_raja_10'
     },
-    isVerified: false
+    isVerified: false,
+    token: null // लॉगिन ऑथेंटिकेशन के लिए
   });
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // [SERVER SLOT]: यहाँ से सर्वर सिंक का काम होगा
-    // जब आप सर्वर का API लगाओगे, तो बस यहाँ URL डाल देना
-    const syncUserData = async () => {
-      try {
-        console.log("[SERVER SLOT]: Syncing Global User Data...");
-        // यहाँ आप अपना API कॉल डालेंगे
-        setLoading(false);
-      } catch (error) {
-        console.error("Server Sync Error:", error);
-        setLoading(false);
-      }
-    };
+  // सर्वर से डेटा सिंक करने का स्मार्ट फंक्शन
+  const syncUserData = async () => {
+    try {
+      setLoading(true);
+      console.log("[SERVER HUB]: Syncing user data for:", user.userId);
+      // यहाँ आप भविष्य में: const res = await fetch(`${serverUrl}/user/sync`); लगाएंगे
+      setLoading(false);
+    } catch (error) {
+      console.error("Sync Failed:", error);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     syncUserData();
   }, []);
 
-  // यह फंक्शन पूरी वेबसाइट पर कहीं भी यूजर का डेटा अपडेट कर देगा
   const updateUser = (newData) => {
-    setUser({ ...user, ...newData });
+    setUser(prev => ({ ...prev, ...newData }));
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, updateUser, loading }}>
+    <UserContext.Provider value={{ user, setUser, updateUser, loading, syncUserData }}>
       {children}
     </UserContext.Provider>
   );
