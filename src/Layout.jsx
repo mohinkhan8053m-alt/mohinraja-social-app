@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import BottomNav from './BottomNav.jsx';
 
@@ -7,12 +7,16 @@ const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // यहाँ हमने चेक किया है कि अगर आप 'profile' पेज पर हैं, तो हेडर को पूरी तरह हटा दो
+  const isProfilePage = location.pathname === '/profile'; 
+  const showHeader = !hideHeader && !isProfilePage;
+
   const isHomePage = location.pathname === '/home' || location.pathname === '/';
 
   return (
     <div style={{ paddingBottom: '80px', minHeight: '100vh', background: '#fcfcfc' }}>
       
-      {!hideHeader && (
+      {showHeader && (
         <header style={{ 
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
           padding: '10px 20px', background: '#fff', borderBottom: '1px solid #eee',
