@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout.jsx';
 import { UserContext } from './UserContext.jsx';
@@ -6,67 +6,42 @@ import { useApi } from './ApiContext.jsx';
 
 const VideoCallHub = () => {
   const { user } = useContext(UserContext);
-  const { serverUrl } = useApi();
+  const { handleFollow } = useApi();
   const [callActive, setCallActive] = useState(false);
-  const [callCount, setCallCount] = useState(0);
   const navigate = useNavigate();
-
-  // विज्ञापन लॉजिक: हर 2 कॉल बाद
-  const triggerAd = () => {
-    if (!user.isPremium) {
-      alert("📺 विज्ञापन (AdSense/Company Promo) चल रहा है...");
-      // यहाँ आपका Google AdSense या सर्वर-साइड विज्ञापन का कोड आएगा
-    }
-  };
-
-  const handleStartCall = () => {
-    setCallCount(prev => prev + 1);
-    if (callCount >= 1) { // 2 कॉल होते ही विज्ञापन
-      triggerAd();
-      setCallCount(0);
-    }
-    setCallActive(true);
-  };
 
   return (
     <Layout>
-      <div style={{ padding: '10px' }}>
+      <div style={{ padding: '10px', background: '#000', minHeight: '90vh', color: '#fff' }}>
         {!callActive ? (
           <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <h1>RangManch Live</h1>
-            {/* कंपनी प्रमोशन स्टोरी स्लॉट */}
-            <div style={{ margin: '20px 0', padding: '10px', background: '#eee', borderRadius: '10px' }}>
-              <p style={{fontSize:'12px'}}>Featured Stories (Companies/Boosted):</p>
-              <div style={{ display:'flex', gap:'10px', justifyContent:'center' }}>
-                {['Ad 1', 'Ad 2', 'Ad 3'].map(ad => <div key={ad} style={{width:'50px', height:'50px', background:'#ccc', borderRadius:'50%'}}></div>)}
-              </div>
-            </div>
-            <button style={startBtn} onClick={handleStartCall}>🎥 START VIDEO CALL</button>
+            <button style={startBtn} onClick={() => setCallActive(true)}>🎥 START VIDEO CALL</button>
           </div>
         ) : (
           <div>
-            <div style={{ height: '300px', background: '#000', borderRadius: '15px' }}>
-               {/* वीडियो स्ट्रीम */}
+            {/* एडवरटाइजिंग स्लॉट्स - विज्ञापन के लिए */}
+            <div style={{ display:'flex', gap:'5px', marginBottom:'10px' }}>
+               <div style={adSlot}>Ad 1</div><div style={adSlot}>Ad 2</div><div style={adSlot}>Ad 3</div>
             </div>
 
-            {/* 3 विज्ञापन स्लॉट (सबसे ज्यादा विज्ञापन) */}
-            <div style={{ display:'flex', gap:'5px', marginTop:'10px' }}>
-                <div style={adStyle}>AdSlot 1</div>
-                <div style={adStyle}>AdSlot 2</div>
-                <div style={adStyle}>AdSlot 3</div>
+            {/* वीडियो स्ट्रीम स्क्रीन */}
+            <div style={{ height: '300px', background: '#111', borderRadius: '15px', marginBottom: '10px' }}></div>
+
+            {/* 12 मुख्य फीचर्स */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+              <button onClick={() => window.location.reload()}>🔄</button>
+              <button onClick={() => navigate('/messenger')}>💬</button>
+              <button onClick={() => handleFollow(user.userId, 'target_id')}>➕</button>
+              <button onClick={() => setCallActive(false)} style={{background:'red', color:'#fff'}}>🔴</button>
+              {['🔇','📷','🖥️','🌐','🤖','🎁','✨','🚫'].map((l, i) => <button key={i}>{l}</button>)}
             </div>
 
-            {/* मेन 12 फीचर्स */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginTop: '10px' }}>
-              {[
-                {l:'🔄', a:()=>window.location.reload()}, {l:'💬', a:()=>navigate('/messenger')}, 
-                {l:'🔇', a:()=>alert('Mute')}, {l:'📷', a:()=>alert('Cam')},
-                {l:'🖥️', a:()=>alert('Screen')}, {l:'🌐', a:()=>alert('AI Trans')},
-                {l:'🤖', a:()=>alert('Text Trans')}, {l:'🎁', a:()=>navigate('/gifts')},
-                {l:'✨', a:()=>alert('Filter')}, {l:'➕', a:()=>alert('Follow')},
-                {l:'🚫', a:()=>alert('Report'), s:{background:'red', color:'#fff'}},
-                {l:'🔴', a:()=>setCallActive(false), s:{background:'red', color:'#fff'}}
-              ].map((b, i) => <button key={i} onClick={b.a} style={b.s || btnStyle}>{b.l}</button>)}
+            {/* 28 एडवांस्ड फीचर्स (कुल 40) */}
+            <div style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+              {['Tip','Wallet','Priv','Vol','Set','Arch','Zoom','Foc','Rec','Sync','Bst','Prem','Rate','Shr','Info','Rpt','Help','Ext','Mic','Cam','Trn','Lnk','Sav','Del','Upd','Log','Pfl','Ext'].map((f, i) => (
+                <button key={i} style={{ fontSize: '7px', padding: '5px', background:'#222', border:'none', color:'#fff' }}>{f}</button>
+              ))}
             </div>
           </div>
         )}
@@ -75,8 +50,7 @@ const VideoCallHub = () => {
   );
 };
 
-const adStyle = { flex:1, height:'50px', background:'#FFD700', borderRadius:'5px', textAlign:'center', fontSize:'10px', display:'flex', alignItems:'center', justifyContent:'center' };
-const startBtn = { padding: '30px 60px', borderRadius: '40px', background: '#000', color: '#FFD700', border: 'none', cursor: 'pointer', fontWeight: 'bold' };
-const btnStyle = { padding: '10px', borderRadius: '5px', border: '1px solid #ddd', background: '#fff' };
+const startBtn = { padding: '20px 40px', background: '#FFD700', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor:'pointer' };
+const adSlot = { flex:1, height:'50px', background:'#FFD700', borderRadius:'5px', color:'#000', fontSize:'9px', display:'flex', alignItems:'center', justifyContent:'center' };
 
 export default VideoCallHub;
