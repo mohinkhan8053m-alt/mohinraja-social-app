@@ -5,6 +5,7 @@ const ProfilePage = () => {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
+  // यह रही आपकी पूरी 75+ फीचर्स की लिस्ट
   const allExtraButtons = [
     "Wallet", "Bank", "Stats", "Posts", "Live", "Ads", "Help", "Privacy", "Security", 
     "AI Translate", "Gift", "Location", "Block", "Report", "Language", "Activity",
@@ -17,7 +18,8 @@ const ProfilePage = () => {
     "Live Streaming", "Drafts", "AdSense Apply", "Premium Toggle", "Get Analytics", 
     "Local Ad Control", "Global Ad Manager", "Force Ad Trigger", "Current Location", 
     "Live Tracking", "Set Address", "Find Nearby", "Reels Integration", "Story Highlights", 
-    "Archive", "Text Edit", "Add Media", "Campaign View", "Budget Set", "Targeting"
+    "Archive", "Text Edit", "Add Media", "Campaign View", "Budget Set", "Targeting",
+    "Pro Tools", "Affiliate", "Subscription", "Support Ticket", "Verified Badge"
   ];
 
   return (
@@ -32,7 +34,7 @@ const ProfilePage = () => {
         </div>
       </header>
 
-      {/* प्रोफेशनल प्रोफाइल सेक्शन (सिर्फ लोगो और स्टेटस) */}
+      {/* प्रोफेशनल प्रोफाइल सेक्शन */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '25px' }}>
         <div style={{ width: '80px', height: '80px', borderRadius: '12px', background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #ddd' }}>
             <span style={{ fontSize: '30px' }}>⚡</span>
@@ -67,10 +69,11 @@ const ProfilePage = () => {
         <button onClick={() => navigate('/home')} style={bigBtnStyle}>Home</button>
       </div>
       
-      {/* सर्वर हब */}
-      <div style={{ padding: '20px', border: '1px solid #eee', textAlign: 'center', borderRadius: '8px', background: '#fafafa' }}>
-        <h4 style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#333' }}>System Status: Operational</h4>
-        <p style={{ fontSize: '11px', color: '#888' }}>ID: RM-8829-GLOBAL</p>
+      {/* सर्वर हब (यहाँ आपकी API/Database कनेक्टिविटी रहेगी) */}
+      <div style={{ padding: '20px', border: '2px dashed #0095f6', textAlign: 'center', borderRadius: '12px', background: '#f9fbff', marginTop: 'auto' }}>
+        <h4 style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#000' }}>📡 Server Hub: System Operational</h4>
+        <p style={{ fontSize: '11px', color: '#555' }}>Global API Gateway Active | 75+ Modules Sync Ready</p>
+        <button onClick={() => alert('Syncing Data...')} style={{ marginTop: '10px', padding: '8px 20px', background: '#0095f6', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Sync Database</button>
       </div>
     </div>
   );
