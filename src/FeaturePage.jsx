@@ -1,17 +1,19 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Layout from './Layout.jsx'; // Layout जोड़ा
-import { useApi } from './ApiContext.jsx'; // सर्वर कनेक्शन जोड़ा
+import Layout from './Layout.jsx'; 
+import { useApi } from './ApiContext.jsx'; 
 
 const FeaturePage = () => {
   const { featureName } = useParams();
-  const { serverUrl } = useApi(); // सर्वर URL पिक किया
+  // 'serverUrl' की जगह 'proServer' इस्तेमाल करें, जो हमारे Context का सही नाम है
+  const { proServer } = useApi(); 
 
   return (
+    // अगर App.js में Layout पहले से है, तो नीचे वाली लाइनें (Layout) हटा देना
     <Layout>
-      <div style={{ padding: '40px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ padding: '40px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '80vh' }}>
         
-        <h1 style={{ fontFamily: 'cursive', color: '#000', marginBottom: '10px' }}>
+        <h1 style={{ color: '#000', marginBottom: '10px' }}>
           {featureName ? featureName.replace(/-/g, ' ').toUpperCase() : 'Feature'}
         </h1>
         
@@ -23,9 +25,9 @@ const FeaturePage = () => {
           <p style={{ fontSize: '14px', margin: 0 }}>मोइन भाई, बैकएंड से डेटा फेच किया जा रहा है।</p>
         </div>
 
-        {/* सर्वर स्टेटस बार */}
+        {/* सर्वर स्टेटस बार - 'proServer' अब यहाँ सही दिखेगा */}
         <div style={{ marginTop: '40px', fontSize: '11px', color: '#888' }}>
-          📡 <b>Engine:</b> {serverUrl} | Status: Active
+          📡 <b>Engine:</b> {proServer || 'Connecting...'} | Status: Active
         </div>
       </div>
     </Layout>
