@@ -1,4 +1,4 @@
-// PriceHelper.js - मोइन राजा का ग्लोबल फाइनेंस इंजन (चारों कैटेगरी सुरक्षित)
+// PriceHelper.js - मोइन राजा का ग्लोबल फाइनेंस इंजन (100% सटीक)
 
 // --- कैटेगरी 1: पैकेज और करेंसी कॉन्फ़िगरेशन ---
 export const getPackageDetails = (countryCode) => {
@@ -15,12 +15,10 @@ export const getPackageDetails = (countryCode) => {
 
 // --- कैटेगरी 2: कॉइन और गिफ्टिंग के लिए 30% कमीशन ---
 export const calculateCommission = (totalValue) => {
-  const platformShare = totalValue * 0.30; // 30% मोइन राजा का
-  const userShare = totalValue * 0.70;    // 70% यूजर का
-  return {
-    platformShare: Math.round(platformShare), 
-    userShare: Math.round(userShare)
-  };
+  // .toFixed(2) लगाया है ताकि दशमलव के बाद का हिसाब भी पैसा-पैसा सही रहे
+  const platformShare = parseFloat((totalValue * 0.30).toFixed(2));
+  const userShare = parseFloat((totalValue * 0.70).toFixed(2));
+  return { platformShare, userShare };
 };
 
 // --- कैटेगरी 3: स्ट्राइप के लिए ग्लोबल करेंसी कन्वर्जन ---
@@ -35,12 +33,15 @@ export const getLocalizedPrice = (countryCode, basePriceUSD) => {
   };
   const config = countryFactors[countryCode] || countryFactors['IN'];
   const localizedPrice = Math.round(basePriceUSD * config.factor);
-  return { amount: localizedPrice, currency: config.currency, displayPrice: `${localizedPrice} ${config.currency.toUpperCase()}` };
+  return { 
+    amount: localizedPrice, 
+    currency: config.currency.toUpperCase(), 
+    displayPrice: `${localizedPrice} ${config.currency.toUpperCase()}` 
+  };
 };
 
 // --- कैटेगरी 4: बिग टिकट और ग्लोबल प्राइसिंग (मोटी रकम वाला कोड) ---
 export const getGlobalPricing = (countryCode, scope, category) => {
-  // बड़ी रकम की कैटेगरी (50k से 20L तक)
   const basePrices = { 
     'starter': 5000, 
     'startup': 50000, 
@@ -57,15 +58,18 @@ export const getGlobalPricing = (countryCode, scope, category) => {
 
   const base = basePrices[category] || basePrices['starter'];
   const config = countryConfig[countryCode] || countryConfig['IN'];
+  
+  // Scope Factor: 5 गुना ग्लोबल के लिए (पूरी तरह सुरक्षित)
   const scopeFactor = (scope === 'global') ? 5 : 1;
   const finalPrice = Math.round(base * (1 / config.rate) * scopeFactor);
 
   return {
     displayPrice: `${config.symbol} ${finalPrice.toLocaleString()}`,
     value: finalPrice,
-    currency: config.currency
+    currency: config.currency.toUpperCase()
   };
 };
+
 export const getPriceData = (countryCode, category, scope) => {
   return getGlobalPricing(countryCode, scope, category);
 };
