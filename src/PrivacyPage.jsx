@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from './Layout.jsx';
 import { useApi } from './ApiContext.jsx'; 
 
 const PrivacyPage = () => {
-  const { serverUrl } = useApi();
+  const { proServer } = useApi(); // प्रो-सर्वर लिंक
+  const [saving, setSaving] = useState(false);
 
-  const handleToggle = (feature) => {
-    // सर्वर हब पर अपडेट भेजना
-    console.log(`Updating ${feature} status via: ${serverUrl}`);
-    alert(`${feature} सेटिंग अपडेट कर दी गई है!`);
+  const handleToggle = async (featureId, label) => {
+    setSaving(true);
+    try {
+      const response = await fetch(`${proServer}/api/privacy/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feature: featureId, status: true })
+      });
+      
+      if(response.ok) {
+        alert(`✅ ${label} सेटिंग सर्वर पर अपडेट हो गई!`);
+      }
+    } catch (err) {
+      alert("सर्वर से अभी कनेक्शन नहीं बन पा रहा, सेटिंग सेव नहीं हुई!");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -27,7 +41,8 @@ const PrivacyPage = () => {
               <span style={{ fontSize: '14px' }}>{item.label}</span>
               <input 
                 type="checkbox" 
-                onChange={() => handleToggle(item.label)}
+                disabled={saving}
+                onChange={() => handleToggle(item.id, item.label)}
                 style={{ width: '20px', height: '20px', cursor: 'pointer' }} 
               />
             </div>
@@ -35,7 +50,7 @@ const PrivacyPage = () => {
         </div>
 
         <div style={{ marginTop: '40px', padding: '15px', background: '#f9f9f9', borderRadius: '10px', textAlign: 'center' }}>
-          <p style={{ fontSize: '10px', color: '#888' }}>📡 <b>सर्वर स्टेटस:</b> {serverUrl}</p>
+          <p style={{ fontSize: '10px', color: '#888' }}>📡 <b>सर्वर स्टेटस:</b> {proServer ? 'Connected' : 'Offline'}</p>
         </div>
       </div>
     </Layout>
