@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from './Layout.jsx'; 
-import { getGlobalPricing } from './PriceHelper'; // यह फाइल से प्राइस उठाएगा
+import { useApi } from './ApiContext.jsx'; // प्रो-चैनल इंपोर्ट
+import { getGlobalPricing } from './PriceHelper'; 
 
 const PromotionForm = () => {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const { category } = state || { category: 'starter' };
+  const { callProSecure } = useApi(); // 👈 मास्टर सिक्योर चैनल का इस्तेमाल
 
   const [formData, setFormData] = useState({
     companyName: '',
@@ -15,17 +18,35 @@ const PromotionForm = () => {
     campaignType: 'Brand Awareness'
   });
 
-  // PriceHelper को सही पैरामीटर भेज रहे हैं: (कंट्री, स्कोप, कैटेगरी)
   const [priceInfo, setPriceInfo] = useState(getGlobalPricing('IN', 'local', category));
 
   useEffect(() => {
-    // यहाँ डेटा अपडेट होगा
     const updatedPrice = getGlobalPricing(formData.origin, formData.scope, category);
     setPriceInfo(updatedPrice);
   }, [formData.origin, formData.scope, category]);
 
-  const handleSubmit = () => {
-    alert(`प्रपोजल सबमिट! कैटेगरी: ${category.toUpperCase()} | प्राइस: ${priceInfo.displayPrice}`);
+  // प्रो-सिक्योर सबमिट हैंडलर
+  const handleSubmit = async () => {
+    try {
+      const payload = {
+        ...formData,
+        category,
+        price: priceInfo.displayPrice,
+        timestamp: new Date().toISOString()
+      };
+      
+      // सर्वर को सुरक्षित डेटा भेजना
+      await callProSecure({ 
+        action: 'SUBMIT_PROMOTION_PROPOSAL', 
+        data: payload 
+      });
+
+      alert(`प्रपोजल सबमिट! कैटेगरी: ${category.toUpperCase()} | प्राइस: ${priceInfo.displayPrice}`);
+      navigate('/home'); // सबमिट के बाद होम पर भेज दिया
+    } catch (e) {
+      console.error("Proposal Submission Error", e);
+      alert("Something went wrong with the secure connection!");
+    }
   };
 
   return (
