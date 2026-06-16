@@ -1,33 +1,54 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useApi } from './ApiContext.jsx'; // 1. ApiContext को जोड़ा
-import BottomNav from './BottomNav.jsx';
 
-const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
+const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { freeServer } = useApi(); // 2. सर्वर स्टेटस यहाँ से उठाएंगे
+
+  // आपके बताए गए 5 बटन
+  const navItems = [
+    { name: 'Home', path: '/home', icon: '🏠' },
+    { name: 'Search', path: '/search', icon: '🔍' },
+    { name: 'VideoCall', path: '/video-call', icon: '📞' },
+    { name: 'Messenger', path: '/messenger', icon: '💬' },
+    { name: 'Profile', path: '/profile', icon: '👤' },
+  ];
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff' }}>
-      {!hideHeader && (
-        <header style={{ padding: '15px', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center' }}>
-          {location.pathname !== '/home' && (
-            <button onClick={() => navigate(-1)} style={{ marginRight: '10px', cursor: 'pointer' }}>←</button>
-          )}
-          <span style={{ fontWeight: 'bold' }}>RangManch</span>
-          {/* छोटा सा फीचर जो मैंने जोड़ा: यहाँ सर्वर स्टेटस का सिग्नल */}
-          <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#ccc' }}>
-             {freeServer ? '●' : '○'}
-          </span>
-        </header>
-      )}
-      
-      <main style={{ flex: 1 }}>{children}</main>
-
-      {!hideFooter && <BottomNav />}
+    <div style={{
+      display: 'flex',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      padding: '10px 0',
+      borderTop: '1px solid #eee',
+      background: '#fff',
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      zIndex: 1000 // ताकि यह सबसे ऊपर दिखे
+    }}>
+      {navItems.map((item) => (
+        <button 
+          key={item.name} 
+          onClick={() => navigate(item.path)}
+          style={{
+            background: 'none',
+            border: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            color: location.pathname === item.path ? '#0095f6' : '#8e8e8e',
+            cursor: 'pointer',
+            fontSize: '18px'
+          }}
+        >
+          <span>{item.icon}</span>
+          <span style={{ fontSize: '10px', marginTop: '2px' }}>{item.name}</span>
+        </button>
+      ))}
     </div>
   );
 };
 
-export default Layout;
+export default BottomNav;
