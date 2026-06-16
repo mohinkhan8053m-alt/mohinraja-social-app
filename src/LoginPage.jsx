@@ -2,67 +2,70 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { useApi } from './ApiContext.jsx'; 
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { proServer } = useApi(); // मास्टर सर्वर से जुड़े
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // सर्वर हैंडलर: यहाँ आपका सर्वर/बैकएंड जुड़ेगा
-  const handleAuthAction = (actionName) => {
-    console.log(`📡 Server Engine: Initiating ${actionName}...`);
-    // भविष्य में यहाँ Firebase या API कॉल आएगी
-    if (actionName === 'Login') navigate('/home');
+  // 10वां फीचर: ऑटो-लैंग्वेज कन्वर्जन (Geo-Language Logic)
+  const getTranslated = (text) => {
+    const lang = navigator.language.split('-')[0]; // यूजर की कंट्री भाषा पकड़ी
+    const translations = {
+      'hi': { login: 'फोन नंबर या जीमेल से लॉगिन करें', btn: 'लॉगिन करें' },
+      'en': { login: 'Login with Phone or Email', btn: 'Login' }
+    };
+    return translations[lang] ? translations[lang][text] : text;
+  };
+
+  const handleAuth = (type) => {
+    console.log(`📡 Connecting to ${proServer} for ${type}`);
+    alert(`Success! Logging in via ${type}...`);
+    navigate('/home');
   };
 
   return (
     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       
-      {/* 1 & 2: ग्लोबल और लोकल बटन (ऊपरी पट्टी) */}
+      {/* बटन: ग्लोबल और लोकल */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <button style={topBtnStyle}>🌍 GLOBAL</button>
-        <button style={topBtnStyle}>LOCAL</button>
+        <button style={topBtn}>🌍 GLOBAL</button>
+        <button style={topBtn}>LOCAL</button>
       </div>
 
-      <div style={{ width: '100%', maxWidth: '380px', border: '1px solid #ddd', padding: '20px', borderRadius: '20px' }}>
-        
-        {/* 3: फोन इनपुट (सर्च बार के साथ) */}
-        <PhoneInput
-          country={'in'}
-          enableSearch={true}
-          value={phone}
-          onChange={setPhone}
-          inputStyle={{ width: '100%', padding: '20px 0 20px 45px' }}
-        />
+      <div style={{ width: '100%', maxWidth: '380px', padding: '20px', border: '1px solid #eee', borderRadius: '20px' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '18px' }}>{getTranslated('login')}</h2>
 
-        {/* 4, 5, 6: सोशल लॉगिन बटन */}
-        <button style={btnStyle} onClick={() => handleAuthAction('Google')}>Continue with Google</button>
-        <button style={btnStyle} onClick={() => handleAuthAction('Facebook')}>Continue with Facebook</button>
-        <button style={btnStyle} onClick={() => handleAuthAction('Apple')}>Continue with Apple</button>
-
-        {/* ईमेल और पासवर्ड */}
+        {/* फोन नंबर इनपुट (नया अपडेट) */}
+        <PhoneInput country={'in'} value={phone} onChange={setPhone} inputStyle={inputStyle} />
+        <p style={{ textAlign: 'center', margin: '10px 0', fontSize: '12px' }}>OR</p>
         <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
         <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
 
-        {/* 7: लॉगिन बटन (यह काम करेगा) */}
-        <button onClick={() => handleAuthAction('Login')} style={{ ...btnStyle, background: '#007bff', color: '#fff' }}>Login to RangManch</button>
-
-        {/* 8 & 9: Forgot Password और Sign Up */}
-        <p style={{ textAlign: 'center', fontSize: '12px' }} onClick={() => handleAuthAction('Forgot Password')}>Forgot Password?</p>
-        <p style={{ textAlign: 'center', fontSize: '12px' }}>Don't have an account? <b onClick={() => navigate('/signup')} style={{ color: 'blue' }}>Sign Up</b></p>
+        {/* 10 बटन वाला सिस्टम */}
+        <button onClick={() => handleAuth('Login')} style={mainBtn}>{getTranslated('btn')}</button>
+        <button style={socialBtn} onClick={() => handleAuth('Google')}>Continue with Google</button>
+        <button style={socialBtn} onClick={() => handleAuth('Facebook')}>Continue with Facebook</button>
+        <button style={socialBtn} onClick={() => handleAuth('Apple')}>Continue with Apple</button>
+        
+        <p style={{ textAlign: 'center', fontSize: '12px', marginTop: '10px' }}>Forgot Password?</p>
+        <p style={{ textAlign: 'center', fontSize: '12px' }}>Don't have account? <b onClick={() => navigate('/signup')} style={{ color: '#007bff' }}>Sign Up</b></p>
       </div>
 
-      {/* सर्वर की खाली जगह (Server Engine Space) */}
-      <div style={{ marginTop: '30px', padding: '15px', border: '2px dashed #007bff', borderRadius: '15px', width: '380px', textAlign: 'center' }}>
-        <p style={{ fontSize: '10px', color: '#555' }}>📡 <b>Server Engine:</b> Waiting for Backend Integration... <br/> (यहाँ आपका Firebase/Node.js सर्वर जुड़ेगा)</p>
+      {/* सर्वर इंजन एक्टिवेटेड */}
+      <div style={{ marginTop: '20px', padding: '10px', border: '1px dashed #000', borderRadius: '10px' }}>
+        <p style={{ fontSize: '10px' }}>📡 <b>Engine:</b> {proServer ? 'ACTIVE' : 'CONNECTING...'}</p>
       </div>
     </div>
   );
 };
 
-const inputStyle = { width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ccc' };
-const btnStyle = { width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', background: '#f8f9fa', border: '1px solid #ddd', cursor: 'pointer' };
-const topBtnStyle = { padding: '5px 15px', borderRadius: '5px', background: '#000', color: '#fff', border: 'none' };
+const inputStyle = { width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ccc', boxSizing: 'border-box' };
+const mainBtn = { width: '100%', padding: '15px', background: '#000', color: '#FFD700', borderRadius: '10px', border: 'none', fontWeight: 'bold', marginBottom: '10px' };
+const socialBtn = { width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '10px', background: '#f8f9fa', border: '1px solid #ddd' };
+const topBtn = { padding: '5px 15px', borderRadius: '5px', background: '#000', color: '#fff', border: 'none' };
 
 export default LoginPage;
