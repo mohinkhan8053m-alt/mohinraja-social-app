@@ -9,7 +9,22 @@ export const ApiProvider = ({ children }) => {
     freeServer: "https://free-server.com",
     proServer: "https://pro-server.com",
 
-    // 1. फ्री वीडियो कॉल - सारे फीचर्स के साथ
+    // === नया: स्पेशल प्रो-सिक्योर चैनल (सिर्फ 3 फाइलों के लिए) ===
+    callProSecure: async (data) => {
+      const secureData = {
+        ...data,
+        channelId: "MoinRaja_Pro_Secure_Channel", // यह आईडी सिर्फ प्रो-सिस्टम के लिए है
+        timestamp: new Date().toISOString()
+      };
+      const response = await fetch(`https://pro-server.com/api/pro-secure-call`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(secureData)
+      });
+      return await response.json();
+    },
+
+    // पुराने सभी फीचर्स वैसे ही रखे हैं ताकि कुछ भी न टूटे
     callFreeVideo: async (data) => {
       const response = await fetch(`https://free-server.com/api/free-video`, {
         method: 'POST',
@@ -19,7 +34,6 @@ export const ApiProvider = ({ children }) => {
       return await response.json();
     },
 
-    // 2. प्रीमियम वीडियो कॉल - कमीशन और प्रॉफिट कैलकुलेशन के साथ
     callProVideo: async (data) => {
       if (data.feature?.startsWith('🎁')) {
         const commission = calculateCommission(data.amount || 0);
@@ -33,7 +47,6 @@ export const ApiProvider = ({ children }) => {
       return await response.json();
     },
 
-    // 3. प्रो मैसेंजर और AI एक्शन्स
     handleProAction: async (data) => {
       const response = await fetch(`https://pro-server.com/api/pro-action`, {
         method: 'POST',
@@ -43,12 +56,8 @@ export const ApiProvider = ({ children }) => {
       return await response.json();
     },
 
-    // 4. फाइनेंशियल और विज्ञापन हेल्पर (सारे पुराने फीचर्स मौजूद)
     getPricing: (country, scope, category) => getGlobalPricing(country, scope, category),
-    
-    // नया बूस्ट रेट्स फीचर जो हमने ऐड किया था
     getBoostRates: (country, category) => getBoostRates(country, category),
-    
     getPaymentDetails: (country, amount) => getLocalizedPrice(country, amount),
     
     fetchAds: async () => {
