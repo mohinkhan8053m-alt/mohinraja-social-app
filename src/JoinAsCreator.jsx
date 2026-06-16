@@ -1,45 +1,57 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout.jsx';
-import { useApi } from './ApiContext.jsx'; // सर्वर से कनेक्शन
+import { useApi } from './ApiContext.jsx'; 
 
 const JoinAsCreator = () => {
-  const { serverUrl } = useApi();
-  const [formData, setFormData] = useState({ name: '', bio: '', rate: '' });
+  const navigate = useNavigate();
+  const { proServer } = useApi(); // हमने प्रो-सर्वर को लिंक किया
+  const [formData, setFormData] = useState({ name: '', bio: '', rate: '', gender: 'female' });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // सर्वर पर प्रोफाइल सेंड करने की लॉजिक
-    console.log(`Sending new creator profile to ${serverUrl}/api/creators`);
-    alert("मोइन भाई, नई क्रिएटर प्रोफाइल सिस्टम में जोड़ दी गई है! 70%Payout चालू है।");
+    // सर्वर पर प्रोफाइल सेंड करने का प्रोसेस
+    try {
+      const response = await fetch(`${proServer}/api/creators`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if(response.ok) {
+        alert("मोइन भाई, नई क्रिएटर प्रोफाइल सिस्टम में जोड़ दी गई है! 70% Payout चालू है।");
+        navigate('/profile');
+      }
+    } catch (err) {
+      alert("सर्वर में कुछ गड़बड़ है, लेकिन डेटा सेव करने की कोशिश जारी है!");
+    }
   };
 
   return (
     <Layout>
-      <div style={{ padding: '20px', fontFamily: 'Poppins', maxWidth: '500px', margin: '0 auto' }}>
+      <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto', paddingBottom: '80px' }}>
         <h2 style={{ textAlign: 'center' }}>✨ Join as a Creator</h2>
-        <p style={{ textAlign: 'center', fontSize: '14px' }}>बात करो और पैसे कमाओ! आपकी 70% कमाई सुरक्षित है।</p>
+        <p style={{ textAlign: 'center', fontSize: '14px', color: '#666' }}>बात करो और पैसे कमाओ! आपकी 70% कमाई सुरक्षित है।</p>
         
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '15px', marginTop: '20px' }}>
-          <input 
-            type="text" placeholder="अपना नाम लिखें" required 
-            onChange={(e) => setFormData({...formData, name: e.target.value})} 
-            style={inputStyle} 
-          />
-          <textarea 
-            placeholder="अपने बारे में कुछ लिखें..." required 
-            onChange={(e) => setFormData({...formData, bio: e.target.value})} 
-            style={{...inputStyle, height: '80px'}} 
-          />
-          <input 
-            type="number" placeholder="प्रति मिनट रेट (Coins)" required 
-            onChange={(e) => setFormData({...formData, rate: e.target.value})} 
-            style={inputStyle} 
-          />
+          <input type="text" placeholder="अपना नाम लिखें" required 
+            onChange={(e) => setFormData({...formData, name: e.target.value})} style={inputStyle} />
+          
+          <select onChange={(e) => setFormData({...formData, gender: e.target.value})} style={inputStyle}>
+            <option value="female">I am a Girl 💖</option>
+            <option value="male">I am a Boy 💙</option>
+          </select>
+
+          <textarea placeholder="अपने बारे में कुछ लिखें..." required 
+            onChange={(e) => setFormData({...formData, bio: e.target.value})} style={{...inputStyle, height: '80px'}} />
+          
+          <input type="number" placeholder="प्रति मिनट रेट (Coins)" required 
+            onChange={(e) => setFormData({...formData, rate: e.target.value})} style={inputStyle} />
+          
           <button type="submit" style={btnStyle}>Create My Profile</button>
         </form>
 
         <div style={{ marginTop: '25px', padding: '15px', background: '#f9f9f9', borderRadius: '10px', fontSize: '12px', border: '1px dashed #ccc' }}>
-          <p>📡 <b>Engine:</b> {serverUrl}</p>
+          <p>📡 <b>Server Engine:</b> {proServer || 'Connecting...'}</p>
           <p>✅ 70% Direct Payout (30% Platform Fee)</p>
           <p>✅ Auto-sync with Bank/Stripe</p>
         </div>
