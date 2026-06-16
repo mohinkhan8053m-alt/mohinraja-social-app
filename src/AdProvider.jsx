@@ -2,33 +2,49 @@ import React, { useState, useEffect } from 'react';
 import { useApi } from './ApiContext.jsx'; 
 
 export const AdProvider = ({ children }) => {
-  // हमने सीधे freeServer को चुना है क्योंकि एड्स वहीं से आते हैं
   const { freeServer } = useApi(); 
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const getTranslatedTitle = (title, lang) => {
-    const translations = { 'hi': 'विज्ञापन: ' + title, 'es': 'Anuncio: ' + title, 'fr': 'Publicité: ' + title };
-    return translations[lang] || title;
+  // 1. मल्टी-लैंग्वेज डिक्शनरी (इसे आप और भी भाषाएँ जोड़ सकते हैं)
+  const translations = {
+    'en': { global: 'Global Enterprise', local: 'Local Business', ad: 'Ad:' },
+    'hi': { global: 'ग्लोबल बिज़नेस', local: 'लोकल बिज़नेस', ad: 'विज्ञापन:' },
+    'ar': { global: 'أعمال عالمية', local: 'أعمال محلية', ad: 'إعلان:' }, // कुवैत/UAE के लिए
+    'es': { global: 'Negocio Global', local: 'Negocio Local', ad: 'Anuncio:' }
+  };
+
+  const getAdContent = (key, lang) => {
+    // अगर भाषा लिस्ट में है तो वो, वरना डिफ़ॉल्ट इंग्लिश
+    const langCode = lang.split('-')[0];
+    const data = translations[langCode] || translations['en'];
+    return data[key] || key;
   };
 
   const fetchAds = async () => {
     try {
-      // यहाँ अब हम सीधे ApiContext से आए freeServer का इस्तेमाल करेंगे
-      const userLang = navigator.language ? navigator.language.split('-')[0] : 'en';
+      const userLang = navigator.language || 'en';
       
-      // विज्ञापन लोड करने का लॉजिक (यहाँ आप API कॉल कर सकते हैं)
-      const mockAds = [
-        { id: 1, title: getTranslatedTitle("Global Enterprise Deal", userLang), link: "/boost-dashboard", reach: "GLOBAL", cost: "Premium" },
-        { id: 2, title: getTranslatedTitle("Local Business Offer", userLang), link: "/boost-dashboard", reach: "LOCAL", cost: "Standard" }
+      // 2. डायनामिक एड्स जो भाषा के हिसाब से बदलेंगे
+      const localizedAds = [
+        { 
+          id: 1, 
+          title: getAdContent('ad', userLang) + " " + getAdContent('global', userLang), 
+          link: "/boost-dashboard", 
+          reach: "GLOBAL" 
+        },
+        { 
+          id: 2, 
+          title: getAdContent('ad', userLang) + " " + getAdContent('local', userLang), 
+          link: "/boost-dashboard", 
+          reach: "LOCAL" 
+        }
       ];
       
-      setAds(mockAds);
-      setError(false);
+      setAds(localizedAds);
     } catch (err) {
-      setError(true);
+      console.error("Ad Loading Error");
     } finally {
       setLoading(false);
     }
@@ -36,35 +52,27 @@ export const AdProvider = ({ children }) => {
 
   useEffect(() => {
     fetchAds();
-    const interval = setInterval(fetchAds, 15000);
-    return () => clearInterval(interval);
-  }, [freeServer]); // अब ये 'freeServer' बदलते ही अपडेट होगा
+  }, [freeServer]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      {isVisible && !error && (
-        <div style={{ backgroundColor: '#fff', padding: '10px 15px', borderBottom: '1px solid #eee', fontSize: '13px' }}>
+    <>
+      {isVisible && (
+        <div style={{ backgroundColor: '#f8f9fa', padding: '10px', borderBottom: '1px solid #eee' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            {loading ? (<span>Loading Promoted Content...</span>) : (
+            {loading ? (<span>Loading...</span>) : (
               <div>
                 {ads.map((ad) => (
-                  <a key={ad.id} href={ad.link} style={{ color: '#000', fontWeight: 'bold', textDecoration: 'none', marginRight: '10px' }}>
-                    <span style={{ background: ad.reach === 'GLOBAL' ? '#FFD700' : '#81ecec', padding: '2px 5px', borderRadius: '4px', fontSize: '10px', marginRight: '5px' }}>{ad.reach}</span>
-                    {ad.title}
+                  <a key={ad.id} href={ad.link} style={{ marginRight: '10px', textDecoration: 'none', color: '#333', fontSize: '12px' }}>
+                    <b>[{ad.reach}]</b> {ad.title}
                   </a>
                 ))}
               </div>
             )}
-            <button onClick={() => setIsVisible(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px' }}>×</button>
+            <button onClick={() => setIsVisible(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>×</button>
           </div>
         </div>
       )}
-
-      <div style={{ flex: 1 }}>{children}</div>
-
-      <div style={{ padding: '8px', borderTop: '1px dashed #ccc', textAlign: 'center', fontSize: '9px', color: '#999' }}>
-        📡 RangManch Engine: Online | Connected to: {freeServer}
-      </div>
-    </div>
+      {children}
+    </>
   );
 };
