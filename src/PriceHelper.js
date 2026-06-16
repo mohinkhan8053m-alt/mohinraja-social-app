@@ -66,3 +66,6 @@ export const getGlobalPricing = (countryCode, scope, category) => {
     currency: config.currency
   };
 };
+export const getPriceData = (countryCode, category, scope) => {
+  return getGlobalPricing(countryCode, scope, category);
+};
