@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useApi } from './ApiContext.jsx'; // प्रो सर्वर कनेक्शन
+import { useApi } from './ApiContext.jsx'; // प्रो-चैनल इंपोर्ट
 
-const ProMessenger = () => { // फाइल का नाम ProMessenger
-  const { proServer } = useApi();
+const ProMessenger = () => {
+  const { callProSecure } = useApi(); // 👈 मास्टर सिक्योर चैनल का इस्तेमाल
   const [showAllFeatures, setShowAllFeatures] = useState(false);
 
-  // पूरे 59 फीचर्स की लिस्ट
   const allFeatures = [
     '🤖AI', '🛡️Mod', '📢AdS', '💎Prem', '📊Ana', '✅Loc', '🌐Reg', '🌍Glob', '⚡Girl', '🔄Sync', 
     '⚙️Set', '🎥VidCall', '📸Cam', '🎙️Mic', '📞Tel', '💾Save', '☁️Cloud', '🔑Auth', '🔔Noti', '🎨Theme',
@@ -15,19 +14,22 @@ const ProMessenger = () => { // फाइल का नाम ProMessenger
     '🎁G1', '🎁G2', '🎁G3', '🎁G4', '🎁G5', '🎁G6', '🎁G7', '🎁G8', '🎁G9', '🎁G10'
   ];
 
+  // 👈 प्रो-सिक्योर तरीके से फीचर एग्जीक्यूट करना
   const executeFeature = async (feature) => {
     try {
-      await fetch(`${proServer}/api/pro-execute`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feature, source: 'ProMessenger' })
+      await callProSecure({ 
+        feature, 
+        source: 'ProMessenger',
+        timestamp: new Date().toISOString()
       });
-    } catch (err) { console.error("ProServer Connection Error"); }
+      console.log(`[PRO-SECURE] Action ${feature} sent via Messenger`);
+    } catch (err) { 
+      console.error("ProSecure Connection Error", err); 
+    }
   };
 
   return (
     <div style={overlayContainer}>
-      {/* 1. मैसेजिंग एरिया (प्रो-स्टाइल) */}
       <div style={messageBar}>
         <div style={quickBar}>
           <button style={miniBtn}>🌐 AI</button>
@@ -37,7 +39,6 @@ const ProMessenger = () => { // फाइल का नाम ProMessenger
         <input style={inputStyle} placeholder="Pro Message..." />
       </div>
 
-      {/* 2. प्रो फीचर्स पॉप-अप */}
       {showAllFeatures && (
         <div style={popupStyle}>
           <div style={gridStyle}>
@@ -51,7 +52,7 @@ const ProMessenger = () => { // फाइल का नाम ProMessenger
   );
 };
 
-// Styles
+// Styles (वही, एकदम साफ़)
 const overlayContainer = { position: 'absolute', bottom: '10px', width: '96%', left: '2%', zIndex: 1000 };
 const messageBar = { background: 'rgba(0,0,0,0.9)', padding: '12px', borderRadius: '15px' };
 const quickBar = { display: 'flex', gap: '8px', marginBottom: '10px' };
