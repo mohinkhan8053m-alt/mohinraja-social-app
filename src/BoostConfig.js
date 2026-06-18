@@ -1,27 +1,32 @@
-// BoostConfig.js - अब ये ग्लोबल लेवल पर काम करेगा
-export const getBoostRates = (country, category = 'Standard') => {
-  const rates = {
+// BoostConfig.js - ग्लोबल वर्जन
+export const getBoostRates = (countryCode, category = 'Standard', context = 'PROFILE_BOOST') => {
+  
+  // दुनिया की किसी भी करेंसी के लिए डायनामिक डेटा
+  const globalRates = {
     'IN': { price: 500, symbol: '₹', tax: 0.18 },
     'US': { price: 10, symbol: '$', tax: 0.08 },
     'KW': { price: 3, symbol: 'KD', tax: 0.05 },
-    'AE': { price: 35, symbol: 'AED', tax: 0.05 }
+    'AE': { price: 35, symbol: 'AED', tax: 0.05 },
+    'DEFAULT': { price: 100, symbol: 'UNIT', tax: 0.10 } // बाकी पूरी दुनिया के लिए
   };
 
-  // 1. अगर देश नहीं मिला, तो डिफॉल्ट 'IN'
-  const baseRate = rates[country] || rates['IN'];
+  // देश ढूँढना (अगर लिस्ट में नहीं है तो DEFAULT ले लेगा)
+  const baseRate = globalRates[countryCode] || globalRates['DEFAULT'];
 
-  // 2. नया फीचर: 'Premium' कैटेगरी के लिए 20% एक्स्ट्रा सर्विस चार्ज/डिस्काउंट
-  let finalPrice = baseRate.price;
-  if (category === 'Premium') {
-    finalPrice = baseRate.price * 1.2; 
-  }
+  // 1. प्राइसिंग लॉजिक (प्रोफाइल vs कंपनी)
+  let finalPrice = (context === 'COMPANY_BOOST') ? baseRate.price * 2.5 : baseRate.price;
 
-  // 3. नया फीचर: टैक्स का हिसाब (ग्लोबल बिज़नेस के लिए जरूरी)
-  const finalPriceWithTax = finalPrice * (1 + baseRate.tax);
+  // 2. कैटेगरी लॉजिक
+  if (category === 'Premium') finalPrice *= 1.2;
+
+  // 3. टैक्स कैलकुलेशन
+  const taxAmount = finalPrice * baseRate.tax;
+  const total = finalPrice + taxAmount;
 
   return {
     ...baseRate,
-    price: parseFloat(finalPriceWithTax.toFixed(2)),
-    category: category
+    price: parseFloat(total.toFixed(2)),
+    category,
+    context
   };
 };
