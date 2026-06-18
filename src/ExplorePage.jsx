@@ -1,76 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApi } from './ApiContext.jsx'; 
 
 const ExplorePage = () => {
   const navigate = useNavigate();
-  const { proServer } = useApi();
-  const [userRole, setUserRole] = useState('starter');
-  const [earnings, setEarnings] = useState(0); // नया फीचर 1: Earnings Counter
+  const [showAll, setShowAll] = useState(false);
 
-  // 31 फीचर्स की लिस्ट (सभी एक्टिव)
+  // बिज़नेस कांटेक्ट लिंक (35वां फीचर)
+  const openWhatsApp = () => window.open("https://wa.me/918053756591?text=Hello%20Moin%20Raja,%20I%20am%20from%20a%20company%20interested%20in%20promotion.", "_blank");
+
+  // 34 फीचर्स की लिस्ट
   const allFeatures = [
     { name: "🚀 Promote", path: "/promote" }, { name: "🔥 Boosting", path: "/boost" },
-    { name: "🌍 Geo-Target", path: "/geo-targeting" }, { name: "💖 Premium", path: "/premium" },
-    { name: "🎁 Gifts", path: "/gifts" }, { name: "💬 Messenger", path: "/messenger" },
-    { name: "💰 Affiliate", path: "/affiliate" }, { name: "💳 Wallet", path: "/wallet" },
-    { name: "📊 Earnings", path: "/earnings" }, { name: "📱 Ads Network", path: "/ads-network" },
-    { name: "🎥 Live Stream", path: "/live" }, { name: "🏆 Rewards", path: "/rewards" },
-    { name: "🤝 Partnerships", path: "/partnerships" }, { name: "🛒 E-commerce", path: "/shop" },
-    { name: "📢 Marketing", path: "/marketing" }, { name: "🎮 Gaming", path: "/gaming" },
-    { name: "🎟️ Events", path: "/events" }, { name: "🛡️ Security", path: "/security" },
-    { name: "📈 Admin", path: "/admin" }, { name: "🌐 Global Reach", path: "/global" },
-    { name: "👤 Profile Edit", path: "/profile-edit" }, { name: "🛠️ Server Hub", path: "/server-settings" },
-    { name: "⚡ Girl Filter", path: "/girl-filter" }, { name: "📡 Live Stats", path: "/live-stats" },
-    { name: "🏦 Bank Payouts", path: "/bank" }, { name: "📍 Map Share", path: "/map-share" },
-    { name: "🛡️ Auto-Mod", path: "/auto-mod" },
-    { name: "🔔 Notifications", path: "/notifications" }, // नया फीचर 2
-    { name: "📈 Live ROI", path: "/roi-stats" }, // नया फीचर 3
-    { name: "🔑 Auth Portal", path: "/auth" }, // नया फीचर 4
-    { name: "🌍 Global Hub", path: "/global-hub" } // नया फीचर 5
+    { name: "💖 Premium", path: "/premium" }, { name: "💬 Messenger", action: openWhatsApp },
+    { name: "🌍 Geo", path: "/geo" }, { name: "🎁 Gifts", path: "/gifts" },
+    { name: "💰 Affiliate", path: "/affi" }, { name: "💳 Wallet", path: "/wallet" },
+    { name: "📊 Earnings", path: "/earn" }, { name: "📱 Ads", path: "/ads" },
+    { name: "🎥 Live", path: "/live" }, { name: "🏆 Rewards", path: "/rewards" },
+    { name: "🤝 Partner", path: "/part" }, { name: "🛒 Shop", path: "/shop" },
+    { name: "📢 Marketing", path: "/mark" }, { name: "🎮 Game", path: "/game" },
+    { name: "🎟️ Events", path: "/events" }, { name: "🛡️ Security", path: "/sec" },
+    { name: "📈 Admin", path: "/admin" }, { name: "🌐 Global", path: "/global" },
+    { name: "👤 Profile", path: "/prof" }, { name: "🛠️ Server", path: "/serv" },
+    { name: "⚡ Filter", path: "/filt" }, { name: "📡 Stats", path: "/stats" },
+    { name: "🏦 Bank", path: "/bank" }, { name: "📍 Map", path: "/map" },
+    { name: "🛡️ AutoMod", path: "/mod" }, { name: "🔔 Notify", path: "/noti" },
+    { name: "📈 ROI", path: "/roi" }, { name: "🔑 Auth", path: "/auth" },
+    { name: "🌍 Hub", path: "/hub" }, { name: "⚙️ Settings", path: "/set" },
+    { name: "📱 Mobile", path: "/mob" }, { name: "💾 Backup", path: "/back" }
   ];
 
-  // इंटरनेशनल लैंग्वेज लॉजिक
-  const getLabel = (name) => {
-    const lang = navigator.language.split('-')[0];
-    const translations = { 'hi': ' (हिंदी)', 'ar': ' (عربي)', 'es': ' (ES)' };
-    return name + (translations[lang] || '');
-  };
-
   return (
-    <div style={{ padding: '20px', paddingBottom: '100px', background: '#fff', minHeight: '100vh' }}>
-      
-      {/* 1. Header (Earnings + Notification) */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <div>Earnings: <b>₹{earnings}</b></div>
-        <button onClick={() => navigate('/notifications')}>🔔</button>
-      </div>
+    <div style={{ padding: '20px', minHeight: '100vh', background: '#fff' }}>
+      {/* हेडर */}
+      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <h2 style={{ margin: 0 }}>Explore</h2>
+        <button onClick={() => setShowAll(!showAll)} style={{ fontSize: '24px', border: 'none', background: 'none' }}>⋮</button>
+      </header>
 
-      {/* 2. FOMO Timer */}
-      <div style={{ background: '#FFD700', padding: '10px', borderRadius: '8px', textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>
-        🔥 Flash Offer Ending in: 02:45:00
-      </div>
-
-      {/* 3. 31 फीचर्स की ग्रिड */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-        {allFeatures.map((item) => (
-          <button 
-            key={item.name} 
-            onClick={() => navigate(item.path)} 
-            style={featureStyle}>
-            {getLabel(item.name)}
+      {/* मुख्य 4 फीचर */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+        {allFeatures.slice(0, 4).map(f => (
+          <button key={f.name} onClick={f.action ? f.action : () => navigate(f.path)} 
+                  style={{ padding: '20px', borderRadius: '10px', border: '1px solid #ddd' }}>
+            {f.name}
           </button>
         ))}
       </div>
 
-      {/* 4. सर्वर स्टेटस */}
-      <div style={{ marginTop: '30px', padding: '15px', background: '#f9f9f9', borderRadius: '10px', textAlign: 'center', border: '1px dashed #ccc' }}>
-        <p style={{ fontSize: '11px' }}>📡 Engine: {proServer || 'Connecting...'} | 31 Features Active</p>
-      </div>
+      {/* 3-डॉट मेनू के अंदर बाकी फीचर */}
+      {showAll && (
+        <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '10px' }}>
+          {allFeatures.slice(4).map(f => (
+            <div key={f.name} onClick={() => navigate(f.path)} 
+                 style={{ padding: '15px', borderBottom: '1px solid #f9f9f9', cursor: 'pointer' }}>
+              {f.name}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
-
-const featureStyle = { padding: '15px', background: '#fff', border: '1px solid #ddd', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' };
 
 export default ExplorePage;
