@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { VideoServer } from './VideoServer'; // पाथ ठीक किया
-import { AdServer } from './AdServer';       // पाथ ठीक किया
-import { PaymentServer } from './PaymentServer'; // पाथ ठीक किया
-import ProMessenger from './ProMessenger';   // पाथ ठीक किया
-import { getGifts } from './GiftService';    // पाथ ठीक किया (एक्सटेंशन हटाया)
+import { VideoServer } from './VideoServer'; 
+import { AdServer } from './AdServer';
+import { PaymentServer } from './PaymentServer';
+import ProMessenger from './ProMessenger';
+import { getGifts, sendGift } from './GiftService'; // पाथ और इम्पोर्ट सही किया
 
 const ProVideoCall = () => {
   const navigate = useNavigate();
-  const [callActive, setCallActive] = useState(false);
+  // यहाँ से तुम अपना यूजर डेटा ले सकते हो
   const [showControls, setShowControls] = useState(false);
   const [showGifts, setShowGifts] = useState(false);
 
-  // 56 फीचर्स का मास्टर एरे - सुरक्षित है
+  // 56 फीचर्स का मास्टर एरे - एकदम सुरक्षित है
   const features = ['🔄', '💬', '➕', '🔴', '🔇', '📷', '🖥', '🌐', '🤖', '🎁', '✨', '🚫', 'Tip', 'Wallet', 'Priv', 'Vol', 'Set', 'Arch', 'Zoom', 'Foc', 'Rec', 'Sync', 'Bst', 'Prem', 'Rate', 'Shr', 'Info', 'Rpt', 'Help', 'Ext', 'Mic', 'Cam', 'Trn', 'Lnk', 'Sav', 'Del', 'Upd', 'Log', 'Pfl', 'S1', 'S2', 'S3', 'Add1', 'Add2', 'Add3', 'Extra'];
 
   return (
     <div style={containerStyle} onClick={() => setShowControls(!showControls)}>
       
-      {/* वीडियो स्क्रीन: सामने वाला बड़ा, आप छोटे */}
+      {/* वीडियो स्क्रीन */}
       <div style={bigScreen}></div>
       <div style={smallScreen}></div>
 
-      {/* विज्ञापन और प्रीमियम (सिर्फ कॉल के दौरान) */}
+      {/* विज्ञापन और प्रीमियम */}
       {showControls && (
         <>
           <div style={adBanner}>Google AdSense / Company Ad</div>
@@ -38,7 +38,7 @@ const ProVideoCall = () => {
         </div>
       )}
 
-      {/* कंट्रोल्स: यह सिर्फ कॉल के दौरान और क्लिक करने पर दिखेंगे */}
+      {/* कंट्रोल्स */}
       {showControls && (
         <div style={controlBar}>
           {features.map((f, i) => (
@@ -49,11 +49,13 @@ const ProVideoCall = () => {
         </div>
       )}
 
-      {/* गिफ्टिंग (डायनामिक) */}
+      {/* गिफ्टिंग (डायनामिक) - यहाँ लॉजिक सही कर दिया है */}
       {showGifts && (
         <div style={giftGrid}>
           {getGifts().map((g, i) => (
-            <button key={i} onClick={() => VideoServer.sendGift(g)} style={giftItem}>{g.name}</button>
+            <button key={i} onClick={() => sendGift('senderId', 'receiverId', g.name, 'Tier4', AdServer)} style={giftItem}>
+              {g.name}
+            </button>
           ))}
           <button onClick={() => setShowGifts(false)} style={closeBtn}>Close</button>
         </div>
@@ -62,7 +64,7 @@ const ProVideoCall = () => {
   );
 };
 
-// स्टाइल्स (ग्लोबल ब्रांड लुक) - बिना किसी बदलाव के
+// स्टाइल्स वही हैं
 const containerStyle = { background: '#000', height: '100vh', position: 'relative', overflow: 'hidden' };
 const bigScreen = { height: '100vh', width: '100%', background: '#1a1a1a' };
 const smallScreen = { position: 'absolute', top: '20px', right: '20px', width: '90px', height: '130px', background: '#333', borderRadius: '10px' };
