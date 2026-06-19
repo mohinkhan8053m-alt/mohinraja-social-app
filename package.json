@@ -16,7 +16,8 @@
     "lucide-react": "^0.378.0",
     "react-phone-input-2": "^2.15.1",
     "react-toastify": "^10.0.5",
-    "axios": "^1.6.8"
+    "axios": "^1.6.8",
+    "react-select": "^5.8.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
