@@ -1,71 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PhoneInput from 'react-phone-input-2';
+import Select from 'react-select';
 import 'react-phone-input-2/lib/style.css';
-import { useApi } from './ApiContext.jsx'; 
+import { AuthServer } from './AuthServer.js';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { proServer } = useApi(); // मास्टर सर्वर से जुड़े
+  const [remember, setRemember] = useState(false);
   const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  // 10वां फीचर: ऑटो-लैंग्वेज कन्वर्जन (Geo-Language Logic)
-  const getTranslated = (text) => {
-    const lang = navigator.language.split('-')[0]; // यूजर की कंट्री भाषा पकड़ी
-    const translations = {
-      'hi': { login: 'फोन नंबर या जीमेल से लॉगिन करें', btn: 'लॉगिन करें' },
-      'en': { login: 'Login with Phone or Email', btn: 'Login' }
-    };
-    return translations[lang] ? translations[lang][text] : text;
-  };
+  // कंट्री और भाषा डेटा (सर्च बार के साथ)
+  const languageOptions = [{ value: 'en', label: 'English' }, { value: 'hi', label: 'Hindi' }, { value: 'es', label: 'Spanish' }];
 
-  const handleAuth = (type) => {
-    console.log(`📡 Connecting to ${proServer} for ${type}`);
-    alert(`Success! Logging in via ${type}...`);
-    navigate('/home');
+  const handleLogin = async () => {
+    const result = await AuthServer.login({ phone, remember });
+    if (result.success) {
+      alert("Login Successful - Connected to Global Server!");
+      navigate('/home');
+    }
   };
 
   return (
-    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      
-      {/* बटन: ग्लोबल और लोकल */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <button style={topBtn}>🌍 GLOBAL</button>
-        <button style={topBtn}>LOCAL</button>
-      </div>
-
-      <div style={{ width: '100%', maxWidth: '380px', padding: '20px', border: '1px solid #eee', borderRadius: '20px' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '18px' }}>{getTranslated('login')}</h2>
-
-        {/* फोन नंबर इनपुट (नया अपडेट) */}
-        <PhoneInput country={'in'} value={phone} onChange={setPhone} inputStyle={inputStyle} />
-        <p style={{ textAlign: 'center', margin: '10px 0', fontSize: '12px' }}>OR</p>
-        <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
-        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
-
-        {/* 10 बटन वाला सिस्टम */}
-        <button onClick={() => handleAuth('Login')} style={mainBtn}>{getTranslated('btn')}</button>
-        <button style={socialBtn} onClick={() => handleAuth('Google')}>Continue with Google</button>
-        <button style={socialBtn} onClick={() => handleAuth('Facebook')}>Continue with Facebook</button>
-        <button style={socialBtn} onClick={() => handleAuth('Apple')}>Continue with Apple</button>
+    <div style={containerStyle}>
+      <div style={loginCard}>
+        <h2 style={titleStyle}>Login to Global Hub</h2>
         
-        <p style={{ textAlign: 'center', fontSize: '12px', marginTop: '10px' }}>Forgot Password?</p>
-        <p style={{ textAlign: 'center', fontSize: '12px' }}>Don't have account? <b onClick={() => navigate('/signup')} style={{ color: '#007bff' }}>Sign Up</b></p>
-      </div>
+        {/* ग्लोबल सर्च बार: लैंग्वेज के लिए */}
+        <div style={{ marginBottom: '15px' }}>
+          <Select options={languageOptions} placeholder="Search Language..." />
+        </div>
 
-      {/* सर्वर इंजन एक्टिवेटेड */}
-      <div style={{ marginTop: '20px', padding: '10px', border: '1px dashed #000', borderRadius: '10px' }}>
-        <p style={{ fontSize: '10px' }}>📡 <b>Engine:</b> {proServer ? 'ACTIVE' : 'CONNECTING...'}</p>
+        {/* फोन नंबर (कंट्री सर्च के साथ) */}
+        <PhoneInput country={'in'} inputStyle={inputStyle} enableSearch={true} onChange={setPhone} />
+        
+        <input type="email" placeholder="Gmail/Email" style={inputStyle} />
+        <input type="password" placeholder="Password" style={inputStyle} />
+
+        <div style={optionsRow}>
+          <label style={{ fontSize: '12px', cursor: 'pointer' }}>
+            <input type="checkbox" onChange={() => setRemember(!remember)} /> Remember Me
+          </label>
+          <span style={linkStyle} onClick={() => AuthServer.resetPassword()}>Forgot Password?</span>
+        </div>
+
+        {/* प्रीमियम नीला लॉगिन बटन (Server Ready) */}
+        <button style={blueLoginBtn} onClick={handleLogin}>Login</button>
+        
+        <p style={{ textAlign: 'center', fontSize: '12px', marginTop: '10px' }}>
+          Don't have an account? <b style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => navigate('/signup')}>Sign Up</b>
+        </p>
       </div>
     </div>
   );
 };
 
-const inputStyle = { width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ccc', boxSizing: 'border-box' };
-const mainBtn = { width: '100%', padding: '15px', background: '#000', color: '#FFD700', borderRadius: '10px', border: 'none', fontWeight: 'bold', marginBottom: '10px' };
-const socialBtn = { width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '10px', background: '#f8f9fa', border: '1px solid #ddd' };
-const topBtn = { padding: '5px 15px', borderRadius: '5px', background: '#000', color: '#fff', border: 'none' };
+// Styles (Professional & Global)
+const containerStyle = { padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#f0f2f5' };
+const loginCard = { width: '100%', maxWidth: '350px', padding: '25px', background: '#fff', borderRadius: '20px', boxShadow: '0 5px 20px rgba(0,0,0,0.1)' };
+const inputStyle = { width: '100%', padding: '12px', marginBottom: '12px', borderRadius: '10px', border: '1px solid #ddd', boxSizing: 'border-box' };
+const optionsRow = { display: 'flex', justifyContent: 'space-between', marginBottom: '15px' };
+const blueLoginBtn = { width: '100%', padding: '14px', background: '#007bff', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' };
+const linkStyle = { fontSize: '12px', color: '#007bff', cursor: 'pointer' };
+const titleStyle = { textAlign: 'center', marginBottom: '20px' };
 
 export default LoginPage;
