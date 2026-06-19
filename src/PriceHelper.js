@@ -1,6 +1,6 @@
-// PriceHelper.js - मोइन राजा का ग्लोबल फाइनेंस इंजन (100% सटीक)
+// PriceHelper.js - मोइन राजा का फाइनल ग्लोबल फाइनेंस इंजन
 
-// --- कैटेगरी 1: पैकेज और करेंसी कॉन्फ़िगरेशन ---
+// 1. पैकेज और करेंसी (एग्ज़िस्टिंग)
 export const getPackageDetails = (countryCode) => {
   const countryConfig = {
     'KW': { currency: 'KWD', small: 7.5, large: 21, rate: 60 },
@@ -13,42 +13,18 @@ export const getPackageDetails = (countryCode) => {
   return countryConfig[countryCode] || countryConfig['IN'];
 };
 
-// --- कैटेगरी 2: कॉइन और गिफ्टिंग के लिए 30% कमीशन ---
-export const calculateCommission = (totalValue) => {
-  // .toFixed(2) लगाया है ताकि दशमलव के बाद का हिसाब भी पैसा-पैसा सही रहे
-  const platformShare = parseFloat((totalValue * 0.30).toFixed(2));
-  const userShare = parseFloat((totalValue * 0.70).toFixed(2));
-  return { platformShare, userShare };
-};
+// 2. कमीशन (एग्ज़िस्टिंग)
+export const calculateCommission = (totalValue) => ({
+  platformShare: parseFloat((totalValue * 0.30).toFixed(2)),
+  userShare: parseFloat((totalValue * 0.70).toFixed(2))
+});
 
-// --- कैटेगरी 3: स्ट्राइप के लिए ग्लोबल करेंसी कन्वर्जन ---
-export const getLocalizedPrice = (countryCode, basePriceUSD) => {
-  const countryFactors = {
-    'IN': { currency: 'inr', factor: 84 },
-    'US': { currency: 'usd', factor: 1 },
-    'KW': { currency: 'kwd', factor: 0.31 },
-    'GB': { currency: 'gbp', factor: 0.79 },
-    'AE': { currency: 'aed', factor: 3.67 },
-    'SA': { currency: 'sar', factor: 3.75 }
-  };
-  const config = countryFactors[countryCode] || countryFactors['IN'];
-  const localizedPrice = Math.round(basePriceUSD * config.factor);
-  return { 
-    amount: localizedPrice, 
-    currency: config.currency.toUpperCase(), 
-    displayPrice: `${localizedPrice} ${config.currency.toUpperCase()}` 
-  };
-};
-
-// --- कैटेगरी 4: बिग टिकट और ग्लोबल प्राइसिंग (मोटी रकम वाला कोड) ---
+// 3. ग्लोबल प्राइसिंग इंजन (तुम्हारा वाला ओरिजिनल - नो कॉम्प्रोमाइज!)
 export const getGlobalPricing = (countryCode, scope, category) => {
   const basePrices = { 
-    'starter': 5000, 
-    'startup': 50000, 
-    'enterprise': 1000000,
-    'vip_big': 2000000 
+    'starter': 5000, 'startup': 50000, 
+    'enterprise': 1000000, 'vip_big': 2000000 
   };
-
   const countryConfig = {
     'IN': { symbol: '₹', rate: 1, currency: 'inr' },
     'US': { symbol: '$', rate: 0.012, currency: 'usd' },
@@ -58,8 +34,6 @@ export const getGlobalPricing = (countryCode, scope, category) => {
 
   const base = basePrices[category] || basePrices['starter'];
   const config = countryConfig[countryCode] || countryConfig['IN'];
-  
-  // Scope Factor: 5 गुना ग्लोबल के लिए (पूरी तरह सुरक्षित)
   const scopeFactor = (scope === 'global') ? 5 : 1;
   const finalPrice = Math.round(base * (1 / config.rate) * scopeFactor);
 
@@ -70,6 +44,21 @@ export const getGlobalPricing = (countryCode, scope, category) => {
   };
 };
 
-export const getPriceData = (countryCode, category, scope) => {
-  return getGlobalPricing(countryCode, scope, category);
+// 4. नया: ऐड-फ्री और बूस्टिंग (तुम्हारे प्राइस के साथ)
+export const getServicePricing = (serviceType, countryCode, durationOrTier) => {
+  if (serviceType === 'adfree') {
+    const isGlobal = countryCode !== 'IN';
+    const rate = isGlobal ? 499 : 99;
+    return { price: rate * durationOrTier, currency: isGlobal ? 'USD' : 'INR' };
+  }
+  
+  if (serviceType === 'boosting') {
+    // यहाँ तुम्हारे बताए हुए मोटे प्राइसेस फिक्स कर दिए हैं
+    const tiers = {
+      'starter': { price: 5000 },
+      'growth': { price: 25000 },
+      'enterprise': { price: 100000 }
+    };
+    return tiers[durationOrTier] || tiers['starter'];
+  }
 };
