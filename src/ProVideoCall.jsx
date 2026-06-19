@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { VideoServer } from './VideoServer.js'; 
-import { AdServer } from './AdServer.js';
-import { PaymentServer } from './PaymentServer.js';
-import ProMessenger from './ProMessenger.jsx';
-import { getGifts } from './GiftService.js';
+import { VideoServer } from './VideoServer'; // पाथ ठीक किया
+import { AdServer } from './AdServer';       // पाथ ठीक किया
+import { PaymentServer } from './PaymentServer'; // पाथ ठीक किया
+import ProMessenger from './ProMessenger';   // पाथ ठीक किया
+import { getGifts } from './GiftService';    // पाथ ठीक किया (एक्सटेंशन हटाया)
 
 const ProVideoCall = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const ProVideoCall = () => {
   const [showControls, setShowControls] = useState(false);
   const [showGifts, setShowGifts] = useState(false);
 
-  // 56 फीचर्स का मास्टर एरे
+  // 56 फीचर्स का मास्टर एरे - सुरक्षित है
   const features = ['🔄', '💬', '➕', '🔴', '🔇', '📷', '🖥', '🌐', '🤖', '🎁', '✨', '🚫', 'Tip', 'Wallet', 'Priv', 'Vol', 'Set', 'Arch', 'Zoom', 'Foc', 'Rec', 'Sync', 'Bst', 'Prem', 'Rate', 'Shr', 'Info', 'Rpt', 'Help', 'Ext', 'Mic', 'Cam', 'Trn', 'Lnk', 'Sav', 'Del', 'Upd', 'Log', 'Pfl', 'S1', 'S2', 'S3', 'Add1', 'Add2', 'Add3', 'Extra'];
 
   return (
@@ -62,7 +62,7 @@ const ProVideoCall = () => {
   );
 };
 
-// स्टाइल्स (ग्लोबल ब्रांड लुक)
+// स्टाइल्स (ग्लोबल ब्रांड लुक) - बिना किसी बदलाव के
 const containerStyle = { background: '#000', height: '100vh', position: 'relative', overflow: 'hidden' };
 const bigScreen = { height: '100vh', width: '100%', background: '#1a1a1a' };
 const smallScreen = { position: 'absolute', top: '20px', right: '20px', width: '90px', height: '130px', background: '#333', borderRadius: '10px' };
