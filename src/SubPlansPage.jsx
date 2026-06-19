@@ -1,8 +1,10 @@
 import React from 'react';
-import { getCurrencyData } from './CurrencyEngine.js';
+// यहाँ पाथ और नाम दोनों सही कर दिए गए हैं
+import { getCurrencyData } from './CurrencyConfig.js'; 
 import { PaymentServer } from './PaymentServer.js';
 
-const SubPlansPage = ({ countryCode }) => {
+const SubPlansPage = ({ countryCode = 'IN' }) => {
+  // अगर countryCode नहीं मिला तो डिफ़ॉल्ट 'IN' इस्तेमाल होगा
   const info = getCurrencyData(countryCode);
 
   return (
