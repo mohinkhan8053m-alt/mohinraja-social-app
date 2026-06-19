@@ -14,7 +14,9 @@
     "react-router-dom": "^6.23.0",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.378.0",
-    "react-phone-input-2": "^2.15.1"
+    "react-phone-input-2": "^2.15.1",
+    "react-toastify": "^10.0.5",
+    "axios": "^1.6.8"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
