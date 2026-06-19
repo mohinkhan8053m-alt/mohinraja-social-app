@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { AuthServer } from './AuthServer.js'; // 👈 मास्टर हब से जुड़ा
 
 export const UserContext = createContext();
 
@@ -10,7 +11,7 @@ export const UserProvider = ({ children }) => {
     walletBalance: 0,
     totalEarnings: 0,
     language: 'hi',
-    countryCode: 'IN', // यह प्राइसिंग के लिए बहुत महत्वपूर्ण है
+    countryCode: 'IN',
     isChatGuardOn: true,
     socialLinks: {
       youtube: 'https://youtube.com/@mohinraja-r2m',
@@ -18,17 +19,23 @@ export const UserProvider = ({ children }) => {
       instagram: 'https://www.instagram.com/moin_raja_10'
     },
     isVerified: false,
-    token: null // लॉगिन ऑथेंटिकेशन के लिए
+    token: null
   });
 
   const [loading, setLoading] = useState(true);
 
-  // सर्वर से डेटा सिंक करने का स्मार्ट फंक्शन
+  // अब यह Sync सीधे AuthServer के जरिए होगा
   const syncUserData = async () => {
     try {
       setLoading(true);
-      console.log("[SERVER HUB]: Syncing user data for:", user.userId);
-      // यहाँ आप भविष्य में: const res = await fetch(`${serverUrl}/user/sync`); लगाएंगे
+      console.log("[USER CONTEXT]: Syncing with AuthServer...");
+      
+      // यहाँ AuthServer से डेटा आएगा
+      const serverData = await AuthServer.executeAction('SYNC_USER_DATA');
+      
+      if(serverData) {
+        setUser(prev => ({ ...prev, ...serverData }));
+      }
       setLoading(false);
     } catch (error) {
       console.error("Sync Failed:", error);
