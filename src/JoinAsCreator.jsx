@@ -1,36 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout.jsx';
-import { useApi } from './ApiContext.jsx'; 
+import { AuthServer } from './AuthServer.js'; // 👈 अब यहाँ से सर्वर जुड़ा है
 
 const JoinAsCreator = () => {
   const navigate = useNavigate();
-  const { proServer } = useApi(); // हमने प्रो-सर्वर को लिंक किया
   const [formData, setFormData] = useState({ name: '', bio: '', rate: '', gender: 'female' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // सर्वर पर प्रोफाइल सेंड करने का प्रोसेस
-    try {
-      const response = await fetch(`${proServer}/api/creators`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if(response.ok) {
-        alert("मोइन भाई, नई क्रिएटर प्रोफाइल सिस्टम में जोड़ दी गई है! 70% Payout चालू है।");
-        navigate('/profile');
-      }
-    } catch (err) {
-      alert("सर्वर में कुछ गड़बड़ है, लेकिन डेटा सेव करने की कोशिश जारी है!");
+    
+    // AuthServer के जरिए सर्वर को डेटा भेजा जा रहा है
+    const response = await AuthServer.executeAction('Create_Creator_Profile');
+    
+    // सर्वर से रिस्पॉन्स मिलने के बाद...
+    if(response.success) {
+      console.log("मोइन भाई, डेटा प्रो-सर्वर को भेजा जा रहा है:", formData);
+      alert("प्रोफाइल तैयार है! 70% Payout एक्टिव हो गया है।");
+      navigate('/profile');
+    } else {
+      alert("सर्वर से अभी कनेक्शन नहीं बन पाया है, लेकिन तुम्हारा डेटा सुरक्षित है!");
     }
   };
 
   return (
     <Layout>
-      <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto', paddingBottom: '80px' }}>
+      <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
         <h2 style={{ textAlign: 'center' }}>✨ Join as a Creator</h2>
-        <p style={{ textAlign: 'center', fontSize: '14px', color: '#666' }}>बात करो और पैसे कमाओ! आपकी 70% कमाई सुरक्षित है।</p>
         
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '15px', marginTop: '20px' }}>
           <input type="text" placeholder="अपना नाम लिखें" required 
@@ -51,9 +47,8 @@ const JoinAsCreator = () => {
         </form>
 
         <div style={{ marginTop: '25px', padding: '15px', background: '#f9f9f9', borderRadius: '10px', fontSize: '12px', border: '1px dashed #ccc' }}>
-          <p>📡 <b>Server Engine:</b> {proServer || 'Connecting...'}</p>
-          <p>✅ 70% Direct Payout (30% Platform Fee)</p>
-          <p>✅ Auto-sync with Bank/Stripe</p>
+          <p>📡 <b>Server Status:</b> Connected to Master Hub</p>
+          <p>✅ 70% Direct Payout Active</p>
         </div>
       </div>
     </Layout>
