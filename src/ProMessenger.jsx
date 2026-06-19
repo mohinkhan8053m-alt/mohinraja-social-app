@@ -1,49 +1,36 @@
 import React, { useState } from 'react';
-import { useApi } from './ApiContext.jsx'; // प्रो-चैनल इंपोर्ट
+import { VideoServer } from './VideoServer.js'; 
 
 const ProMessenger = () => {
-  const { callProSecure } = useApi(); // 👈 मास्टर सिक्योर चैनल का इस्तेमाल
   const [showAllFeatures, setShowAllFeatures] = useState(false);
 
+  // फीचर्स को 'More' के अंदर डालने के लिए
   const allFeatures = [
-    '🤖AI', '🛡️Mod', '📢AdS', '💎Prem', '📊Ana', '✅Loc', '🌐Reg', '🌍Glob', '⚡Girl', '🔄Sync', 
+    '🛡️Mod', '📢AdS', '💎Prem', '📊Ana', '✅Loc', '🌐Reg', '🌍Glob', '⚡Girl', '🔄Sync', 
     '⚙️Set', '🎥VidCall', '📸Cam', '🎙️Mic', '📞Tel', '💾Save', '☁️Cloud', '🔑Auth', '🔔Noti', '🎨Theme',
     '📝Note', '📂File', '🔗Link', '📍Map', '🗓️Cal', '🧮Calc', '⏳Timer', '⏱️Stop', '🔦Flash', '🌡️Temp',
     '🚗Auto', '✈️Fly', '🍔Food', '🎮Game', '🎵Music', '🎬Video', '📖Read', '✍️Edit', '🧩Plug', '📦Pack',
-    '🛡️Fire', '🛸Drone', '📡Signal', '💡Bulb', '🚪Lock', '🌡️AC', '💧Water', '🔌Power', '📡Wifi',
-    '🎁G1', '🎁G2', '🎁G3', '🎁G4', '🎁G5', '🎁G6', '🎁G7', '🎁G8', '🎁G9', '🎁G10'
+    '🛡️Fire', '🛸Drone', '📡Signal', '💡Bulb', '🚪Lock', '🌡️AC', '💧Water', '🔌Power', '📡Wifi'
   ];
-
-  // 👈 प्रो-सिक्योर तरीके से फीचर एग्जीक्यूट करना
-  const executeFeature = async (feature) => {
-    try {
-      await callProSecure({ 
-        feature, 
-        source: 'ProMessenger',
-        timestamp: new Date().toISOString()
-      });
-      console.log(`[PRO-SECURE] Action ${feature} sent via Messenger`);
-    } catch (err) { 
-      console.error("ProSecure Connection Error", err); 
-    }
-  };
 
   return (
     <div style={overlayContainer}>
       <div style={messageBar}>
+        {/* सामने दिखने वाले मुख्य कंट्रोल्स */}
         <div style={quickBar}>
-          <button style={miniBtn}>🌐 AI</button>
-          <button style={miniBtn}>🎁 G1</button>
-          <button onClick={() => setShowAllFeatures(!showAllFeatures)} style={dotsBtn}>•••</button>
+          <button style={actionBtn} onClick={() => VideoServer.execute('AI')}>🤖 AI</button>
+          <button style={giftBtn} onClick={() => VideoServer.execute('Gift')}>🎁 Gift</button>
+          <button onClick={() => setShowAllFeatures(!showAllFeatures)} style={dotsBtn}>⋮</button>
         </div>
-        <input style={inputStyle} placeholder="Pro Message..." />
+        <input style={inputStyle} placeholder="Type a pro message..." />
       </div>
 
+      {/* तीन डॉट के अंदर बाकी सब फीचर्स (साफ़ ग्रिड में) */}
       {showAllFeatures && (
         <div style={popupStyle}>
           <div style={gridStyle}>
             {allFeatures.map(f => (
-              <button key={f} onClick={() => executeFeature(f)} style={featureBtn}>{f}</button>
+              <button key={f} onClick={() => VideoServer.execute(f)} style={featureBtn}>{f}</button>
             ))}
           </div>
         </div>
@@ -52,15 +39,16 @@ const ProMessenger = () => {
   );
 };
 
-// Styles (वही, एकदम साफ़)
+// स्टाइल्स
 const overlayContainer = { position: 'absolute', bottom: '10px', width: '96%', left: '2%', zIndex: 1000 };
-const messageBar = { background: 'rgba(0,0,0,0.9)', padding: '12px', borderRadius: '15px' };
-const quickBar = { display: 'flex', gap: '8px', marginBottom: '10px' };
-const miniBtn = { background: '#222', color: '#fff', border: '1px solid #444', borderRadius: '6px', padding: '6px 10px', fontSize: '11px' };
-const dotsBtn = { background: '#FFD700', border: 'none', borderRadius: '6px', padding: '6px 12px', fontWeight: 'bold' };
-const inputStyle = { width: '100%', padding: '10px', borderRadius: '8px', border: 'none', boxSizing: 'border-box' };
-const popupStyle = { background: '#111', color: '#fff', padding: '15px', borderRadius: '15px', marginTop: '10px', maxHeight: '250px', overflowY: 'auto' };
-const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' };
-const featureBtn = { background: '#333', color: '#fff', border: '1px solid #555', padding: '8px', fontSize: '10px', borderRadius: '6px', cursor: 'pointer' };
+const messageBar = { background: 'rgba(0,0,0,0.8)', padding: '10px', borderRadius: '15px', border: '1px solid #333' };
+const quickBar = { display: 'flex', gap: '8px', marginBottom: '8px' };
+const actionBtn = { background: '#222', color: '#FFD700', border: '1px solid #FFD700', borderRadius: '6px', padding: '6px 12px', fontSize: '11px' };
+const giftBtn = { background: '#FFD700', color: '#000', border: 'none', borderRadius: '6px', padding: '6px 12px', fontSize: '11px', fontWeight: 'bold' };
+const dotsBtn = { background: '#444', color: '#fff', border: 'none', borderRadius: '6px', padding: '6px 12px', fontWeight: 'bold' };
+const inputStyle = { width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #444', background: '#111', color: '#fff', boxSizing: 'border-box' };
+const popupStyle = { background: '#000', color: '#fff', padding: '10px', borderRadius: '15px', marginTop: '5px', maxHeight: '200px', overflowY: 'auto', border: '1px solid #444' };
+const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '5px' };
+const featureBtn = { background: '#222', color: '#fff', border: 'none', padding: '6px', fontSize: '9px', borderRadius: '4px', cursor: 'pointer' };
 
 export default ProMessenger;
