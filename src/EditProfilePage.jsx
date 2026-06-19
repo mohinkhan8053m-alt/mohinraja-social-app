@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { UserContext } from './UserContext.js';
+// यहाँ .js को .jsx कर दिया गया है ताकि Vercel इसे सही से पढ़ सके
+import { UserContext } from './UserContext.jsx'; 
 import { AuthServer } from './AuthServer.js';
 
 export const EditProfileComponent = () => {
@@ -21,9 +22,21 @@ export const EditProfileComponent = () => {
 
   return (
     <div className="edit-profile-container">
-      <input value={profile.name} onChange={(e) => setProfile({...profile, name: e.target.value})} placeholder="Name" />
-      <input value={profile.username} onChange={(e) => setProfile({...profile, username: e.target.value})} placeholder="Username" />
-      <textarea value={profile.bio} onChange={(e) => setProfile({...profile, bio: e.target.value})} placeholder="Bio" />
+      <input 
+        value={profile.name} 
+        onChange={(e) => setProfile({...profile, name: e.target.value})} 
+        placeholder="Name" 
+      />
+      <input 
+        value={profile.username} 
+        onChange={(e) => setProfile({...profile, username: e.target.value})} 
+        placeholder="Username" 
+      />
+      <textarea 
+        value={profile.bio} 
+        onChange={(e) => setProfile({...profile, bio: e.target.value})} 
+        placeholder="Bio" 
+      />
       
       {/* बटन अब सीधे handleSave को कॉल कर रहा है */}
       <button onClick={handleSave} className="save-btn">Done</button>
