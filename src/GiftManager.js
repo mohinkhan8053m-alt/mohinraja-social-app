@@ -41,5 +41,16 @@ export const sendGift = async (senderId, receiverId, giftKey, countryTier, AdSer
   }
 };
 
-// UI में दिखाने के लिए गिफ्ट्स की लिस्ट
+// UI में दिखाने के लिए गिफ्ट्स की लिस्ट (इसे ही ProVideoCall.jsx में इस्तेमाल करना)
 export const getAllGifts = () => GIFT_CATALOG;
+
+// नया फंक्शन जो ProVideoCall के लिए जरूरी है ताकि एरर न आए
+export const getGifts = () => {
+  let list = [];
+  Object.keys(GIFT_CATALOG).forEach(cat => {
+    Object.keys(GIFT_CATALOG[cat]).forEach(key => {
+      list.push({ name: key, price: GIFT_CATALOG[cat][key] });
+    });
+  });
+  return list;
+};
