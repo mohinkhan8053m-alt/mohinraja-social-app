@@ -1,27 +1,32 @@
-// EditProfileLogic.js (सिर्फ लॉजिक)
-export const profileValidation = {
-  isNameValid: (name) => name.length >= 3,
-  isUsernameValid: (username) => !/\s/.test(username), // कोई स्पेस न हो
-  isImageSizeValid: (size) => size <= 1048576 // 1MB लिमिट
-};
+import React, { useContext, useState } from 'react';
+import { UserContext } from './UserContext.js';
+import { AuthServer } from './AuthServer.js';
 
-// EditProfileComponent (बिना लेआउट का क्लीन कंपोनेंट)
-export const EditProfileComponent = ({ profile, image, onSave, onImageChange, onChange }) => {
+export const EditProfileComponent = () => {
+  const { user, updateUser } = useContext(UserContext);
+  const [profile, setProfile] = useState(user);
+
+  const handleSave = async () => {
+    // 1. सर्वर को कॉल किया
+    const result = await AuthServer.updateProfile(profile);
+    
+    // 2. अगर सर्वर ने 'success' दिया, तो ऐप का डेटा अपडेट किया
+    if (result.success) {
+      updateUser(profile); 
+      alert("प्रोफाइल सफलतापूर्वक अपडेट हो गई!");
+    } else {
+      alert("सर्वर में कोई समस्या है, कृपया बाद में प्रयास करें।");
+    }
+  };
+
   return (
     <div className="edit-profile-container">
-      {/* फोटो वाला हिस्सा */}
-      <div className="photo-section">
-        <img src={image} alt="Profile" className="profile-img" />
-        <input type="file" accept="image/*" onChange={onImageChange} id="photoInput" />
-      </div>
-
-      {/* इनपुट फ़ील्ड्स */}
-      <input value={profile.name} onChange={(e) => onChange('name', e.target.value)} placeholder="Name" />
-      <input value={profile.username} onChange={(e) => onChange('username', e.target.value)} placeholder="Username" />
-      <textarea value={profile.bio} onChange={(e) => onChange('bio', e.target.value)} placeholder="Bio" />
+      <input value={profile.name} onChange={(e) => setProfile({...profile, name: e.target.value})} placeholder="Name" />
+      <input value={profile.username} onChange={(e) => setProfile({...profile, username: e.target.value})} placeholder="Username" />
+      <textarea value={profile.bio} onChange={(e) => setProfile({...profile, bio: e.target.value})} placeholder="Bio" />
       
-      {/* बटन */}
-      <button onClick={onSave} className="save-btn">Done</button>
+      {/* बटन अब सीधे handleSave को कॉल कर रहा है */}
+      <button onClick={handleSave} className="save-btn">Done</button>
     </div>
   );
 };
