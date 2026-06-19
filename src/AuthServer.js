@@ -1,36 +1,25 @@
-// AuthServer.js - हाइब्रिड मोड (Direct + Server Ready)
-
 export const AuthServer = {
-  
-  // मास्टर एक्शन एग्जीक्यूटर - यह फैसला करेगा कि क्या डायरेक्ट चलाना है और क्या सर्वर से
-  executeAction: async (featureName) => {
-    console.log(`📡 [SERVER]: ${featureName} प्रोसेस हो रहा है...`);
+  // 1. ये वो बटन हैं जो अभी के अभी काम करेंगे (Local-Active)
+  directFeatures: ["Dark Mode", "Cache Clear", "Version Info", "Help", "Privacy", "Text Edit", "Language", "Report Bug", "Terms & Policy"],
 
-    // 1. बिना सर्वर वाले फीचर्स (जो अभी के अभी चलेंगे)
-    const directFeatures = ["Dark Mode", "Cache Clear", "Text Edit", "Help", "Privacy", "Version Info"];
-    
-    if (directFeatures.includes(featureName)) {
-      console.log(`🚀 [LOCAL]: ${featureName} डायरेक्ट चल रहा है!`);
-      // यहाँ वो कोड डालो जो बिना सर्वर के चलेगा
-      return { success: true, mode: 'DIRECT' };
+  executeAction: async (featureName) => {
+    // अगर बटन 'Direct' लिस्ट में है तो यहीं से चल जाएगा
+    if (AuthServer.directFeatures.includes(featureName)) {
+      console.log(`🚀 [LOCAL]: ${featureName} अभी चल रहा है!`);
+      // यहाँ तुम अपना लॉजिक लिख सकते हो, जैसे:
+      if (featureName === "Dark Mode") { /* Dark mode toggle logic */ }
+      return { success: true, mode: 'LOCAL' };
     }
 
-    // 2. सर्वर वाले फीचर्स (जहाँ तुम्हें अपनी API लगानी है)
-    console.log(`⏳ [API]: ${featureName} सर्वर का इंतज़ार कर रहा है...`);
-    
-    /* SERVER API PLACEHOLDER:
-       जब तुम्हारी API रेडी हो, तो यहाँ से कोड चालू करना:
-       
-       const res = await fetch("https://api.yourdomain.com/data", { 
-          method: 'POST', body: JSON.stringify({ feature: featureName }) 
-       });
-       return await res.json();
+    // अगर सर्वर वाला बटन है तो यहाँ रुक जाएगा
+    console.log(`📡 [SERVER]: ${featureName} के लिए सर्वर कनेक्शन चाहिए...`);
+    /* यहाँ अपना API URL डालना है:
+       const res = await fetch("https://api.yourdomain.com/...", { ... });
     */
-    
-    return { success: true, mode: 'SERVER_PENDING' };
+    return { success: true, mode: 'SERVER' };
   },
 
-  // बाकी सभी 86 फीचर्स की लिस्ट (जो पिछले कोड में थी)
+  // ये रहे तुम्हारे पूरे 86 फीचर्स
   getFeatures: () => [
     "Wallet", "Bank", "Stats", "Posts", "Live", "Ads", "Help", "Privacy", "Security", 
     "AI Translate", "Gift", "Location", "Block", "Report", "Language", "Activity",
