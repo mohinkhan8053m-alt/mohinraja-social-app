@@ -2,7 +2,7 @@
 
 // 1. सारी जरूरी फाइलें यहाँ इंपोर्ट कर रहे हैं
 import * as PriceEngine from './PriceHelper.js';
-import { getCurrencyData } from './CurrencyEngine.js';
+import { getCurrencyData } from './CurrencyConfig.js'; // यहाँ नाम सही कर दिया है
 import { TransactionLogger } from './TransactionLogger.js';
 
 export const PaymentServer = {
