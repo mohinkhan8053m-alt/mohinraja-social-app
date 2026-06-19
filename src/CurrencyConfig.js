@@ -1,4 +1,4 @@
-// CurrencyEngine.js - अब यह और भी स्मार्ट है
+// CurrencyEngine.js - मास्टर करेंसी और टैक्स इंजन
 export const getCurrencyData = (countryCode) => {
   const settings = {
     'IN': { currency: 'INR', symbol: '₹', basePrice: 2999, tax: 0.18 },
@@ -9,13 +9,13 @@ export const getCurrencyData = (countryCode) => {
   };
 
   const data = settings[countryCode] || settings['GLOBAL'];
-
-  // नया फीचर: टैक्स कैलकुलेशन के साथ फाइनल प्राइस
-  const finalPrice = data.basePrice * (1 + data.tax);
+  const taxAmount = data.basePrice * data.tax;
+  const finalPrice = data.basePrice + taxAmount;
 
   return {
     ...data,
-    price: parseFloat(finalPrice.toFixed(2)), // टैक्स जोड़कर फाइनल अमाउंट
+    price: parseFloat(finalPrice.toFixed(2)),
+    taxAmount: parseFloat(taxAmount.toFixed(2)),
     taxIncluded: true
   };
 };
