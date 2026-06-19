@@ -1,43 +1,43 @@
-// DataServer.js - 6 फाइलों का मास्टर हब
+// DataServer.js - मास्टर कंट्रोल हब
 export const DataServer = {
 
-  // 1. HomePage के लिए डेटा
+  // 1. HomePage: सर्वर से क्रिएटर डेटा लाएं
   getCreators: async () => {
+    // 📡 यहाँ अपना Backend API का URL डालें (e.g., fetch('https://api.yourdomain.com/creators'))
     return [
       { id: 1, name: 'Sara', country: 'India', gender: 'female', coins: 100, isVerified: true, img: 'https://via.placeholder.com/150' },
       { id: 2, name: 'John', country: 'USA', gender: 'male', coins: 250, isVerified: false, img: 'https://via.placeholder.com/150' }
     ];
   },
 
-  // 2. ExplorePage के लिए फीचर चेक
+  // 2. ExplorePage: फीचर एक्सेस चेक
   checkFeature: async (path) => {
-    return true; // फीचर एक्सेस लॉजिक
+    // 📡 सर्वर से चेक करें कि क्या यूजर का प्लान ये फीचर सपोर्ट करता है
+    return true; 
   },
 
-  // 3. FeaturePage के लिए डायनामिक डेटा
-  getFeatureDetails: async (featureName) => {
-    return { name: featureName, status: 'Active', version: '2.0' };
-  },
-
-  // 4. RankPage के लिए लीडरबोर्ड
+  // 3. RankPage: लीडरबोर्ड डेटा
   getTopRankings: async () => {
-    return [
-      { id: 1, name: 'Sara', totalEarnings: 5000, img: 'https://via.placeholder.com/150' },
-      { id: 2, name: 'John', totalEarnings: 3000, img: 'https://via.placeholder.com/150' }
-    ];
+    // 📡 सर्वर से टॉप अर्निंग क्रिएटर्स का डेटा फेच करें
+    return [ /* डेटा यहाँ आएगा */ ];
   },
 
-  // 5. SettingsPage के लिए सर्वर स्टेटस
-  checkStatus: async () => {
-    return "Connected (Online)";
-  },
-
-  // 6. PrivacyPage के लिए सेटिंग्स हैंडलर
-  getPrivacySettings: async () => {
-    return { private: false, blockComments: true, hideStatus: false, globalSearch: true };
-  },
+  // 4. PrivacyPage: प्राइवेसी सेटिंग्स अपडेट
   updatePrivacy: async (id, status) => {
-    console.log(`🔒 Updating ${id} to ${status}`);
+    // 📡 यहाँ से POST रिक्वेस्ट भेजकर सर्वर पर डेटा सेव करें
+    console.log(`📡 Sending update to Server: ${id} is now ${status}`);
     return true;
+  },
+
+  // 5. SettingsPage: क्लाउड सिंक
+  syncCloud: () => {
+    // 📡 यहाँ पूरा ऐप डेटा सर्वर पर बैकअप/सिंक करें
+    alert("✅ डेटा सर्वर के साथ सिंक हो रहा है...");
+  },
+
+  // 6. FeaturePage: डायनामिक फीचर डेटा
+  getFeatureDetails: async (name) => {
+    // 📡 सर्वर से उस पर्टिकुलर फीचर की डिटेल्स उठाएं
+    return { name, status: 'Active' };
   }
 };
