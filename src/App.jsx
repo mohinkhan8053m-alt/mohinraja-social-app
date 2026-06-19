@@ -29,6 +29,11 @@ const ProVideoCall = lazy(() => import('./ProVideoCall.jsx'));
 const ProMessenger = lazy(() => import('./ProMessenger.jsx'));
 const JoinAsCreator = lazy(() => import('./JoinAsCreator.jsx'));
 
+// --- मोइन भाई द्वारा जोड़ी गई नई मास्टर फाइलें ---
+const SubPlansPage = lazy(() => import('./SubPlansPage.jsx'));
+const SubTiersPage = lazy(() => import('./SubTiersPage.jsx'));
+const RankPage = lazy(() => import('./RankPage.jsx'));
+
 function App() {
   return (
     <ApiProvider> 
@@ -46,6 +51,11 @@ function App() {
                 <Route path="/pro-video-call/:id" element={<ProVideoCall />} />
                 <Route path="/pro-messenger" element={<ProMessenger />} />
                 <Route path="/join-creator" element={<Layout><JoinAsCreator /></Layout>} />
+                
+                {/* --- नई जोड़ी गई मास्टर फाइलें (पेमेंट और रैंक) --- */}
+                <Route path="/plans" element={<Layout><SubPlansPage /></Layout>} />
+                <Route path="/tiers" element={<Layout><SubTiersPage /></Layout>} />
+                <Route path="/rank" element={<Layout><RankPage /></Layout>} />
                 
                 {/* --- अन्य सभी रूट्स --- */}
                 <Route path="/explore" element={<Layout><ExplorePage /></Layout>} />
