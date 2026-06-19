@@ -1,4 +1,4 @@
-// CurrencyConfig.js.js - मास्टर करेंसी और टैक्स इंजन
+// CurrencyConfig.js - मास्टर करेंसी और टैक्स इंजन
 export const getCurrencyData = (countryCode) => {
   const settings = {
     'IN': { currency: 'INR', symbol: '₹', basePrice: 2999, tax: 0.18 },
