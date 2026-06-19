@@ -1,102 +1,79 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApi } from './ApiContext.jsx';
-import { calculateCommission } from './PriceHelper.js';
-import ProMessenger from './ProMessenger.jsx'; // 👈 आपका प्रो-मैसेंजर यहाँ जुड़ गया है!
+import { VideoServer } from './VideoServer.js'; 
+import { AdServer } from './AdServer.js';
+import { PaymentServer } from './PaymentServer.js';
+import ProMessenger from './ProMessenger.jsx';
+import { getGifts } from './GiftService.js';
 
 const ProVideoCall = () => {
   const navigate = useNavigate();
-  // 👈 अब यह सीधे आपके नए सिक्योर चैनल का इस्तेमाल करेगा
-  const { callProSecure } = useApi(); 
+  const [callActive, setCallActive] = useState(false);
+  const [showControls, setShowControls] = useState(false);
   const [showGifts, setShowGifts] = useState(false);
 
-  // पूरे 46 फीचर्स (आपके पुराने वीडियो कॉल वाले सारे बटन, एक भी कम नहीं)
-  const features = [
-    '🔄', '💬', '➕', '🔴', '🔇', '📷', '🖥', '🌐', '🤖', '🎁', '✨', '🚫',
-    'Tip', 'Wallet', 'Priv', 'Vol', 'Set', 'Arch', 'Zoom', 'Foc', 'Rec', 'Sync', 
-    'Bst', 'Prem', 'Rate', 'Shr', 'Info', 'Rpt', 'Help', 'Ext', 'Mic', 'Cam', 
-    'Trn', 'Lnk', 'Sav', 'Del', 'Upd', 'Log', 'Pfl', 'S1', 'S2', 'S3', 'Add1', 'Add2', 'Add3', 'Extra'
-  ];
-  
-  // 10 गिफ्टिंग फीचर्स (कुल मिलाकर हो गए पूरे 56 फीचर्स)
-  const giftCategories = ['🎁G1','🎁G2','🎁G3','🎁G4','🎁G5','🎁G6','🎁G7','🎁G8','🎁G9','🎁G10'];
-
-  // हैंडलर: सिक्योर चैनल के साथ सर्वर-रेडी लॉजिक
-  const handleFeatureClick = async (f) => {
-    try {
-      if (f === '🎁') {
-        setShowGifts(!showGifts);
-      } else {
-        // कमीशन कैलकुलेशन
-        const commission = calculateCommission(100); 
-        
-        // 👈 सिक्योर प्रो-सर्वर को सिग्नल भेजना (callProSecure का इस्तेमाल)
-        await callProSecure({ 
-          feature: f, 
-          profit: commission.platformShare,
-          timestamp: new Date().toISOString()
-        });
-        
-        console.log(`[SECURE] Action: ${f} sent to server successfully!`);
-      }
-    } catch (e) {
-      console.error("Secure Server Error on:", f, e);
-    }
-  };
+  // 56 फीचर्स का मास्टर एरे
+  const features = ['🔄', '💬', '➕', '🔴', '🔇', '📷', '🖥', '🌐', '🤖', '🎁', '✨', '🚫', 'Tip', 'Wallet', 'Priv', 'Vol', 'Set', 'Arch', 'Zoom', 'Foc', 'Rec', 'Sync', 'Bst', 'Prem', 'Rate', 'Shr', 'Info', 'Rpt', 'Help', 'Ext', 'Mic', 'Cam', 'Trn', 'Lnk', 'Sav', 'Del', 'Upd', 'Log', 'Pfl', 'S1', 'S2', 'S3', 'Add1', 'Add2', 'Add3', 'Extra'];
 
   return (
-    <div style={{ background: '#000', height: '100vh', color: '#fff', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <div style={containerStyle} onClick={() => setShowControls(!showControls)}>
       
-      {/* टॉप बार - होम और अर्निंग फीचर्स */}
-      <div style={topBar}>
-        <button onClick={() => navigate('/home')} style={navBtn}>🏠 Home</button>
-        <div style={{ display: 'flex', gap: '5px' }}>
-          <button onClick={() => navigate('/earn')} style={topBtn}>💰 Earn</button>
-          <button onClick={() => navigate('/premium')} style={topBtn}>👑 Prem</button>
-          <button onClick={() => navigate('/join-creator')} style={topBtn}>🚀 Join</button>
+      {/* वीडियो स्क्रीन: सामने वाला बड़ा, आप छोटे */}
+      <div style={bigScreen}></div>
+      <div style={smallScreen}></div>
+
+      {/* विज्ञापन और प्रीमियम (सिर्फ कॉल के दौरान) */}
+      {showControls && (
+        <>
+          <div style={adBanner}>Google AdSense / Company Ad</div>
+          <button style={premiumBtn} onClick={() => PaymentServer.openPremium()}>👑 Go Premium</button>
+          <button style={earnBtn} onClick={() => AdServer.showRewardedAd()}>💰 Earn 10</button>
+        </>
+      )}
+
+      {/* प्रो-मैसेंजर */}
+      {showControls && (
+        <div style={messengerOverlay}>
+          <ProMessenger />
         </div>
-      </div>
+      )}
 
-      {/* वीडियो सेक्शन */}
-      <div style={{ flex: 1, background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: '#555' }}>Live Video Streaming...</p>
-      </div>
+      {/* कंट्रोल्स: यह सिर्फ कॉल के दौरान और क्लिक करने पर दिखेंगे */}
+      {showControls && (
+        <div style={controlBar}>
+          {features.map((f, i) => (
+            <button key={i} onClick={() => f === '🎁' ? setShowGifts(!showGifts) : VideoServer.execute(f)} style={btnStyle}>
+              {f}
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* प्रो-मैसेंजर (वीडियो के ऊपर रहेगा ताकि कॉल न कटे) */}
-      <div style={{ position: 'absolute', bottom: '180px', width: '100%' }}>
-        <ProMessenger />
-      </div>
-
-      {/* बटन्स का ग्रिड (पूरे 56 फीचर्स) */}
-      <div style={{ background: '#000', paddingBottom: '10px' }}>
-        {!showGifts ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', padding: '10px' }}>
-            {features.map((f, i) => (
-              <button key={i} onClick={() => handleFeatureClick(f)} style={featureBtn}>
-                {f}
-              </button>
-            ))}
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', padding: '15px', background: '#1a1a1a' }}>
-            {giftCategories.map((g, i) => (
-              <button key={i} onClick={() => handleFeatureClick(g)} style={giftBtn}>
-                {g}
-              </button>
-            ))}
-            <button onClick={() => setShowGifts(false)} style={{...featureBtn, gridColumn: 'span 5', background: '#d00'}}>Close</button>
-          </div>
-        )}
-      </div>
+      {/* गिफ्टिंग (डायनामिक) */}
+      {showGifts && (
+        <div style={giftGrid}>
+          {getGifts().map((g, i) => (
+            <button key={i} onClick={() => VideoServer.sendGift(g)} style={giftItem}>{g.name}</button>
+          ))}
+          <button onClick={() => setShowGifts(false)} style={closeBtn}>Close</button>
+        </div>
+      )}
     </div>
   );
 };
 
-// स्टाइल्स
-const topBar = { display: 'flex', justifyContent: 'space-between', padding: '10px', background: '#111' };
-const topBtn = { background: '#222', color: '#FFD700', border: '1px solid #FFD700', padding: '4px 8px', borderRadius: '4px', fontSize: '10px', cursor: 'pointer' };
-const navBtn = { background: '#444', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' };
-const featureBtn = { background: '#333', color: '#fff', border: 'none', padding: '6px', fontSize: '10px', cursor: 'pointer', borderRadius: '4px' };
-const giftBtn = { background: '#FFD700', color: '#000', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' };
+// स्टाइल्स (ग्लोबल ब्रांड लुक)
+const containerStyle = { background: '#000', height: '100vh', position: 'relative', overflow: 'hidden' };
+const bigScreen = { height: '100vh', width: '100%', background: '#1a1a1a' };
+const smallScreen = { position: 'absolute', top: '20px', right: '20px', width: '90px', height: '130px', background: '#333', borderRadius: '10px' };
+const controlBar = { position: 'absolute', bottom: '20px', left: '10px', right: '10px', display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: '5px', background: 'rgba(0,0,0,0.6)', padding: '10px' };
+const btnStyle = { background: '#444', color: '#fff', border: 'none', padding: '8px', fontSize: '10px', borderRadius: '4px' };
+const adBanner = { position: 'absolute', top: '20px', width: '100%', textAlign: 'center', color: '#fff', background: 'rgba(0,0,0,0.5)' };
+const premiumBtn = { position: 'absolute', top: '80px', left: '10px', background: '#FFD700', border: 'none', padding: '5px 10px', borderRadius: '5px' };
+const earnBtn = { position: 'absolute', top: '80px', right: '10px', background: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' };
+const giftGrid = { position: 'absolute', bottom: '150px', background: '#222', padding: '10px', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px', width: '100%' };
+const giftItem = { background: '#FFD700', padding: '10px', border: 'none', borderRadius: '5px', fontSize: '9px' };
+const messengerOverlay = { position: 'absolute', bottom: '250px', width: '100%', padding: '10px' };
+const closeBtn = { background: '#d00', color: '#fff', border: 'none', padding: '10px' };
 
 export default ProVideoCall;
