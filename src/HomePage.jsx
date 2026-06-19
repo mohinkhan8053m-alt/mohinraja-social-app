@@ -1,80 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from './Layout.jsx';
-import { useApi } from './ApiContext.jsx'; // प्रो-चैनल इंपोर्ट किया
+import { DataServer } from './DataServer.js';
+import { AuthServer } from './AuthServer.js'; // प्रीमियम चेक के लिए
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { callProSecure } = useApi(); // मास्टर सिक्योर चैनल यहाँ एक्टिवेट हो गया
-  
-  const [creators] = useState([
-    { id: 1, name: 'Sara', gender: 'female', country: 'India', distance: '5km', coins: 100, img: 'https://via.placeholder.com/150' },
-    { id: 2, name: 'John', gender: 'male', country: 'USA', distance: 'Global', coins: 250, img: 'https://via.placeholder.com/150' }
-  ]);
-  const [genderFilter, setGenderFilter] = useState('all');
+  const [creators, setCreators] = useState([]);
+  const [search, setSearch] = useState('');
 
-  // प्रो-कॉल हैंडलर: अब यह सीधे प्रो-सिक्योर चैनल का उपयोग करेगा
-  const handleProCall = async (creatorId) => {
-    // सर्वर को सिग्नल भेजें कि प्रो-कॉल शुरू हो रही है
-    await callProSecure({ action: 'START_PRO_CALL', creatorId, status: 'initializing' });
-    navigate(`/pro-video-call/${creatorId}`);
+  useEffect(() => {
+    // DataServer से डेटा उठाना (कंट्री, कॉइन्स, प्रोफाइल डेटा)
+    DataServer.getCreators().then(setCreators);
+  }, []);
+
+  const handleCall = (creator) => {
+    // प्रीमियम चेक लॉजिक
+    if (!AuthServer.isPremium()) {
+      alert("ग्लोबल बात करने के लिए प्रीमियम लें!");
+      navigate('/sub-plans');
+    } else {
+      navigate(`/pro-video-call/${creator.id}`);
+    }
   };
 
-  const filteredCreators = creators.filter(c => genderFilter === 'all' || c.gender === genderFilter);
-
   return (
-    <Layout>
-      <div style={{ padding: '15px', paddingBottom: '80px' }}>
-        
-        {/* 1. Earnings */}
-        <div style={topDashboard}>
-          <div style={{ fontSize: '14px' }}>My Earnings: <b>₹4,500</b></div>
-          <button onClick={() => navigate('/bank')} style={withdrawBtn}>Withdraw 💸</button>
-        </div>
-
-        {/* 2. Banners */}
-        <button onClick={() => alert("Buy Ad-Free Plan")} style={adFreeBtn}>💎 Go Ad-Free</button>
-        <div style={earnBanner}>🚀 Want to earn? <button onClick={() => navigate('/join-creator')} style={joinBtn}>Create Profile</button></div>
-
-        {/* 3. Search & Filter */}
-        <input placeholder="Search country, name..." style={searchBar} />
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-          <button onClick={() => setGenderFilter('all')} style={filterBtn}>All</button>
-          <button onClick={() => setGenderFilter('female')} style={filterBtn}>Girls 💖</button>
-          <button onClick={() => setGenderFilter('male')} style={filterBtn}>Boys 💙</button>
-        </div>
-
-        {/* 4. Creator Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          {filteredCreators.map((c) => (
-            <div key={c.id} style={card}>
-              <img src={c.img} style={img} alt={c.name} />
-              <div style={{ padding: '8px' }}>
-                <h4 style={{ margin: '0' }}>{c.name}</h4>
-                <p style={{ fontSize: '10px', color: '#666' }}>{c.country} • {c.distance}</p>
-                <div style={coinTag}>💰 {c.coins} Coins/Min</div>
-              </div>
-              {/* प्रो-कॉल बटन अब सिक्योर चैनल से जुड़ा है */}
-              <button onClick={() => handleProCall(c.id)} style={btn}>Call Now</button>
-            </div>
-          ))}
-        </div>
+    <div style={{ padding: '15px', paddingBottom: '80px', background: '#f9f9f9', minHeight: '100vh' }}>
+      {/* 1. Dashboard */}
+      <div style={topDashboard}>
+        <div>My Earnings: <b>₹4,500</b></div>
+        <button onClick={() => navigate('/bank')} style={withdrawBtn}>Withdraw 💸</button>
       </div>
-    </Layout>
+
+      {/* 2. Premium & Free Coins Ads */}
+      <button onClick={() => navigate('/sub-plans')} style={premiumBtn}>👑 Unlock Premium Global Access</button>
+      <button onClick={() => alert("Ad Loaded...")} style={adBtn}>🎁 Watch Ads to get 10 Free Coins</button>
+
+      {/* 3. Global Search */}
+      <input 
+        placeholder="Search by Country (e.g. India, USA)..." 
+        onChange={(e) => setSearch(e.target.value)}
+        style={searchBar} 
+      />
+
+      {/* 4. Creator Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+        {creators.filter(c => c.country.toLowerCase().includes(search.toLowerCase())).map(c => (
+          <div key={c.id} style={card}>
+            {/* प्रोफाइल देखने के लिए फोटो पर क्लिक */}
+            <img src={c.img} style={imgStyle} onClick={() => navigate(`/profile/${c.id}`)} />
+            <div style={{ padding: '10px' }}>
+              <h4 style={{ margin: '0' }}>{c.name} {c.isVerified && '✅'}</h4>
+              <p style={{ fontSize: '10px', color: '#666' }}>📍 {c.country} • {c.gender}</p>
+              <div style={coinTag}>💰 {c.coins} Coins/Min</div>
+              
+              {/* प्रो-वीडियो कॉल और मैसेंजर का कनेक्शन */}
+              <div style={{ display: 'flex', gap: '5px', marginTop: '10px' }}>
+                <button onClick={() => handleCall(c)} style={btn}>Call</button>
+                <button onClick={() => navigate(`/pro-messenger/${c.id}`)} style={msgBtn}>Chat</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
-// स्टाइल्स वही हैं जो आपने दिए थे
-const topDashboard = { background: '#000', color: '#FFD700', padding: '15px', borderRadius: '10px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' };
-const withdrawBtn = { background: '#28a745', color: '#fff', border: 'none', padding: '8px', borderRadius: '5px', fontWeight: 'bold' };
-const adFreeBtn = { width: '100%', background: '#fff', border: '1px solid #FFD700', padding: '10px', borderRadius: '8px', marginBottom: '15px', fontWeight: 'bold' };
-const earnBanner = { background: '#0095f6', color: '#fff', padding: '15px', textAlign: 'center', borderRadius: '10px', marginBottom: '15px' };
-const joinBtn = { background: '#fff', color: '#0095f6', border: 'none', padding: '5px 10px', borderRadius: '5px', fontWeight: 'bold' };
-const searchBar = { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '8px', border: '1px solid #ddd' };
-const filterBtn = { flex: 1, padding: '8px', borderRadius: '5px', border: '1px solid #ddd', background: '#fff' };
-const card = { border: '1px solid #eee', borderRadius: '15px', overflow: 'hidden', background: '#fff' };
-const img = { width: '100%', height: '140px', objectFit: 'cover' };
-const coinTag = { background: '#000', color: '#FFD700', fontSize: '10px', padding: '4px', borderRadius: '5px', textAlign: 'center', margin: '5px 0' };
-const btn = { width: '100%', background: '#0095f6', color: '#fff', border: 'none', padding: '8px' };
+// Styles
+const topDashboard = { background: '#000', color: '#FFD700', padding: '15px', borderRadius: '10px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between' };
+const withdrawBtn = { background: '#28a745', color: '#fff', border: 'none', padding: '8px', borderRadius: '5px' };
+const premiumBtn = { width:'100%', padding:'12px', background:'#FFD700', border:'none', borderRadius:'10px', fontWeight:'bold', marginBottom:'10px' };
+const adBtn = { width:'100%', padding:'10px', background:'#ff4757', color:'#fff', border:'none', borderRadius:'10px', marginBottom:'15px' };
+const searchBar = { width:'100%', padding:'12px', borderRadius:'8px', border:'1px solid #ddd', marginBottom:'15px' };
+const card = { background:'#fff', borderRadius:'15px', overflow:'hidden', border:'1px solid #eee' };
+const imgStyle = { width:'100%', height:'140px', objectFit:'cover', cursor: 'pointer' };
+const coinTag = { background:'#000', color:'#FFD700', fontSize: '10px', padding: '4px', borderRadius: '5px', textAlign: 'center', margin: '5px 0' };
+const btn = { flex:1, background: '#0095f6', color: '#fff', border: 'none', padding: '8px', borderRadius: '5px' };
+const msgBtn = { flex:1, background: '#eee', color: '#000', border: 'none', padding: '8px', borderRadius: '5px' };
 
 export default HomePage;
