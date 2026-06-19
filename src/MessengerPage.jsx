@@ -1,85 +1,72 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from './Layout.jsx';
-import { UserContext } from './UserContext.jsx';
-import { useApi } from './ApiContext.jsx';
+import React, { useState } from 'react';
+import { VideoServer } from './VideoServer.js'; // मास्टर सर्वर
+import { AdServer } from './AdServer.js';       // विज्ञापन और कॉइन लॉजिक
+import { PaymentServer } from './PaymentServer.js'; // प्रीमियम
 
 const MessengerPage = () => {
-  const { user } = useContext(UserContext);
-  const { proServer } = useApi();
-  const navigate = useNavigate();
-  const [activeSubMenu, setActiveSubMenu] = useState(null);
-  const [friends, setFriends] = useState([]); // यहाँ आपकी फ्रेंड लिस्ट आएगी
+  const [showMore, setShowMore] = useState(false);
+  const [inCall, setInCall] = useState(false);
 
-  // 1. 49 मुख्य फीचर्स
+  // 12 मुख्य बटन जो स्क्रीन पर दिखेंगे
   const mainFeatures = [
-    '🤖AI', '🛡️Mod', '📢AdS', '💎Prem', '📊Ana', '✅Loc', '🌐Reg', '🌍Glob', '⚡Girl', '🔄Sync', 
-    '⚙️Set', '🎥VidCall', '📸Cam', '🎙️Mic', '📞Tel', '💾Save', '☁️Cloud', '🔑Auth', '🔔Noti', '🎨Theme',
-    '📝Note', '📂File', '🔗Link', '📍Map', '🗓️Cal', '🧮Calc', '⏳Timer', '⏱️Stop', '🔦Flash', '🌡️Temp',
-    '🚗Auto', '✈️Fly', '🍔Food', '🎮Game', '🎵Music', '🎬Video', '📖Read', '✍️Edit', '🧩Plug', '📦Pack',
-    '🛡️Fire', '🛸Drone', '📡Signal', '💡Bulb', '🚪Lock', '🌡️AC', '💧Water', '🔌Power', '📡Wifi'
+    { name: 'Video', icon: '🎥' }, { name: 'Gift', icon: '🎁' }, 
+    { name: 'Trans', icon: '🔊' }, { name: 'Filter', icon: '✨' }, 
+    { name: 'Block', icon: '🚫' }, { name: 'Prem', icon: '👑' }, 
+    { name: 'Earn', icon: '💰' }, { name: 'Ads', icon: '📢' }
   ];
 
-  // 2. 10 गिफ्टिंग फीचर्स
-  const giftFeatures = ['🎁G1', '🎁G2', '🎁G3', '🎁G4', '🎁G5', '🎁G6', '🎁G7', '🎁G8', '🎁G9', '🎁G10'];
-
-  // मास्टर फीचर फंक्शन (Pro Server से जुड़ा)
-  const executeFeature = async (featureName) => {
-    if (featureName === '🎁GiftMenu') {
-      setActiveSubMenu(activeSubMenu === 'gifts' ? null : 'gifts');
-      return;
-    }
-    try {
-      const response = await fetch(`${proServer}/api/execute-feature`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feature: featureName, userId: user?.id })
-      });
-      alert(`मोइन भाई, ${featureName} कमांड सर्वर पर भेजी गई! ✅`);
-    } catch (err) { alert("सर्वर कनेक्शन एरर!"); }
+  // बटन क्लिक हैंडलर (जो सर्वर से सर्वर कॉल करेगा)
+  const handleFeature = (feature) => {
+    if (feature === 'Earn') AdServer.showRewardedAd();
+    else if (feature === 'Prem') PaymentServer.openPremium();
+    else VideoServer.execute(feature); // बाकी सारे फीचर्स सर्वर के पास जाएंगे
   };
 
   return (
-    <Layout>
-      <div style={{ padding: '15px', paddingBottom: '100px' }}>
-        
-        {/* Facebook Style Chat List (फॉलोअर्स और फॉलोइंग) */}
-        <h4 style={{ marginBottom: '10px' }}>Recent Chats</h4>
-        <div style={{ marginBottom: '25px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-           {/* यहाँ आप अपनी फ्रेंड लिस्ट मैप करेंगे */}
-           <div style={friendCard} onClick={() => navigate('/chat/user1')}>
-             <div style={avatar}></div>
-             <span>Mohan Raja's Friends...</span>
-           </div>
-        </div>
+    <div style={containerStyle}>
+      {/* विज्ञापन बैनर */}
+      <div style={adBanner}>Google AdSense / Company Promo</div>
 
-        {/* 49 फीचर्स का ग्रिड */}
-        <h4 style={{ marginBottom: '10px' }}>Messenger Tools (59 Total)</h4>
-        <div style={gridStyle}>
-          {mainFeatures.map((f, i) => (
-            <button key={i} style={featureBtn} onClick={() => executeFeature(f)}>{f}</button>
-          ))}
-          <button style={{...featureBtn, background: '#FFD700'}} onClick={() => executeFeature('🎁GiftMenu')}>🎁Gifts</button>
+      {/* वीडियो कॉल स्क्रीन (Active) */}
+      {inCall && (
+        <div style={videoScreen}>
+          <div style={remoteVideo}></div>
+          <button style={hangupBtn} onClick={() => { VideoServer.execute('EndCall'); setInCall(false); }}>🔴</button>
         </div>
+      )}
 
-        {/* गिफ्टिंग सब-मेनू */}
-        {activeSubMenu === 'gifts' && (
-          <div style={giftGridStyle}>
-            {giftFeatures.map((g, i) => (
-              <button key={i} style={featureBtn} onClick={() => executeFeature(g)}>{g}</button>
-            ))}
-          </div>
-        )}
+      {/* मुख्य कंट्रोल्स (स्क्रीन पर 8-12 बटन) */}
+      <div style={controlBar}>
+        {mainFeatures.map((f, i) => (
+          <button key={i} style={mainBtn} onClick={() => handleFeature(f.name)}>
+            {f.icon}
+          </button>
+        ))}
+        <button style={dotsBtn} onClick={() => setShowMore(!showMore)}>⋮</button>
       </div>
-    </Layout>
+
+      {/* मोर फीचर्स (Nested) */}
+      {showMore && (
+        <div style={nestedGrid}>
+          {['AI', 'Mod', 'Ana', 'Loc', 'Save', 'Cloud', 'Auth', 'Noti'].map((f, i) => (
+            <button key={i} style={subBtn} onClick={() => VideoServer.execute(f)}>{f}</button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
-// Styles
-const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' };
-const giftGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px', marginTop: '10px', padding: '10px', background: '#e1ffc7', borderRadius: '10px' };
-const featureBtn = { background: '#f8f8f8', border: '1px solid #ddd', padding: '8px 2px', fontSize: '9px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' };
-const friendCard = { display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: '#fff', borderRadius: '10px', border: '1px solid #eee' };
-const avatar = { width: '40px', height: '40px', borderRadius: '50%', background: '#ccc' };
+// स्टाइल्स वही प्रोफेशनल डार्क थीम में
+const containerStyle = { background: '#000', minHeight: '100vh', color: '#fff' };
+const adBanner = { height: '50px', background: '#222', textAlign: 'center', fontSize: '10px', paddingTop: '10px' };
+const videoScreen = { height: '60vh', background: '#111', position: 'relative' };
+const remoteVideo = { height: '100%', width: '100%' };
+const hangupBtn = { position: 'absolute', bottom: '20px', left: '45%', background: 'red', border: 'none', padding: '15px', borderRadius: '50%' };
+const controlBar = { position: 'fixed', bottom: '10px', width: '96%', left: '2%', display: 'grid', gridTemplateColumns: 'repeat(9, 1fr)', gap: '4px' };
+const mainBtn = { background: '#222', border: '1px solid #444', padding: '10px 5px', fontSize: '12px', borderRadius: '5px', color: '#fff' };
+const dotsBtn = { background: '#FFD700', border: 'none', padding: '10px', borderRadius: '5px', fontWeight: 'bold' };
+const nestedGrid = { position: 'fixed', bottom: '70px', width: '96%', left: '2%', background: '#111', padding: '10px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '5px' };
+const subBtn = { background: '#333', color: '#fff', border: 'none', padding: '10px', fontSize: '9px' };
 
 export default MessengerPage;
