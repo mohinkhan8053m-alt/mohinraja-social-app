@@ -1,65 +1,73 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from './Layout.jsx';
-import { UserContext } from './UserContext.jsx';
-import { useApi } from './ApiContext.jsx';
+import React, { useState } from 'react';
+import { VideoServer } from './VideoServer.js';
+import { AdServer } from './AdServer.js';
+import { PaymentServer } from './PaymentServer.js';
 
 const VideoCallHub = () => {
-  const { user, setUser } = useContext(UserContext);
-  const { handleFollow } = useApi();
   const [callActive, setCallActive] = useState(false);
-  const navigate = useNavigate();
+  const [showMore, setShowMore] = useState(false);
 
-  // यह है आपका 'मास्टर सर्वर लिंक'। आप सिर्फ इस फंक्शन में अपनी दूसरी फाइल का लॉजिक जोड़ देना।
-  const executeServerAction = (featureName) => {
-    console.log(`Feature ${featureName} is triggering your main server file...`);
-    // यहाँ आपकी मेन सर्वर फाइल का लिंक/फंक्शन कॉल होगा
-  };
+  // सभी 56 फीचर्स की लिस्ट
+  const mainFeatures = ['🔇','📷','🖥','🌐','🤖','🎁','✨','🚫','🔄','💬','➕','🔴'];
+  const extraFeatures = ['Tip','Wallet','Priv','Vol','Set','Arch','Zoom','Foc','Rec','Sync','Bst','Prem','Rate','Shr','Info','Rpt','Help','Ext','Mic','Cam','Trn','Lnk','Sav','Del','Upd','Log','Pfl','G1','G2','G3','G4','G5','G6','G7','G8','G9','G10','S1','S2','S3','Add1','Add2','Add3','Extra'];
 
   return (
-    <Layout>
-      <div style={{ padding: '10px', background: '#000', minHeight: '90vh', color: '#fff' }}>
-        {!callActive ? (
-          <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h1>RangManch Live</h1>
-            <button style={startBtn} onClick={() => setCallActive(true)}>🎥 START VIDEO CALL</button>
+    <div style={containerStyle}>
+      {!callActive ? (
+        <div style={centerStyle}>
+          <h1>RangManch Live</h1>
+          <button style={startBtn} onClick={() => setCallActive(true)}>🎥 START VIDEO CALL</button>
+          <button style={earnBtn} onClick={() => AdServer.showRewardedAd()}>💰 Watch Ad & Earn 10</button>
+        </div>
+      ) : (
+        <div style={videoCallLayout}>
+          {/* बड़ी स्क्रीन और छोटी स्क्रीन */}
+          <div style={bigScreen}></div>
+          <div style={smallScreen}></div>
+
+          {/* विज्ञापन और प्रीमियम का विकल्प */}
+          <div style={adBanner}>Google Ad / Company Ad</div>
+          <button style={premiumBtn} onClick={() => PaymentServer.openPremium()}>👑 Go Premium (No Ads)</button>
+
+          {/* 12 मुख्य बटन */}
+          <div style={controlBar}>
+            {mainFeatures.map((f, i) => (
+              <button key={i} onClick={() => f === '🔴' ? setCallActive(false) : VideoServer.execute(f)} style={f === '🔴' ? redBtn : btnStyle}>
+                {f}
+              </button>
+            ))}
+            {/* तीन डॉट बटन */}
+            <button onClick={() => setShowMore(!showMore)} style={btnStyle}>⋮</button>
           </div>
-        ) : (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-               <button onClick={() => navigate('/premium')} style={premiumBtn}>👑 Go Premium</button>
-               <button onClick={() => setUser(prev => ({ ...prev, coins: prev.coins + 10 }))} style={coinBtn}>💰 Earn 10</button>
-            </div>
 
-            <div style={{ height: '250px', background: '#111', borderRadius: '15px', marginBottom: '10px' }}></div>
-
-            {/* 12 मुख्य फीचर्स */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-              <button onClick={() => window.location.reload()}>🔄</button>
-              <button onClick={() => navigate('/messenger')}>💬</button>
-              <button onClick={() => handleFollow(user.userId, 'target_id')}>➕</button>
-              <button onClick={() => setCallActive(false)} style={{background:'red', color:'#fff'}}>🔴</button>
-              {['🔇','📷','🖥','🌐','🤖','🎁','✨','🚫'].map((l, i) => (
-                <button key={i} onClick={() => executeServerAction(l)}>{l}</button>
+          {/* बाकी 44 फीचर्स (तीन डॉट के अंदर) */}
+          {showMore && (
+            <div style={extraGrid}>
+              {extraFeatures.map((f, i) => (
+                <button key={i} onClick={() => VideoServer.execute(f)} style={smallBtn}>{f}</button>
               ))}
             </div>
-
-            {/* 44 अन्य फीचर्स (कुल 56 का मास्टर सेट) */}
-            <div style={{ marginTop: '15px', display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
-              {['Tip','Wallet','Priv','Vol','Set','Arch','Zoom','Foc','Rec','Sync','Bst','Prem','Rate','Shr','Info','Rpt','Help','Ext','Mic','Cam','Trn','Lnk','Sav','Del','Upd','Log','Pfl','G1','G2','G3','G4','G5','G6','G7','G8','G9','G10','S1','S2','S3','Add1','Add2','Add3','Extra'].map((f, i) => (
-                <button key={i} onClick={() => executeServerAction(f)} style={{ fontSize: '7px', padding: '5px', background:'#222', border:'none', color:'#fff' }}>{f}</button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </Layout>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 
-// स्टाइल्स वही हैं जो आपके कोड में थे
-const startBtn = { padding: '20px 40px', background: '#FFD700', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor:'pointer' };
-const premiumBtn = { background: '#FFD700', color: '#000', border: 'none', padding: '5px 10px', borderRadius: '15px', fontSize: '10px', fontWeight: 'bold' };
-const coinBtn = { background: '#fff', color: '#000', border: 'none', padding: '5px 10px', borderRadius: '15px', fontSize: '10px', fontWeight: 'bold' };
+// स्टाइल्स
+const containerStyle = { background: '#000', minHeight: '100vh', color: '#fff', padding: '10px' };
+const centerStyle = { textAlign: 'center', paddingTop: '30vh' };
+const videoCallLayout = { position: 'relative', height: '90vh' };
+const bigScreen = { width: '100%', height: '70%', background: '#222', borderRadius: '15px' };
+const smallScreen = { position: 'absolute', top: '10px', right: '10px', width: '80px', height: '120px', background: '#444', borderRadius: '10px' };
+const controlBar = { position: 'absolute', bottom: '20px', width: '100%', display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '5px' };
+const adBanner = { textAlign: 'center', padding: '10px', background: '#333', marginTop: '10px' };
+const startBtn = { padding: '15px 30px', background: '#FFD700', borderRadius: '30px', border: 'none', fontWeight: 'bold', display: 'block', margin: '20px auto' };
+const earnBtn = { background: 'none', border: '1px solid #fff', color: '#fff', padding: '10px', borderRadius: '20px' };
+const premiumBtn = { background: '#FFD700', color: '#000', border: 'none', padding: '5px', borderRadius: '5px', width: '100%', marginTop: '5px' };
+const btnStyle = { padding: '10px', background: '#444', border: 'none', color: '#fff', borderRadius: '5px' };
+const redBtn = { padding: '10px', background: '#ff3b30', border: 'none', color: '#fff', borderRadius: '5px' };
+const extraGrid = { position: 'absolute', bottom: '80px', background: '#222', padding: '10px', display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '5px', width: '100%' };
+const smallBtn = { fontSize: '9px', background: '#111', color: '#fff', border: 'none', padding: '5px' };
 
 export default VideoCallHub;
