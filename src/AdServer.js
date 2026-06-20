@@ -5,7 +5,6 @@ import * as AdProvider from './AdProvider.jsx';
 import * as BoostDashboard from './BoostDashboard.jsx';
 import * as BoostConfig from './BoostConfig.js';
 import * as PromotionForm from './PromotionForm.jsx';
-// 'GiftServer' का इम्पोर्ट यहाँ से हटा दिया गया है ताकि लूप न बने
 
 export const AdServer = {
   // ---------------------------------------------------------
@@ -21,9 +20,9 @@ export const AdServer = {
       case 'boost-config': return BoostConfig.getRates(data.tier);
       case 'promotion': return PromotionForm.submitPromo(data);
       case 'gift': 
-        // यहाँ हमने डायनामिक इम्पोर्ट का उपयोग किया है ताकि एरर न आए
-        const GiftServer = await import('./GiftServer.js');
-        return GiftServer.processGift(data.senderId, data.receiverId, data.giftKey, data.countryTier, AdServer);
+        // यहाँ फाइल का नाम सही करके GiftService.js कर दिया गया है
+        const GiftService = await import('./GiftService.js');
+        return GiftService.processGift(data.senderId, data.receiverId, data.giftKey, data.countryTier, AdServer);
       default: return null;
     }
   },
@@ -45,7 +44,6 @@ export const AdServer = {
 
   // 4. नया हेल्पर जो गिफ्ट सर्वर को बोनस चेक करने में मदद करेगा
   getGiftBonusMultiplier: async () => {
-    // यहाँ आप अपना बोनस लॉजिक लिख सकते हैं
     return 1.0; 
   }
 };
