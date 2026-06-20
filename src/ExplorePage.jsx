@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataServer } from './DataServer.js'; 
-import { PriceHelper } from './PriceHelper.js';
+// यह इम्पोर्ट लाइन अब सही है, जो सारे फंक्शन्स को PriceHelper नाम के अंदर ले आएगी
+import * as PriceHelper from './PriceHelper.js';
 
 const ExplorePage = () => {
   const navigate = useNavigate();
   const [showAll, setShowAll] = useState(false);
 
-  // सभी 34 फीचर्स की पूरी लिस्ट
+  // सभी 34 फीचर्स की लिस्ट (आपके कोड से ली गई है, कोई फीचर नहीं हटाया गया)
   const allFeatures = [
     { name: "🚀 Promote", path: "/promote" }, { name: "🔥 Boosting", path: "/boost" },
     { name: "💖 Premium", path: "/premium" }, { name: "💬 Messenger", path: "/messenger" },
@@ -28,12 +29,12 @@ const ExplorePage = () => {
     { name: "📱 Mobile", path: "/mob" }, { name: "💾 Backup", path: "/back" }
   ];
 
-  // फीचर हैंडलर: जो सीधे सर्वर से बात करेगा
   const handleFeatureClick = async (feature) => {
-    // 1. DataServer से फीचर का स्टेटस चेक
     const status = await DataServer.checkFeature(feature.path);
-    // 2. PriceHelper से दाम/लॉजिक चेक (अगर जरूरी हो)
-    const price = PriceHelper.getPrice(feature.name);
+    
+    // यहाँ PriceHelper से सही फंक्शन का उपयोग किया गया है जो आपके कोड में मौजूद है
+    const priceData = PriceHelper.getGlobalPricing('IN', 'local', 'starter');
+    const price = priceData.displayPrice;
     
     console.log(`Action: ${feature.name}, Status: ${status}, Price: ${price}`);
     navigate(feature.path);
@@ -46,7 +47,7 @@ const ExplorePage = () => {
         <button onClick={() => setShowAll(!showAll)} style={{ fontSize: '24px', border: 'none', background: 'none' }}>⋮</button>
       </header>
 
-      {/* मुख्य 4 बटन (जो ऊपर दिखेंगे) */}
+      {/* मुख्य 4 बटन */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
         {allFeatures.slice(0, 4).map(f => (
           <button key={f.name} onClick={() => handleFeatureClick(f)} style={btnStyle}>
@@ -55,7 +56,7 @@ const ExplorePage = () => {
         ))}
       </div>
 
-      {/* थ्री-डॉट मेनू के अंदर बाकी 30 फीचर्स */}
+      {/* बाकी 30 फीचर्स */}
       {showAll && (
         <div style={{ marginTop: '20px', borderTop: '2px solid #eee' }}>
           {allFeatures.slice(4).map(f => (
