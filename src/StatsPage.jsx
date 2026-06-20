@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout.jsx';
 import { useApi } from './ApiContext.jsx';
-import { getLocalizedPrice } from './PriceHelper.js'; // मास्टर इंजन से करेंसी ली
+// अब हमने पूरी फाइल को import * किया है ताकि सारे फंक्शन्स सही से मिलें
+import * as PriceHelper from './PriceHelper.js'; 
 
 const StatsPage = () => {
   const { serverUrl } = useApi();
-  const [stats, setStats] = useState({ views: 0, followers: 0, likes: 0, earnings: 0 });
+  const [stats, setStats] = useState({ views: 0, followers: 0, likes: 0, earnings: 10000 }); // टेस्टिंग के लिए 10000 अर्निंग रखी है
 
-  // सर्वर से असली डेटा खींचने के लिए
   useEffect(() => {
-    // यहाँ आप अपने सर्वर से रियल टाइम डेटा लाएंगे
-    // setStats(data);
+    // यहाँ डेटा लोड लॉजिक आएगा
   }, [serverUrl]);
 
-  // करेंसी के हिसाब से अर्निंग दिखाना
-  const localizedEarnings = getLocalizedPrice('IN', stats.earnings); 
+  // अपडेट: हमने PriceHelper.getGlobalPricing का इस्तेमाल किया है
+  // 'IN' (India), 'local' (scope), और 'starter' (category) के आधार पर डेटा लिया
+  const localizedEarnings = PriceHelper.getGlobalPricing('IN', 'local', 'starter'); 
 
   return (
     <Layout>
@@ -29,6 +29,7 @@ const StatsPage = () => {
           
           {/* मास्टर अर्निंग डिस्प्ले */}
           <div style={cardStyle('#fffaf0')}>
+            {/* यहाँ localizedEarnings.displayPrice सही से काम करेगा */}
             <h3>{localizedEarnings.displayPrice}</h3>
             <p>Total Earnings</p>
           </div>
