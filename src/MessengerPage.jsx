@@ -1,55 +1,58 @@
-import React, { useState } from 'react';
-import { VideoServer } from './VideoServer.js'; // मास्टर सर्वर
-import { AdServer } from './AdServer.js';       // विज्ञापन और कॉइन लॉजिक
-import { PaymentServer } from './PaymentServer.js'; // प्रीमियम
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { VideoServer } from './VideoServer.js';
+import { AdServer } from './AdServer.js';
+import { PaymentServer } from './PaymentServer.js';
 
 const MessengerPage = () => {
+  const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
-  const [inCall, setInCall] = useState(false);
+  const [followers, setFollowers] = useState([]); // प्रोफाइल से डेटा यहाँ आएगा
 
-  // 12 मुख्य बटन जो स्क्रीन पर दिखेंगे
-  const mainFeatures = [
-    { name: 'Video', icon: '🎥' }, { name: 'Gift', icon: '🎁' }, 
-    { name: 'Trans', icon: '🔊' }, { name: 'Filter', icon: '✨' }, 
-    { name: 'Block', icon: '🚫' }, { name: 'Prem', icon: '👑' }, 
-    { name: 'Earn', icon: '💰' }, { name: 'Ads', icon: '📢' }
+  // 62 फीचर्स की पूरी लिस्ट
+  const allFeatures = [
+    'AI', 'Mod', 'AdS', 'Prem', 'Ana', 'Loc', 'Reg', 'Glob', 'Girl', 'Sync',
+    'Set', 'VidCall', 'Cam', 'Mic', 'Tel', 'Save', 'Cloud', 'Auth', 'Noti', 'Theme',
+    'Note', 'File', 'Link', 'Map', 'Cal', 'Calc', 'Timer', 'Stop', 'Flash', 'Temp',
+    'Auto', 'Fly', 'Food', 'Game', 'Music', 'Video', 'Read', 'Edit', 'Plug', 'Pack',
+    'Fire', 'Drone', 'Signal', 'Bulb', 'Lock', 'AC', 'Water', 'Power', 'Wifi', 'Gifts',
+    'Ad-Free', 'Ad-Sound', 'Watch-Earn', 'Filter', 'Trans', 'Block', 'Ads', 'Cloud', 'Auth', 'Noti', 'Ana', 'Mod'
   ];
 
-  // बटन क्लिक हैंडलर (जो सर्वर से सर्वर कॉल करेगा)
+  // स्क्रीन पर दिखने वाले 12 मुख्य बटन
+  const mainFeatures = ['AI', 'Gift', 'VidCall', 'Ad-Free', 'Ad-Sound', 'Watch-Earn', 'Loc', 'Prem', 'Earn', 'Ads', 'Cam', 'Mic'];
+
   const handleFeature = (feature) => {
-    if (feature === 'Earn') AdServer.showRewardedAd();
-    else if (feature === 'Prem') PaymentServer.openPremium();
-    else VideoServer.execute(feature); // बाकी सारे फीचर्स सर्वर के पास जाएंगे
+    if (feature === 'Watch-Earn') AdServer.showRewardedAd();
+    else if (feature === 'Prem' || feature === 'Ad-Free') PaymentServer.openPremium();
+    else if (feature === 'VidCall') navigate('/video-call'); // वीडियो कॉल फाइल से जुड़ गया
+    else VideoServer.execute(feature); // बाकी सब मास्टर सर्वर पर
   };
 
   return (
     <div style={containerStyle}>
-      {/* विज्ञापन बैनर */}
-      <div style={adBanner}>Google AdSense / Company Promo</div>
-
-      {/* वीडियो कॉल स्क्रीन (Active) */}
-      {inCall && (
-        <div style={videoScreen}>
-          <div style={remoteVideo}></div>
-          <button style={hangupBtn} onClick={() => { VideoServer.execute('EndCall'); setInCall(false); }}>🔴</button>
+      {/* 1. प्रोफाइल और फॉलोअर्स लिस्ट (Profile Connection) */}
+      <div style={profileSection}>
+        <div style={userInfo}>👤 Mohan Raja | Status: Online</div>
+        <div style={listArea}>
+          {/* यहाँ से प्रोफाइल का बायो और फॉलोअर्स का डेटा लोड होगा */}
+          <div style={userCard}>Follower 1: India 🇮🇳 (View Profile)</div>
         </div>
-      )}
+      </div>
 
-      {/* मुख्य कंट्रोल्स (स्क्रीन पर 8-12 बटन) */}
+      {/* 2. मुख्य 12 कंट्रोल बटन */}
       <div style={controlBar}>
-        {mainFeatures.map((f, i) => (
-          <button key={i} style={mainBtn} onClick={() => handleFeature(f.name)}>
-            {f.icon}
-          </button>
+        {mainFeatures.map((f) => (
+          <button key={f} style={mainBtn} onClick={() => handleFeature(f)}>{f}</button>
         ))}
         <button style={dotsBtn} onClick={() => setShowMore(!showMore)}>⋮</button>
       </div>
 
-      {/* मोर फीचर्स (Nested) */}
+      {/* 3. मोर फीचर्स (बाकी 50 फीचर्स यहाँ हैं) */}
       {showMore && (
         <div style={nestedGrid}>
-          {['AI', 'Mod', 'Ana', 'Loc', 'Save', 'Cloud', 'Auth', 'Noti'].map((f, i) => (
-            <button key={i} style={subBtn} onClick={() => VideoServer.execute(f)}>{f}</button>
+          {allFeatures.filter(f => !mainFeatures.includes(f)).map((f) => (
+            <button key={f} style={subBtn} onClick={() => handleFeature(f)}>{f}</button>
           ))}
         </div>
       )}
@@ -57,16 +60,16 @@ const MessengerPage = () => {
   );
 };
 
-// स्टाइल्स वही प्रोफेशनल डार्क थीम में
-const containerStyle = { background: '#000', minHeight: '100vh', color: '#fff' };
-const adBanner = { height: '50px', background: '#222', textAlign: 'center', fontSize: '10px', paddingTop: '10px' };
-const videoScreen = { height: '60vh', background: '#111', position: 'relative' };
-const remoteVideo = { height: '100%', width: '100%' };
-const hangupBtn = { position: 'absolute', bottom: '20px', left: '45%', background: 'red', border: 'none', padding: '15px', borderRadius: '50%' };
-const controlBar = { position: 'fixed', bottom: '10px', width: '96%', left: '2%', display: 'grid', gridTemplateColumns: 'repeat(9, 1fr)', gap: '4px' };
-const mainBtn = { background: '#222', border: '1px solid #444', padding: '10px 5px', fontSize: '12px', borderRadius: '5px', color: '#fff' };
-const dotsBtn = { background: '#FFD700', border: 'none', padding: '10px', borderRadius: '5px', fontWeight: 'bold' };
-const nestedGrid = { position: 'fixed', bottom: '70px', width: '96%', left: '2%', background: '#111', padding: '10px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '5px' };
-const subBtn = { background: '#333', color: '#fff', border: 'none', padding: '10px', fontSize: '9px' };
+// स्टाइल्स
+const containerStyle = { background: '#000', minHeight: '100vh', color: '#fff', paddingBottom: '120px' };
+const profileSection = { padding: '20px', borderBottom: '1px solid #333' };
+const userInfo = { fontWeight: 'bold', marginBottom: '10px' };
+const listArea = { height: '30vh', overflowY: 'auto' };
+const userCard = { padding: '10px', background: '#222', marginBottom: '5px', borderRadius: '5px' };
+const controlBar = { position: 'fixed', bottom: '10px', width: '96%', left: '2%', display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '4px' };
+const mainBtn = { background: '#333', border: 'none', padding: '10px', fontSize: '9px', color: '#fff', borderRadius: '5px' };
+const dotsBtn = { background: '#FFD700', border: 'none', padding: '10px', borderRadius: '5px', color: '#000' };
+const nestedGrid = { position: 'fixed', bottom: '80px', left: '2%', width: '96%', background: '#111', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px', padding: '10px', maxHeight: '200px', overflowY: 'scroll', border: '1px solid #444' };
+const subBtn = { background: '#444', color: '#fff', border: 'none', padding: '8px', fontSize: '8px' };
 
 export default MessengerPage;
