@@ -1,30 +1,52 @@
-// प्रोफेशनल मैसेंजर पेज लेआउट
-<div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#f4f4f4' }}>
-  
-  {/* 1. प्रोफेशनल हेडर - यहाँ थ्री-डॉट और वीडियो कॉल बटन हैं */}
-  <header style={{ padding: '15px', background: '#fff', display: 'flex', alignItems: 'center', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-    <button onClick={goBack}>←</button>
-    <h3 style={{ margin: '0 15px', flex: 1 }}>{activeChat.name}</h3>
-    <button onClick={toggleMenu}>⋮</button>
-    <button onClick={startVideoCall}>🎥</button>
-  </header>
+import React, { useState, useEffect } from 'react';
+import { VideoServer } from './VideoServer.js'; // आपका असली सर्वर
+import { AdServer } from './AdServer.js';       // विज्ञापन सर्वर
+import { PaymentServer } from './PaymentServer.js'; // पेमेंट सर्वर
+import { ProfileService } from './ProfileService.js'; // प्रोफाइल कनेक्शन
 
-  {/* 2. विज्ञापन डैशबोर्ड (Ad-Dashboard) - यहीं पॉप-अप्स आएंगे */}
-  <div style={{ background: '#fff9c4', padding: '10px', textAlign: 'center', fontSize: '13px', borderBottom: '1px solid #ffe082' }}>
-    📢 [GLOBAL] Ad: Professional Business Promotion
-  </div>
+const MessengerPage = () => {
+  const [profileData, setProfileData] = useState(null);
+  const [activeChat, setActiveChat] = useState(null);
+  const [showTools, setShowTools] = useState(false);
 
-  {/* 3. मुख्य चैट एरिया (यहाँ मैसेज आएंगे) */}
-  <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-    {/* यहाँ मैसेज चैट्स रेंडर होंगे */}
-  </div>
+  // प्रोफाइल डेटा लोड करना
+  useEffect(() => {
+    setProfileData(ProfileService.getUserData());
+  }, []);
 
-  {/* 4. टूलबार (AI, Gift, Location आदि) - ये बटन्स अब यहीं नीचे दिखेंगे */}
-  <div style={{ background: '#fff', padding: '10px', display: 'flex', gap: '10px', borderTop: '1px solid #ddd' }}>
-    <button>🤖 AI</button>
-    <button>🎁 Gift</button>
-    <button>📍 Loc</button>
-    <input type="text" placeholder="Type a message..." style={{ flex: 1, padding: '8px', borderRadius: '20px', border: '1px solid #ccc' }} />
-    <button style={{ background: '#007bff', color: '#fff', borderRadius: '50%', width: '40px' }}>➤</button>
-  </div>
-</div>
+  const allFeatures = ['AI', 'Mod', 'AdS', 'Prem', 'Ana', 'Loc', 'Reg', 'Glob', 'Girl', 'Sync', 'Set', 'VidCall', 'Cam', 'Mic', 'Tel', 'Save', 'Cloud', 'Auth', 'Noti', 'Theme', 'Note', 'File', 'Link', 'Map', 'Cal', 'Calc', 'Timer', 'Stop', 'Flash', 'Temp', 'Auto', 'Fly', 'Food', 'Game', 'Music', 'Video', 'Read', 'Edit', 'Plug', 'Pack', 'Fire', 'Drone', 'Signal', 'Bulb', 'Lock', 'AC', 'Water', 'Power', 'Wifi', 'Gifts', 'Ad-Free', 'Ad-Sound', 'Watch-Earn', 'Filter', 'Trans', 'Block', 'Ads'];
+
+  return (
+    <div style={{ background: '#fff', minHeight: '100vh', padding: '10px' }}>
+      {/* 1. प्रोफाइल सेक्शन */}
+      <div style={{ padding: '15px', background: '#f8f8f8', marginBottom: '10px', borderRadius: '10px' }}>
+        <h3>{profileData ? profileData.name : 'Loading...'}</h3>
+      </div>
+
+      {/* 2. मुख्य डैशबोर्ड (जो आपने स्क्रीनशॉट में दिखाया था) */}
+      {!activeChat ? (
+        <div>
+          <h4>Messenger Tools (59 Total)</h4>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+            {allFeatures.map(f => (
+              <button key={f} onClick={() => VideoServer.execute(f)} style={{ padding: '10px', fontSize: '10px', border: '1px solid #ddd' }}>
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        // 3. एक्टिव चैट डैशबोर्ड
+        <div>
+          <button onClick={() => setActiveChat(null)}>Back</button>
+          <div style={{ background: '#fff3cd', padding: '10px' }}>Ads Dashboard</div>
+          <input type="text" placeholder="Message..." />
+          <button onClick={() => VideoServer.execute('Gifts')}>Gift</button>
+          <button onClick={() => VideoServer.execute('AI')}>AI</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MessengerPage;
