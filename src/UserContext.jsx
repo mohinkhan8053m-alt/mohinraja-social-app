@@ -4,6 +4,7 @@ import { AuthServer } from './AuthServer.js';
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  // आपका ओरिजिनल यूजर डेटा स्ट्रक्चर
   const [user, setUser] = useState({
     userId: 'moin_raja_10',
     name: 'Moin Raja',
@@ -24,18 +25,20 @@ export const UserProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
 
+  // मास्टर सिंक फंक्शन: यह पूरी ऐप को डेटा देता है
   const syncUserData = async () => {
     try {
       setLoading(true);
-      // यहाँ AuthServer का चेक लगाया है ताकि एरर न आए
-      if (typeof AuthServer !== 'undefined' && AuthServer.executeAction) {
+      // चेक करें कि AuthServer और उसका मेथड मौजूद है या नहीं
+      if (AuthServer && typeof AuthServer.executeAction === 'function') {
         const serverData = await AuthServer.executeAction('SYNC_USER_DATA');
         if (serverData) {
           setUser(prev => ({ ...prev, ...serverData }));
         }
       }
     } catch (error) {
-      console.warn("[UserContext]: Server sync skipped, using local profile.");
+      // अगर सर्वर से कनेक्शन नहीं हो पाया तो भी ऐप क्रैश नहीं होगी
+      console.error("[UserContext Error]: Sync failed, using default values.", error);
     } finally {
       setLoading(false);
     }
@@ -45,6 +48,7 @@ export const UserProvider = ({ children }) => {
     syncUserData();
   }, []);
 
+  // बाकी फाइलों के लिए अपडेट फंक्शन
   const updateUser = (newData) => {
     setUser(prev => ({ ...prev, ...newData }));
   };
