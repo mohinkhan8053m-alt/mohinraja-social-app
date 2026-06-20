@@ -7,7 +7,6 @@ const MessengerPage = () => {
   const [activeChat, setActiveChat] = useState(null);
   const [showTools, setShowTools] = useState(false);
 
-  // ये रहे आपके पूरे 62 फीचर्स जो थ्री-डॉट में रहेंगे
   const allFeatures = [
     'AI', 'Mod', 'AdS', 'Prem', 'Ana', 'Loc', 'Reg', 'Glob', 'Girl', 'Sync',
     'Set', 'VidCall', 'Cam', 'Mic', 'Tel', 'Save', 'Cloud', 'Auth', 'Noti', 'Theme',
@@ -17,48 +16,55 @@ const MessengerPage = () => {
     'Ad-Free', 'Ad-Sound', 'Watch-Earn', 'Filter', 'Trans', 'Block', 'Ads'
   ];
 
+  const followers = [
+    { id: 1, name: "Mohan Raja" },
+    { id: 2, name: "Rahul Singh" }
+  ];
+
+  // यह आपका Chat View है
   if (activeChat) {
     return (
-      <div style={{height: '100vh', display: 'flex', flexDirection: 'column', background: '#fff'}}>
-        {/* चैट हेडर */}
-        <div style={{padding: '15px', display: 'flex', gap: '10px', borderBottom: '1px solid #eee'}}>
+      <div style={{ background: '#fff', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: '15px', background: '#f8f8f8', display: 'flex', alignItems: 'center', borderBottom: '1px solid #ddd' }}>
           <button onClick={() => setActiveChat(null)}>⬅</button>
-          <span style={{flex: 1, fontWeight: 'bold'}}>{activeChat.name}</span>
-          <button onClick={() => setShowTools(!showTools)}>⋮</button> {/* थ्री-डॉट यहाँ है */}
-          <button onClick={() => navigate('/video-call')}>🎥</button>
+          <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>{activeChat.name}</span>
+          <div style={{ marginLeft: 'auto' }}>
+            <button onClick={() => setShowTools(!showTools)}>⋮</button>
+            <button onClick={() => navigate('/video-call')}>🎥</button>
+          </div>
         </div>
 
-        {/* चैट बॉडी जहाँ विज्ञापन और मैसेज आएंगे */}
-        <div style={{flex: 1, padding: '10px'}}>
-           <div style={{background: '#fff3cd', padding: '10px', marginBottom: '10px'}}>Ad: Promotion/Boosting</div>
-           <p>Start messaging...</p>
-        </div>
-
-        {/* थ्री-डॉट खोलने पर पूरे 62 फीचर्स का ग्रिड */}
         {showTools && (
-          <div style={{position: 'absolute', top: '60px', width: '100%', background: '#fff', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px', padding: '10px', borderBottom: '1px solid #ddd', maxHeight: '300px', overflowY: 'scroll'}}>
-            {allFeatures.map(f => (
-              <button key={f} onClick={() => VideoServer.execute(f)} style={{fontSize: '9px', padding: '5px'}}>{f}</button>
-            ))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px', padding: '10px', background: '#eee' }}>
+            {allFeatures.map(f => <button key={f} onClick={() => VideoServer.execute(f)} style={{ fontSize: '10px' }}>{f}</button>)}
           </div>
         )}
 
-        {/* चैट फुटर - मुख्य बटन */}
-        <div style={{padding: '10px', display: 'flex', gap: '5px', borderTop: '1px solid #eee'}}>
-          <button onClick={() => VideoServer.execute('AI')}>🤖 AI</button>
-          <button onClick={() => VideoServer.execute('Gifts')}>🎁 Gift</button>
-          <button onClick={() => VideoServer.execute('Loc')}>📍 Loc</button>
-          <input type="text" style={{flex: 1, border: '1px solid #ccc', borderRadius: '20px'}} />
+        <div style={{ flex: 1, padding: '10px' }}>
+          <div style={{ background: '#fff3cd', padding: '5px', fontSize: '12px' }}>Ad: Promotion/Boosting</div>
+        </div>
+
+        <div style={{ padding: '10px', display: 'flex', gap: '5px', borderTop: '1px solid #ddd' }}>
+          <button onClick={() => VideoServer.execute('AI')}>🤖</button>
+          <button onClick={() => VideoServer.execute('Gifts')}>🎁</button>
+          <button onClick={() => VideoServer.execute('Loc')}>📍</button>
+          <input style={{ flex: 1 }} type="text" />
           <button>Send</button>
         </div>
       </div>
     );
   }
 
-  // मेन लिस्ट स्क्रीन
+  // यह आपका Main List View है
   return (
-    <div style={{padding: '20px'}}>
-      {/* यहाँ लिस्ट दिखेगी */}
+    <div style={{ padding: '15px' }}>
+      <h3>Recent Chats</h3>
+      {followers.map(user => (
+        <div key={user.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '15px', borderBottom: '1px solid #eee' }}>
+          <span>{user.name}</span>
+          <button onClick={() => setActiveChat(user)}>Message</button>
+        </div>
+      ))}
     </div>
   );
 };
