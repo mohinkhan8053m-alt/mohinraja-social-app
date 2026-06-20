@@ -2,24 +2,31 @@ export const AuthServer = {
   // 1. ये वो बटन हैं जो अभी के अभी काम करेंगे (Local-Active)
   directFeatures: ["Dark Mode", "Cache Clear", "Version Info", "Help", "Privacy", "Text Edit", "Language", "Report Bug", "Terms & Policy"],
 
+  // 2. लॉगिन फंक्शन - अब यह आपके लॉगिन बटन से जुड़ गया है
+  login: async (credentials) => {
+    console.log("Login Attempted with:", credentials);
+
+    // यहाँ सर्वर की जगह छोड़ी गई है (Server Integration Point)
+    /* 
+       जब आप अपना सर्वर लिंक डालेंगे, तो यहाँ fetch लगा देना:
+       const response = await fetch("https://api.yourdomain.com/login", { 
+         method: 'POST', body: JSON.stringify(credentials) 
+       });
+    */
+
+    // अभी के लिए इसे 'Local-Active' रखा है ताकि बटन काम करे
+    return { success: true, user: "Moin Raja", mode: 'SERVER_READY' };
+  },
+
   executeAction: async (featureName) => {
-    // अगर बटन 'Direct' लिस्ट में है तो यहीं से चल जाएगा
     if (AuthServer.directFeatures.includes(featureName)) {
       console.log(`🚀 [LOCAL]: ${featureName} अभी चल रहा है!`);
-      // यहाँ तुम अपना लॉजिक लिख सकते हो, जैसे:
-      if (featureName === "Dark Mode") { /* Dark mode toggle logic */ }
       return { success: true, mode: 'LOCAL' };
     }
-
-    // अगर सर्वर वाला बटन है तो यहाँ रुक जाएगा
-    console.log(`📡 [SERVER]: ${featureName} के लिए सर्वर कनेक्शन चाहिए...`);
-    /* यहाँ अपना API URL डालना है:
-       const res = await fetch("https://api.yourdomain.com/...", { ... });
-    */
+    console.log(`📡 [SERVER]: ${featureName} के लिए सर्वर कनेक्शन का इंतज़ार...`);
     return { success: true, mode: 'SERVER' };
   },
 
-  // ये रहे तुम्हारे पूरे 86 फीचर्स
   getFeatures: () => [
     "Wallet", "Bank", "Stats", "Posts", "Live", "Ads", "Help", "Privacy", "Security", 
     "AI Translate", "Gift", "Location", "Block", "Report", "Language", "Activity",
