@@ -5,7 +5,7 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ये 6 बटन तुम्हारे लिए फिक्स कर दिए हैं
+  // ये रहे आपके 6 फिक्स बटन
   const navItems = [
     { name: 'Home', icon: '🏠', path: '/home' },
     { name: 'Explore', icon: '🧭', path: '/explore' },
@@ -19,27 +19,35 @@ const Layout = ({ children }) => {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fcfcfc' }}>
       
       {/* मुख्य कंटेंट वाला हिस्सा */}
-      <main style={{ flex: 1, paddingBottom: '80px' }}>
+      <main style={{ flex: 1, paddingBottom: '90px' }}>
         {children}
       </main>
 
-      {/* नीचे वाली 6 बटनों की पट्टी - हमेशा के लिए फिक्स */}
+      {/* नीचे वाली 6 बटनों की पट्टी */}
       <div style={{ 
         position: 'fixed', bottom: 0, left: 0, width: '100%', 
-        height: '70px', background: '#000', display: 'flex', 
+        height: '80px', background: '#000', display: 'flex', 
         justifyContent: 'space-around', alignItems: 'center',
         borderTop: '2px solid #deff9a', zIndex: 9999,
         boxShadow: '0 -5px 15px rgba(0,0,0,0.3)'
       }}>
         {navItems.map((item) => (
-          <div key={item.name} onClick={() => navigate(item.path)} 
-               style={{ 
-                 color: location.pathname === item.path ? '#deff9a' : '#aaa', 
-                 fontSize: '12px', textAlign: 'center', cursor: 'pointer',
-                 display: 'flex', flexDirection: 'column', alignItems: 'center'
-               }}>
+          <div 
+            key={item.name} 
+            onClick={() => navigate(item.path)} 
+            style={{ 
+              color: location.pathname === item.path ? '#deff9a' : '#aaa', 
+              fontSize: '12px', 
+              textAlign: 'center', 
+              cursor: 'pointer',
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center',
+              width: '16%'
+            }}
+          >
             <span style={{ fontSize: '24px' }}>{item.icon}</span>
-            <span>{item.name}</span>
+            <span style={{ marginTop: '4px' }}>{item.name}</span>
           </div>
         ))}
       </div>
