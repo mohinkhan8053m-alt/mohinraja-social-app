@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { AuthServer } from './AuthServer.js'; // 👈 मास्टर हब से जुड़ा
+import { AuthServer } from './AuthServer.js';
 
 export const UserContext = createContext();
 
@@ -24,21 +24,19 @@ export const UserProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
 
-  // अब यह Sync सीधे AuthServer के जरिए होगा
   const syncUserData = async () => {
     try {
       setLoading(true);
-      console.log("[USER CONTEXT]: Syncing with AuthServer...");
-      
-      // यहाँ AuthServer से डेटा आएगा
-      const serverData = await AuthServer.executeAction('SYNC_USER_DATA');
-      
-      if(serverData) {
-        setUser(prev => ({ ...prev, ...serverData }));
+      // यहाँ AuthServer का चेक लगाया है ताकि एरर न आए
+      if (typeof AuthServer !== 'undefined' && AuthServer.executeAction) {
+        const serverData = await AuthServer.executeAction('SYNC_USER_DATA');
+        if (serverData) {
+          setUser(prev => ({ ...prev, ...serverData }));
+        }
       }
-      setLoading(false);
     } catch (error) {
-      console.error("Sync Failed:", error);
+      console.warn("[UserContext]: Server sync skipped, using local profile.");
+    } finally {
       setLoading(false);
     }
   };
