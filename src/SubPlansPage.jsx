@@ -1,64 +1,73 @@
-// PremiumPurchase.js - 3-टियर मास्टर इंजन (प्रीमियम + रीजनल + इंटरनेट)
+// SubPlansPage.jsx - अपडेटेड मास्टर डेटा और पेमेंट लॉजिक के साथ
 
-export const getCountryPricing = (countryCode) => {
-  // 1. प्रीमियम देश
-  const premiumData = {
-    'IN': { mult: 1, name: 'इंडिया' },
-    'SA': { mult: 2, name: 'सऊदी अरब' },
-    'AE': { mult: 2, name: 'यूएई (दुबई)' },
-    'SG': { mult: 3, name: 'सिंगापुर' },
-    'CA': { mult: 4, name: 'कनाडा' },
-    'US': { mult: 5, name: 'अमेरिका' },
-    'EU': { mult: 6, name: 'यूरोपीय संघ' },
-    'GB': { mult: 7, name: 'यूके' },
-    'JO': { mult: 7, name: 'जॉर्डन' },
-    'BH': { mult: 8, name: 'बहरीन' },
-    'OM': { mult: 8, name: 'ओमान' },
-    'KW': { mult: 9, name: 'कुवैत' }
+import React from 'react';
+import { PaymentServer } from './PaymentServer.js';
+
+const SubPlansPage = ({ countryCode = 'IN' }) => {
+  
+  // 1. मास्टर प्राइसिंग डेटा (सभी 26+ देश यहाँ हैं)
+  const getPricingData = (code) => {
+    const data = {
+      // प्रीमियम (11 देश)
+      'SA': { small: 598, med: 1598, large: 2998, coins: 40, name: 'सऊदी अरब' },
+      'AE': { small: 598, med: 1598, large: 2998, coins: 40, name: 'यूएई (दुबई)' },
+      'SG': { small: 897, med: 2397, large: 4497, coins: 60, name: 'सिंगापुर' },
+      'CA': { small: 1196, med: 3196, large: 5996, coins: 80, name: 'कनाडा' },
+      'US': { small: 1495, med: 3995, large: 7495, coins: 100, name: 'अमेरिका' },
+      'EU': { small: 1794, med: 4794, large: 8994, coins: 120, name: 'यूरोपीय संघ' },
+      'GB': { small: 2093, med: 5593, large: 10493, coins: 140, name: 'यूके' },
+      'JO': { small: 2093, med: 5593, large: 10493, coins: 140, name: 'जॉर्डन' },
+      'BH': { small: 2392, med: 6392, large: 11992, coins: 160, name: 'बहरीन' },
+      'OM': { small: 2392, med: 6392, large: 11992, coins: 160, name: 'ओमान' },
+      'KW': { small: 2691, med: 7191, large: 13491, coins: 180, name: 'कुवैत' },
+      // रीजनल (12 देश)
+      'NP': { small: 329, med: 879, large: 1649, coins: 22, name: 'नेपाल' },
+      'LK': { small: 329, med: 879, large: 1649, coins: 22, name: 'श्रीलंका' },
+      'BD': { small: 329, med: 879, large: 1649, coins: 22, name: 'बांग्लादेश' },
+      'PH': { small: 359, med: 959, large: 1799, coins: 24, name: 'फिलीपींस' },
+      'ID': { small: 359, med: 959, large: 1799, coins: 24, name: 'इंडोनेशिया' },
+      'VN': { small: 389, med: 1039, large: 1949, coins: 26, name: 'वियतनाम' },
+      'TH': { small: 389, med: 1039, large: 1949, coins: 26, name: 'थाईलैंड' },
+      'BR': { small: 419, med: 1119, large: 2099, coins: 28, name: 'ब्राजील' },
+      'ZA': { small: 419, med: 1119, large: 2099, coins: 28, name: 'साउथ अफ्रीका' },
+      'MY': { small: 449, med: 1199, large: 2249, coins: 30, name: 'मलेशिया' },
+      'EG': { small: 449, med: 1199, large: 2249, coins: 30, name: 'मिस्र' },
+      'KE': { small: 449, med: 1199, large: 2249, coins: 30, name: 'केन्या' },
+      // इंडिया और अन्य (7 देश)
+      'IN': { small: 299, med: 799, large: 1499, coins: 20, name: 'इंडिया' },
+      'PK': { small: 299, med: 799, large: 1499, coins: 20, name: 'पाकिस्तान' },
+      'NG': { small: 299, med: 799, large: 1499, coins: 20, name: 'नाइजीरिया' },
+      'AR': { small: 299, med: 799, large: 1499, coins: 20, name: 'अर्जेंटीना' },
+      'IR': { small: 299, med: 799, large: 1499, coins: 20, name: 'ईरान' },
+      'AF': { small: 299, med: 799, large: 1499, coins: 20, name: 'अफगानिस्तान' },
+      'MM': { small: 299, med: 799, large: 1499, coins: 20, name: 'म्यांमार' }
+    };
+    return data[code] || data['IN'];
   };
 
-  // 2. रीजनल देश
-  const regionalData = {
-    'NP': { mult: 1.1, name: 'नेपाल' },
-    'LK': { mult: 1.1, name: 'श्रीलंका' },
-    'BD': { mult: 1.1, name: 'बांग्लादेश' },
-    'PH': { mult: 1.2, name: 'फिलीपींस' },
-    'ID': { mult: 1.2, name: 'इंडोनेशिया' },
-    'VN': { mult: 1.3, name: 'वियतनाम' },
-    'TH': { mult: 1.3, name: 'थाईलैंड' },
-    'BR': { mult: 1.4, name: 'ब्राजील' },
-    'ZA': { mult: 1.4, name: 'साउथ अफ्रीका' },
-    'MY': { mult: 1.5, name: 'मलेशिया' },
-    'EG': { mult: 1.5, name: 'मिस्र' },
-    'KE': { mult: 1.5, name: 'केन्या' }
-  };
+  const info = getPricingData(countryCode);
 
-  // डेटा चुनना
-  const info = premiumData[countryCode] || regionalData[countryCode] || { mult: 1.0, name: 'Global User' };
-
-  // 30/70 कमीशन लॉजिक
-  const calculateSplit = (coins) => ({
-    platformShare: Math.round(coins * 0.30),
-    hostShare: Math.round(coins * 0.70)
+  // 2. कमीशन हिसाब (30/70)
+  const getSplit = (price) => ({
+    platformShare: Math.round(price * 0.30),
+    hostShare: Math.round(price * 0.70)
   });
 
-  return {
-    countryName: info.name,
-    multiplier: info.mult,
-    coinsPerMinute: Math.round(20 * info.mult),
-    
-    // पैकेजेस
-    packages: {
-      small: { coins: 2000, price: Math.round(299 * info.mult), split: calculateSplit(2000) },
-      medium: { coins: 7000, price: Math.round(799 * info.mult), split: calculateSplit(7000) },
-      large: { coins: 15000, price: Math.round(1499 * info.mult), split: calculateSplit(15000) }
-    },
-
-    // स्ट्राइप पेमेंट गेटवे के लिए जगह
-    stripePayment: {
-      enabled: true,
-      provider: 'Stripe',
-      currency: countryCode === 'IN' ? 'INR' : 'USD'
-    }
-  };
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Poppins' }}>
+      <h2>Upgrade to Premium - {info.name}</h2>
+      {/* स्ट्राइप पेमेंट के लिए यहाँ ऑप्शंस दिए हैं */}
+      <button onClick={() => PaymentServer.processPayment('stripe', { price: info.small, split: getSplit(info.small) })}>
+        Pay Small ({info.small})
+      </button>
+      <button onClick={() => PaymentServer.processPayment('stripe', { price: info.med, split: getSplit(info.med) })}>
+        Pay Medium ({info.med})
+      </button>
+      <button onClick={() => PaymentServer.processPayment('stripe', { price: info.large, split: getSplit(info.large) })}>
+        Pay Large ({info.large})
+      </button>
+    </div>
+  );
 };
+
+export default SubPlansPage;
