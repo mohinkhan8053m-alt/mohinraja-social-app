@@ -16,7 +16,7 @@ const HomePage = () => {
   const handleCall = (creator) => {
     if (!AuthServer.isPremium()) {
       alert("ग्लोबल बात करने के लिए प्रीमियम लें!");
-      navigate('/sub-plans');
+      navigate('/plans'); // App.js के हिसाब से updated
     } else {
       navigate(`/pro-video-call/${creator.id}`);
     }
@@ -33,11 +33,11 @@ const HomePage = () => {
       {/* 1. Dashboard (Withdraw & Register) */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
         <button onClick={() => navigate('/bank')} style={withdrawBtn}>Withdraw 💸</button>
-        <button onClick={() => navigate('/register-creator')} style={regBtn}>🚀 Become a Creator</button>
+        <button onClick={() => navigate('/join-creator')} style={regBtn}>🚀 Become a Creator</button>
       </div>
 
       {/* 2. Premium & Ads */}
-      <button onClick={() => navigate('/sub-plans')} style={premiumBtn}>👑 Unlock Premium Global Access</button>
+      <button onClick={() => navigate('/plans')} style={premiumBtn}>👑 Unlock Premium Global Access</button>
       <button onClick={() => alert("Ad Loaded...")} style={adBtn}>🎁 Watch Ads to get 10 Free Coins</button>
 
       {/* 3. Global Search & Gender Filter */}
@@ -61,7 +61,7 @@ const HomePage = () => {
               
               <div style={{ display: 'flex', gap: '5px', marginTop: '10px' }}>
                 <button onClick={() => handleCall(c)} style={btn}>Call</button>
-                <button onClick={() => navigate(`/pro-messenger/${c.id}`)} style={msgBtn}>Chat</button>
+                <button onClick={() => navigate(`/pro-messenger`)} style={msgBtn}>Chat</button>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ const HomePage = () => {
   );
 };
 
-// Styles
+// Styles (आपके डिज़ाइन को वैसा ही रखा है)
 const filterBtn = (active) => ({ flex: 1, padding: '8px', border: 'none', borderRadius: '20px', background: active ? '#000' : '#ddd', color: active ? '#fff' : '#000', fontWeight: 'bold', cursor: 'pointer' });
 const withdrawBtn = { background: '#28a745', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px', flex: 1, fontWeight: 'bold', cursor: 'pointer' };
 const regBtn = { background: '#6f42c1', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px', flex: 1, fontWeight: 'bold', cursor: 'pointer' };
