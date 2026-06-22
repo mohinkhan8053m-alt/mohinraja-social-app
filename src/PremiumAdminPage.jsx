@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { PaymentServer } from './PaymentServer.js'; // अब यह पेमेंट सर्वर से जुड़ा है
+import { PaymentServer } from './PaymentServer.js';
 
 const PremiumAdminPage = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [financeData, setFinanceData] = useState({ earnings: 0, activeUsers: 0 });
 
   useEffect(() => {
-    // अब यह सीधे पेमेंट और फाइनेंस का मास्टर डेटा उठाएगा
-    PaymentServer.getAdminFinanceData().then(data => setFinanceData(data));
+    // हमने PaymentServer में 'getMasterData' बनाया है, उसका इस्तेमाल करें
+    // अगर फाइनेंस डेटा सर्वर से लेना है, तो PaymentServer में एक नया फंक्शन जोड़ें या fetch करें
+    fetch(`${PaymentServer.proServer}/api/admin/finance`)
+      .then(res => res.json())
+      .then(data => setFinanceData(data))
+      .catch(err => console.log("Finance Data Fetch Error:", err));
   }, []);
 
   const allFeatures = [
@@ -21,12 +25,16 @@ const PremiumAdminPage = () => {
 
   const handleSync = async () => {
     setIsSyncing(true);
-    // पेमेंट सर्वर के जरिए ट्रांजेक्शन और फीचर्स का मास्टर सिंक
-    const success = await PaymentServer.syncMasterFinanceLogs();
-    if (success) {
-      alert('✅ मोइन भाई, फाइनेंस और फीचर्स का मास्टर सिंक पूरा हुआ!');
-    } else {
-      alert('⚠️ सिंक फेल! पेमेंट सर्वर से कनेक्शन चेक करें।');
+    try {
+      const response = await fetch(`${PaymentServer.proServer}/api/admin/sync`, { method: 'POST' });
+      const result = await response.json();
+      if (result.success) {
+        alert('✅ मोइन भाई, फाइनेंस और फीचर्स का मास्टर सिंक पूरा हुआ!');
+      } else {
+        alert('⚠️ सिंक फेल! सर्वर रिस्पॉन्स चेक करें।');
+      }
+    } catch (error) {
+      alert('⚠️ कनेक्शन एरर! सर्वर से संपर्क नहीं हो पा रहा।');
     }
     setIsSyncing(false);
   };
@@ -38,7 +46,6 @@ const PremiumAdminPage = () => {
         <span style={{ fontSize: '10px', background: '#FFD700', padding: '5px 10px', borderRadius: '15px', fontWeight: 'bold' }}>Payment Master</span>
       </div>
 
-      {/* फाइनेंस डेटा (सीधे पेमेंट सर्वर से) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
         <div style={{ background: '#000', color: '#fff', padding: '15px', borderRadius: '15px' }}>
           <p style={{ margin: 0, fontSize: '12px', color: '#ccc' }}>Total Global Earnings</p>
@@ -50,7 +57,6 @@ const PremiumAdminPage = () => {
         </div>
       </div>
 
-      {/* फीचर्स ग्रिड और सिंक बटन वैसे ही रहेंगे */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
         {allFeatures.map(feature => (
           <button key={feature} style={featureBtnStyle}>{feature}</button>
