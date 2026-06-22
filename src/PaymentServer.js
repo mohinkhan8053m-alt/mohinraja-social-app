@@ -1,8 +1,8 @@
-// PaymentServer.js - मास्टर कंट्रोल हब (All-in-One Integration)
+// PaymentServer.js - मास्टर कंट्रोल हब (Updated & Fixed)
 
 import * as PriceEngine from './PriceHelper.js'; 
-import { getCountryPricing } from './PremiumPurchase.js'; 
-import { getGiftData } from './GiftSystem.js'; 
+import { getCountryPricing } from './PremiumAdminPage.jsx'; // फाइल नाम सही किया
+import { getGiftData } from './GiftService.js';             // फाइल नाम सही किया
 import { getCurrencyData } from './CurrencyConfig.js';
 import { TransactionLogger } from './TransactionLogger.js';
 
@@ -23,7 +23,7 @@ export const PaymentServer = {
     const response = await fetch(`${PaymentServer.proServer}/api/wallet/${userId}`);
     const data = await response.json(); 
     const giftInfo = getGiftData(); 
-    const totalCoins = data.callCoins + data.giftCoins;
+    const totalCoins = (data.callCoins || 0) + (data.giftCoins || 0);
     const hostShare = Math.round(totalCoins * 0.70); 
 
     return {
