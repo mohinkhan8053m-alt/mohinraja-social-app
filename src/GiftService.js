@@ -1,63 +1,71 @@
-// GiftService.js - फाइनल आत्मनिर्भर कोड (सब कुछ इसी फाइल के अंदर)
+// GiftService.js - 100% अपडेटेड मास्टर कोड
 
 const GIFT_CATALOG = {
-  'Common': { 'hi': 10, 'heart': 50, 'rose': 100, 'hug': 250, 'choco': 500 },
-  'Premium': { 'kiss': 800, 'bike': 1500, 'car': 3000, 'teddy': 4000, 'cake': 5000 },
-  'Luxury': { 'ring': 6000, 'castle': 12000, 'watch': 15000, 'diamond': 20000, 'yacht': 25000 },
-  'Elite': { 'jet': 50000, 'mansion': 75000, 'island': 100000, 'galaxy': 150000, 'universe': 250000 }
+  'Common': { 
+    'hi': { price: 10, anim: 'wave' }, 'heart': { price: 50, anim: 'heart-rain' }, 
+    'rose': { price: 100, anim: 'rose-shower' }, 'hug': { price: 250, anim: 'hug-anim' }, 'choco': { price: 500, anim: 'choco-fall' } 
+  },
+  'Premium': { 
+    'kiss': { price: 800, anim: 'kiss-fly' }, 'bike': { price: 1500, anim: 'bike-drive' }, 
+    'car': { price: 3000, anim: 'luxury-car' }, 'teddy': { price: 4000, anim: 'teddy-hug' }, 'cake': { price: 5000, anim: 'cake-celebrate' } 
+  },
+  'Luxury': { 
+    'ring': { price: 6000, anim: 'ring-shine' }, 'castle': { price: 12000, anim: 'castle-glow' }, 
+    'watch': { price: 15000, anim: 'watch-time' }, 'diamond': { price: 20000, anim: 'diamond-spark' }, 'yacht': { price: 25000, anim: 'yacht-sea' } 
+  },
+  'Elite': { 
+    'jet': { price: 50000, anim: 'jet-fly' }, 'mansion': { price: 75000, anim: 'mansion-grand' }, 
+    'island': { price: 100000, anim: 'island-wave' }, 'galaxy': { price: 150000, anim: 'galaxy-spin' }, 'universe': { price: 250000, anim: 'universe-boom' } 
+  }
 };
 
-// कमीशन कैलकुलेशन का अपना फंक्शन (30% कंपनी / 70% यूजर)
-const calculateCommission = (total) => {
-  return { 
-    platformShare: Math.round(total * 0.30), 
-    userShare: Math.round(total * 0.70) 
+const getMultiplier = (countryCode) => {
+  const m = {
+    'KW': 20, 'SA': 15, 'AE': 15, 'US': 15, 'EU': 15, 'GB': 15, 'JO': 15, 'BH': 15, 'OM': 15, 'SG': 12, 'CA': 10,
+    'MY': 6, 'EG': 6, 'KE': 6, 'BR': 5, 'ZA': 5, 'VN': 4, 'TH': 4, 'PH': 3, 'ID': 3, 'NP': 2, 'LK': 2, 'BD': 2,
+    'IN': 1, 'PK': 1, 'NG': 1, 'AR': 1, 'IR': 1, 'AF': 1, 'MM': 1
+  };
+  return m[countryCode] || 1;
+};
+
+// गिफ्ट की वैल्यू और एनीमेशन डेटा तैयार करने वाला फंक्शन
+export const processGiftPayment = (giftKey, countryCode) => {
+  let baseData = { price: 0, anim: '' };
+  Object.keys(GIFT_CATALOG).forEach(cat => { 
+    if (GIFT_CATALOG[cat][giftKey]) baseData = GIFT_CATALOG[cat][giftKey]; 
+  });
+  
+  const totalCost = baseData.price * getMultiplier(countryCode);
+  return {
+    totalCost,
+    platformShare: Math.round(totalCost * 0.30),
+    userShare: Math.round(totalCost * 0.70),
+    anim: baseData.anim, // यह एनीमेशन नाम आगे भेजेगा
+    stripeReady: true
   };
 };
 
-// गिफ्ट डेटा एक्सपोर्ट (PaymentServer के लिए जरूरी)
-export const getGiftData = () => {
-  let list = [];
-  Object.keys(GIFT_CATALOG).forEach(cat => {
-    Object.keys(GIFT_CATALOG[cat]).forEach(key => {
-      list.push({ name: key, price: GIFT_CATALOG[cat][key] });
-    });
-  });
-  return list;
-};
-
-// गिफ्ट भेजने और सारा हिसाब करने का मास्टर फंक्शन
-export const sendGift = async (senderId, receiverId, giftKey, countryTier, AdServer) => {
-  // 1. गिफ्ट की बेस कीमत
-  let basePrice = 0;
-  Object.keys(GIFT_CATALOG).forEach(cat => { if (GIFT_CATALOG[cat][giftKey]) basePrice = GIFT_CATALOG[cat][giftKey]; });
-
-  // 2. कंट्री टियर हिसाब
-  const multipliers = { 'Tier4': 1, 'Tier3': 4, 'Tier2': 8, 'Tier1': 15 };
-  const finalCost = basePrice * (multipliers[countryTier] || 1);
-
-  // 3. बोनस कैलकुलेशन
-  const bonus = await AdServer.getGiftBonusMultiplier(); 
-  const totalCost = finalCost * bonus;
-
-  // 4. कमीशन का हिसाब (अब इसी फाइल का फंक्शन यूज हो रहा है)
-  const { platformShare, userShare } = calculateCommission(totalCost);
+// मास्टर सेंड फंक्शन (पेमेंट + विड्रॉल सिंक + एनीमेशन)
+export const sendGift = async (senderId, receiverId, giftKey, countryCode) => {
+  const calc = processGiftPayment(giftKey, countryCode);
 
   try {
-    const response = await fetch(`/api/process-gift`, {
+    const response = await fetch(`/api/wallet/update-earnings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         senderId, receiverId, giftKey, 
-        totalCost, moinRajaProfit: platformShare, recipientCredit: userShare 
+        totalCost: calc.totalCost,
+        moinRajaProfit: calc.platformShare, 
+        recipientCredit: calc.userShare, // विड्रॉल बटन अपडेट के लिए
+        animationTrigger: calc.anim,     // एनीमेशन सिग्नल (लड़के/लड़की की स्क्रीन पर)
+        status: 'SUCCESS'
       })
     });
+    
+    // यहाँ से रिस्पॉन्स मिलने पर ही एनीमेशन ट्रिगर होगा
     return await response.json();
   } catch (error) {
-    return { success: false, message: "गिफ्टिंग सर्वर डाउन है!" };
+    return { success: false, message: "Gift Server Error" };
   }
 };
-
-// बैकअप फंक्शन्स
-export const getAllGifts = () => GIFT_CATALOG;
-export const getGifts = () => getGiftData();
