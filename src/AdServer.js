@@ -1,33 +1,29 @@
-// AdServer.js - मास्टर कंट्रोल हब
+// AdServer.js - फिक्स्ड मास्टर कंट्रोल हब
 
-// 1. सारी जरूरी फाइलें यहाँ इंपोर्ट कर रहे हैं
-import * as AdProvider from './AdProvider.jsx';
-import * as BoostDashboard from './BoostDashboard.jsx';
-import * as BoostConfig from './BoostConfig.js';
-import * as PromotionForm from './PromotionForm.jsx';
+// अगर ये फाइलें (AdProvider, etc.) एक्सपोर्ट्स के साथ सही से बनी हैं, तो ठीक है।
+// वरना इन्हें सही तरीके से इम्पोर्ट करना होगा।
+import { getAdDetails } from './AdProvider.jsx'; 
+import { getStats } from './BoostDashboard.jsx';
+import { getRates } from './BoostConfig.js';
+import { submitPromo } from './PromotionForm.jsx';
+import { sendGift } from './GiftService.js'; // सही नाम (sendGift)
 
 export const AdServer = {
-  // ---------------------------------------------------------
-  // अपना सर्वर लिंक यहाँ डालें, पूरी ऐप कनेक्ट हो जाएगी
   adServerUrl: "YOUR_ADS_SERVER_URL_HERE", 
-  // ---------------------------------------------------------
 
-  // 2. मास्टर डेटा गेटवे
   getAdData: async (type, data) => {
     switch (type) {
-      case 'provider': return AdProvider.getAdDetails(data);
-      case 'boost-dashboard': return BoostDashboard.getStats(data.user);
-      case 'boost-config': return BoostConfig.getRates(data.tier);
-      case 'promotion': return PromotionForm.submitPromo(data);
+      case 'provider': return getAdDetails(data);
+      case 'boost-dashboard': return getStats(data.user);
+      case 'boost-config': return getRates(data.tier);
+      case 'promotion': return submitPromo(data);
       case 'gift': 
-        // यहाँ फाइल का नाम सही करके GiftService.js कर दिया गया है
-        const GiftService = await import('./GiftService.js');
-        return GiftService.processGift(data.senderId, data.receiverId, data.giftKey, data.countryTier, AdServer);
+        // अब हमने सही नाम (sendGift) यूज़ किया है
+        return await sendGift(data.senderId, data.receiverId, data.giftKey, data.countryTier);
       default: return null;
     }
   },
 
-  // 3. मास्टर सर्वर सिंक
   syncWithServer: async (type, payload) => {
     try {
       const response = await fetch(`${AdServer.adServerUrl}/api/ads/${type}`, {
@@ -42,7 +38,6 @@ export const AdServer = {
     }
   },
 
-  // 4. नया हेल्पर जो गिफ्ट सर्वर को बोनस चेक करने में मदद करेगा
   getGiftBonusMultiplier: async () => {
     return 1.0; 
   }
