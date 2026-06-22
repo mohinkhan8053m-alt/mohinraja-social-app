@@ -42,6 +42,33 @@ export const PaymentServer = {
   },
 
   // 3. मास्टर पेमेंट हब
+    // 4. विड्रॉल मास्टर फंक्शन (70/30 कमीशन के साथ)
+  processWithdrawal: async (withdrawData) => {
+    // 70% यूजर का Payout और 30% प्लेटफॉर्म कमीशन
+    const hostShare = Math.round(withdrawData.amount * 0.70); 
+    const platformShare = Math.round(withdrawData.amount * 0.30);
+
+    const response = await fetch(`${PaymentServer.proServer}/api/withdraw`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        ...withdrawData, 
+        payoutAmount: hostShare,
+        platformCommission: platformShare 
+      })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      TransactionLogger.logTransaction(withdrawData.userId, { 
+        type: 'WITHDRAWAL', 
+        amount: withdrawData.amount, 
+        status: 'SUCCESS' 
+      });
+    }
+    return result;
+  },
+  
   processPayment: async (type, payload) => {
     const pricing = PaymentServer.getMasterData(type, payload);
     
