@@ -6,14 +6,22 @@ const PremiumAdminPage = () => {
   const [financeData, setFinanceData] = useState({ earnings: 0, activeUsers: 0 });
 
   useEffect(() => {
-    // हमने PaymentServer में 'getMasterData' बनाया है, उसका इस्तेमाल करें
-    // अगर फाइनेंस डेटा सर्वर से लेना है, तो PaymentServer में एक नया फंक्शन जोड़ें या fetch करें
-    fetch(`${PaymentServer.proServer}/api/admin/finance`)
-      .then(res => res.json())
-      .then(data => setFinanceData(data))
-      .catch(err => console.log("Finance Data Fetch Error:", err));
+    // सुरक्षित तरीका: सर्वर URL को पहले चेक करें
+    const fetchFinance = async () => {
+      try {
+        if (!PaymentServer.proServer) return; // सर्वर URL न हो तो रुक जाएं
+        const res = await fetch(`${PaymentServer.proServer}/api/admin/finance`);
+        if (!res.ok) throw new Error("Server response error");
+        const data = await res.json();
+        setFinanceData(data);
+      } catch (err) {
+        console.error("Finance Data Fetch Error:", err);
+      }
+    };
+    fetchFinance();
   }, []);
 
+  // ... (बाकी allFeatures वाला हिस्सा बिल्कुल सही है)
   const allFeatures = [
     'Chat Guard', 'Support', 'Payouts', 'Auto Reply', 'Ads Manager', 'Live Mode', 
     'Security', 'Themes', 'History', 'Backups', 'Language', 'Privacy',
@@ -24,6 +32,10 @@ const PremiumAdminPage = () => {
   ];
 
   const handleSync = async () => {
+    if (!PaymentServer.proServer) {
+        alert("⚠️ सर्वर URL सेट नहीं है!");
+        return;
+    }
     setIsSyncing(true);
     try {
       const response = await fetch(`${PaymentServer.proServer}/api/admin/sync`, { method: 'POST' });
@@ -39,6 +51,7 @@ const PremiumAdminPage = () => {
     setIsSyncing(false);
   };
 
+  // ... (बाकी रेंडर कोड वैसा ही रहेगा)
   return (
     <div style={{ padding: '20px', fontFamily: 'Poppins', background: '#fff', minHeight: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
