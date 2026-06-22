@@ -1,4 +1,4 @@
-// GiftService.js - 100% अपडेटेड मास्टर कोड
+// GiftService.js - मास्टर फाइल (सब कुछ एक्सपोर्टेड, बिल्ड एरर-फ्री)
 
 const GIFT_CATALOG = {
   'Common': { 
@@ -28,7 +28,21 @@ const getMultiplier = (countryCode) => {
   return m[countryCode] || 1;
 };
 
-// गिफ्ट की वैल्यू और एनीमेशन डेटा तैयार करने वाला फंक्शन
+// 1. यह फंक्शन PaymentServer को चाहिए (बिल्ड एरर का समाधान)
+export const getGiftData = () => {
+  let list = [];
+  Object.keys(GIFT_CATALOG).forEach(cat => {
+    Object.keys(GIFT_CATALOG[cat]).forEach(key => {
+      list.push({ name: key, price: GIFT_CATALOG[cat][key].price });
+    });
+  });
+  return list;
+};
+
+// 2. सब गिफ्ट्स एक्सपोर्ट करने के लिए
+export const getAllGifts = () => GIFT_CATALOG;
+
+// 3. गिफ्ट वैल्यू कैलकुलेशन
 export const processGiftPayment = (giftKey, countryCode) => {
   let baseData = { price: 0, anim: '' };
   Object.keys(GIFT_CATALOG).forEach(cat => { 
@@ -40,12 +54,12 @@ export const processGiftPayment = (giftKey, countryCode) => {
     totalCost,
     platformShare: Math.round(totalCost * 0.30),
     userShare: Math.round(totalCost * 0.70),
-    anim: baseData.anim, // यह एनीमेशन नाम आगे भेजेगा
+    anim: baseData.anim,
     stripeReady: true
   };
 };
 
-// मास्टर सेंड फंक्शन (पेमेंट + विड्रॉल सिंक + एनीमेशन)
+// 4. मास्टर सेंड फंक्शन (सब कुछ इसी से होगा)
 export const sendGift = async (senderId, receiverId, giftKey, countryCode) => {
   const calc = processGiftPayment(giftKey, countryCode);
 
@@ -57,13 +71,11 @@ export const sendGift = async (senderId, receiverId, giftKey, countryCode) => {
         senderId, receiverId, giftKey, 
         totalCost: calc.totalCost,
         moinRajaProfit: calc.platformShare, 
-        recipientCredit: calc.userShare, // विड्रॉल बटन अपडेट के लिए
-        animationTrigger: calc.anim,     // एनीमेशन सिग्नल (लड़के/लड़की की स्क्रीन पर)
+        recipientCredit: calc.userShare,
+        animationTrigger: calc.anim,
         status: 'SUCCESS'
       })
     });
-    
-    // यहाँ से रिस्पॉन्स मिलने पर ही एनीमेशन ट्रिगर होगा
     return await response.json();
   } catch (error) {
     return { success: false, message: "Gift Server Error" };
