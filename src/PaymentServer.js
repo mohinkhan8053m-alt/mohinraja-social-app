@@ -1,21 +1,21 @@
-// PaymentServer.js - मास्टर कंट्रोल हब (Finalized & Robust)
+// PaymentServer.js - मास्टर कंट्रोल हब (PricingLogic Integrated)
 
-import * as PriceEngine from './PriceHelper.js'; 
-import { getGiftData } from './GiftService.js';             
+import * as PriceEngine from './PriceHelper.js';
+import { getGiftData } from './GiftService.js';
 import { getCurrencyData } from './CurrencyConfig.js';
 import { TransactionLogger } from './TransactionLogger.js';
-// नोट: प्रीमियम प्राइसिंग के लिए एक अलग फाइल (PricingConfig.js) का इस्तेमाल करें 
-// ताकि UI फाइल (PremiumAdminPage.jsx) सर्वर क्रैश न करे।
+// यहाँ आपकी PricingLogic.js फाइल जुड़ गई है:
+import { getCountryPricing } from './PricingLogic.js'; 
 
 export const PaymentServer = {
-  proServer: "YOUR_SERVER_URL_HERE", 
+  proServer: "YOUR_SERVER_URL_HERE", // अपना सर्वर लिंक यहाँ डालें
 
-  // 1. मास्टर डेटा गेटवे (सभी सर्विसेज यहाँ से कंट्रोल होंगी)
+  // 1. मास्टर डेटा गेटवे
   getMasterData: (type, data) => {
     switch(type) {
       case 'premium': 
-        // यहाँ आप अपनी PricingConfig.js वाली फाइल को इम्पोर्ट करके यूज़ करें
-        return { price: 99, currency: 'INR' }; 
+        // अब यह सीधे PricingLogic.js से सही देश का रेट उठाएगा
+        return getCountryPricing(data.country); 
       case 'coins': 
         return PriceEngine.getPackageDetails(data.country);
       case 'boost': 
@@ -31,12 +31,11 @@ export const PaymentServer = {
     }
   },
 
-  // 2. मास्टर वॉलेट डेटा (Gift + Call Coins का हिसाब)
+  // 2. मास्टर वॉलेट डेटा
   getWalletData: async (userId) => {
     try {
       const response = await fetch(`${PaymentServer.proServer}/api/wallet/${userId}`);
       const data = await response.json(); 
-      
       const totalCoins = (data.callCoins || 0) + (data.giftCoins || 0);
       const hostShare = Math.round(totalCoins * 0.70); 
 
@@ -52,10 +51,11 @@ export const PaymentServer = {
     }
   },
 
-  // 3. मास्टर पेमेंट हब (Stripe या अन्य पेमेंट गेटवे के लिए)
+  // 3. मास्टर पेमेंट हब
   processPayment: async (type, payload) => {
     const pricing = PaymentServer.getMasterData(type, payload);
     
+    // Stripe/Payment Gateway के लिए यहाँ अपना लॉजिक रखें
     const response = await fetch(`${PaymentServer.proServer}/api/payment`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -74,7 +74,7 @@ export const PaymentServer = {
     return result;
   },
 
-  // 4. विड्रॉल मास्टर फंक्शन (70/30 कमीशन)
+  // 4. विड्रॉल मास्टर फंक्शन
   processWithdrawal: async (withdrawData) => {
     const hostShare = Math.round(withdrawData.amount * 0.70); 
     const platformShare = Math.round(withdrawData.amount * 0.30);
