@@ -1,12 +1,8 @@
-// AdServer.js - फिक्स्ड मास्टर कंट्रोल हब
-
-// अगर ये फाइलें (AdProvider, etc.) एक्सपोर्ट्स के साथ सही से बनी हैं, तो ठीक है।
-// वरना इन्हें सही तरीके से इम्पोर्ट करना होगा।
 import { getAdDetails } from './AdProvider.jsx'; 
 import { getStats } from './BoostDashboard.jsx';
 import { getRates } from './BoostConfig.js';
 import { submitPromo } from './PromotionForm.jsx';
-import { sendGift } from './GiftService.js'; // सही नाम (sendGift)
+import { sendGift } from './GiftService.js';
 
 export const AdServer = {
   adServerUrl: "YOUR_ADS_SERVER_URL_HERE", 
@@ -18,7 +14,6 @@ export const AdServer = {
       case 'boost-config': return getRates(data.tier);
       case 'promotion': return submitPromo(data);
       case 'gift': 
-        // अब हमने सही नाम (sendGift) यूज़ किया है
         return await sendGift(data.senderId, data.receiverId, data.giftKey, data.countryTier);
       default: return null;
     }
